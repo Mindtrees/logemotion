@@ -173,6 +173,6 @@ storybook-static
 # Bower dependency directory
 bower_components
 
-# Lock files (if you prefer yarn, uncomment yarn.lock line and comment package-lock.json)
-package-lock.json
+# Lock files - frontend는 포함, backend만 제외
+backend/package-lock.json
 # yarn.lock
