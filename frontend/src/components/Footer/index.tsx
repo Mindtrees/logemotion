@@ -1,8 +1,10 @@
+import * as React from 'react';
 import { 
   Box, 
   Typography, 
   Grid, 
-  Link,
+  Link, 
+  IconButton, 
   Stack,
   Divider,
   Chip
@@ -11,12 +13,18 @@ import {
 const Footer = () => {
   const quickLinks = ['Get Started', 'Features', 'How it Works', 'Pricing', 'About Us'];
   const resources = ['Blog', 'Help Center', 'Privacy Policy', 'Terms of Service', 'Contact'];
+  const socials = [
+    { icon: '📧', label: 'Email' },
+    { icon: '📱', label: 'Twitter' },
+    { icon: '📘', label: 'Facebook' },
+    { icon: '📸', label: 'Instagram' }
+  ];
 
   return (
     <Box
       component="footer"
       sx={{
-        background: 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
+        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
         color: 'white',
         pt: 8,
         pb: 3,
@@ -24,9 +32,7 @@ const Footer = () => {
       }}
     >
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
-        {/* Main Footer Content */}
         <Grid container spacing={5} sx={{ mb: 5 }}>
-          {/* Brand Section */}
           <Grid item xs={12} md={3}>
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
               <Typography sx={{ fontSize: '1.75rem' }}>💭</Typography>
@@ -45,7 +51,7 @@ const Footer = () => {
             <Typography
               variant="body2"
               sx={{
-                color: '#d1d5db',
+                color: 'rgba(255, 255, 255, 0.8)',
                 lineHeight: 1.6
               }}
             >
@@ -53,14 +59,13 @@ const Footer = () => {
             </Typography>
           </Grid>
 
-          {/* Quick Links */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: '#f9fafb'
+                color: 'white'
               }}
             >
               Quick Links
@@ -71,7 +76,7 @@ const Footer = () => {
                   key={index}
                   href="#"
                   sx={{
-                    color: '#d1d5db',
+                    color: 'rgba(255, 255, 255, 0.7)',
                     textDecoration: 'none',
                     fontSize: '0.875rem',
                     '&:hover': {
@@ -85,14 +90,13 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          {/* Resources */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: '#f9fafb'
+                color: 'white'
               }}
             >
               Resources
@@ -103,7 +107,7 @@ const Footer = () => {
                   key={index}
                   href="#"
                   sx={{
-                    color: '#d1d5db',
+                    color: 'rgba(255, 255, 255, 0.7)',
                     textDecoration: 'none',
                     fontSize: '0.875rem',
                     '&:hover': {
@@ -117,22 +121,21 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          {/* Connect */}
           <Grid item xs={12} md={5}>
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 600,
                 mb: 2,
-                color: '#f9fafb'
+                color: 'white'
               }}
             >
-              Contact Us
+              Connect With Us
             </Typography>
             <Typography
               variant="body2"
               sx={{
-                color: '#d1d5db',
+                color: 'rgba(255, 255, 255, 0.7)',
                 mb: 2,
                 lineHeight: 1.5
               }}
@@ -140,11 +143,28 @@ const Footer = () => {
               Stay updated with our latest features and emotional wellness tips.
             </Typography>
             
+            <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
+              {socials.map((social, index) => (
+                <IconButton
+                  key={index}
+                  sx={{
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#8b5cf6',
+                      transform: 'translateY(-2px)'
+                    }
+                  }}
+                >
+                  <Typography>{social.icon}</Typography>
+                </IconButton>
+              ))}
+            </Stack>
           </Grid>
         </Grid>
 
-        {/* Bottom Bar */}
-        <Divider sx={{ borderColor: '#374151', mb: 3 }} />
+        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', mb: 3 }} />
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           justifyContent="space-between"
@@ -154,7 +174,7 @@ const Footer = () => {
           <Typography
             variant="body2"
             sx={{
-              color: '#9ca3af'
+              color: 'rgba(255, 255, 255, 0.6)'
             }}
           >
             © 2024 EmotionBlog. We value your emotions ❤️
@@ -167,7 +187,7 @@ const Footer = () => {
               size="small"
               sx={{
                 backgroundColor: 'transparent',
-                color: '#9ca3af',
+                color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
                 fontSize: '0.75rem'
               }}
@@ -178,7 +198,7 @@ const Footer = () => {
               size="small"
               sx={{
                 backgroundColor: 'transparent',
-                color: '#9ca3af',
+                color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
                 fontSize: '0.75rem'
               }}
@@ -189,7 +209,7 @@ const Footer = () => {
               size="small"
               sx={{
                 backgroundColor: 'transparent',
-                color: '#9ca3af',
+                color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
                 fontSize: '0.75rem'
               }}

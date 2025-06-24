@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { CustomThemeProvider } from './contexts/ThemeContext';

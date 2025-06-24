@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { 
   Box, 
   Typography, 
@@ -9,13 +10,6 @@ import {
 } from '@mui/material';
 
 const ExamplePosts = () => {
-  // const stats = [
-  //   { number: '1,000+', label: 'Posts Analyzed' },
-  //   { number: '95%', label: 'Emotion Analysis Accuracy' },
-  //   { number: '500+', label: 'Active Users' },
-  //   { number: '24/7', label: 'Always Available' }
-  // ];
-
   const testimonials = [
     {
       name: 'Minji Kim',
@@ -38,17 +32,18 @@ const ExamplePosts = () => {
   ];
 
   return (
-    <Box sx={{ py: 10, backgroundColor: 'white' }}>
+    <Box sx={{ 
+      py: 10, 
+      backgroundColor: 'background.section'
+    }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
         <Box>
           <Typography
             variant="h2"
             sx={{
               fontSize: '2.25rem',
-              fontWeight: 700,
               textAlign: 'center',
-              mb: 2,
-              color: '#1f2937'
+              mb: 2
             }}
           >
             User Testimonials
@@ -56,9 +51,9 @@ const ExamplePosts = () => {
           
           <Typography
             variant="h6"
+            color="text.secondary"
             sx={{
               textAlign: 'center',
-              color: '#6b7280',
               mb: 8,
               fontWeight: 400
             }}
@@ -69,22 +64,16 @@ const ExamplePosts = () => {
           <Grid container spacing={4}>
             {testimonials.map((testimonial, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    backgroundColor: '#f8fafc',
-                    border: '1px solid #e5e7eb'
-                  }}
-                >
+                <Card sx={{ height: '100%' }}>
                   <CardContent sx={{ p: 4 }}>
                     <Typography
                       variant="body1"
                       sx={{
                         fontStyle: 'italic',
                         lineHeight: 1.6,
-                        color: '#4b5563',
                         mb: 3
                       }}
+                      color="text.secondary"
                     >
                       "{testimonial.content}"
                     </Typography>
@@ -107,18 +96,13 @@ const ExamplePosts = () => {
                       <Box>
                         <Typography
                           variant="subtitle1"
-                          sx={{
-                            fontWeight: 600,
-                            color: '#1f2937'
-                          }}
+                          sx={{ fontWeight: 600 }}
                         >
                           {testimonial.name}
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{
-                            color: '#6b7280'
-                          }}
+                          color="text.secondary"
                         >
                           {testimonial.role}
                         </Typography>

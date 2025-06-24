@@ -1,49 +1,53 @@
 export const colors = {
-  // Brand Colors
   primary: {
     main: '#5046e4',
     light: '#7c6ee8',
     dark: '#3832a0',
   },
   secondary: {
-    main: '#f50057',
-    light: '#ff5983',
-    dark: '#c51162',
+    main: '#06b6d4',
+    light: '#0891b2',
+    dark: '#0e7490',
   },
-  
-  // Light Theme
-  light: {
-    background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
-      navbar: '#ffffff',
+
+  semantic: {
+    bg: {
+      primary: { light: '#ffffff', dark: '#0f172a' },
+      secondary: { light: '#f8fafc', dark: '#1e293b' },
+      elevated: { light: '#ffffff', dark: '#334155' },
+      hero: { 
+        light: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)', 
+        dark: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' 
+      },
+      stats: { 
+        light: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
+        dark: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' 
+      },
     },
+    
     text: {
-      primary: '#333333',
-      secondary: '#666666',
+      primary: { light: '#1f2937', dark: '#f8fafc' },
+      secondary: { light: '#6b7280', dark: '#cbd5e1' },
+      muted: { light: '#9ca3af', dark: '#94a3b8' },
     },
-    border: '#e0e0e0',
-    hover: '#f5f5f5',
+    
+    border: {
+      main: { light: '#e5e7eb', dark: '#334155' },
+      light: { light: '#f3f4f6', dark: '#1e293b' },
+    },
+    
+    emotion: {
+      achievement: '#10b981',
+      fatigue: '#f59e0b', 
+      stress: '#ef4444',
+      pride: '#5046e4',
+    },
   },
   
-  // Dark Theme
-  dark: {
-    background: {
-      default: '#181c24',
-      paper: '#1e1e1e',
-      navbar: '#181c24',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#a0aec0',
-    },
-    border: '#4a5568',
-    hover: 'rgba(255,255,255,0.1)',
+  status: {
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#06b6d4',
   },
-  
-  // Status Colors
-  success: '#4caf50',
-  warning: '#ff9800',
-  error: '#f44336',
-  info: '#2196f3',
 } as const;

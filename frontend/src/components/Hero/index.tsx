@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
+        background: 'background.hero',
         py: 10,
         textAlign: 'center',
         minHeight: '60vh',
@@ -18,8 +18,6 @@ const Hero = () => {
           variant="h1"
           sx={{
             fontSize: { xs: '2.5rem', md: '3rem' },
-            fontWeight: 700,
-            color: '#1f2937',
             mb: 2,
             lineHeight: 1.2
           }}
@@ -29,9 +27,9 @@ const Hero = () => {
         
         <Typography
           variant="h5"
+          color="text.secondary"
           sx={{
             fontSize: '1.125rem',
-            color: '#6b7280',
             mb: 4,
             maxWidth: 600,
             mx: 'auto'

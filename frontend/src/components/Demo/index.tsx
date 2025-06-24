@@ -6,7 +6,7 @@ import {
   Card, 
   CardContent, 
   LinearProgress, 
-  Stack,
+  Stack
 } from '@mui/material';
 import Button from '../common/Button';
 
@@ -25,7 +25,7 @@ const Demo = () => {
     { name: 'Achievement', value: 79, color: '#10b981' },
     { name: 'Fatigue', value: 71, color: '#f59e0b' },
     { name: 'Stress', value: 65, color: '#ef4444' },
-    { name: 'Pride', value: 58, color: '#8b5cf6' }
+    { name: 'Pride', value: 58, color: '#5046e4' }
   ];
 
   React.useEffect(() => {
@@ -103,16 +103,17 @@ const Demo = () => {
 
   if (!isAnalyzed) {
     return (
-      <Box sx={{ py: 10, backgroundColor: 'white' }}>
+      <Box sx={{ 
+        py: 10, 
+        backgroundColor: 'background.section'
+      }}>
         <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
           <Typography
             variant="h2"
             sx={{
               fontSize: '2.25rem',
-              fontWeight: 700,
               textAlign: 'center',
-              mb: 2,
-              color: '#1f2937'
+              mb: 2
             }}
           >
             Real Usage Examples
@@ -120,9 +121,9 @@ const Demo = () => {
           
           <Typography
             variant="h6"
+            color="text.secondary"
             sx={{
               textAlign: 'center',
-              color: '#6b7280',
               mb: 8,
               fontWeight: 400
             }}
@@ -134,15 +135,18 @@ const Demo = () => {
             <Card
               ref={textRef}
               sx={{
-                border: '2px solid #8b5cf6',
+                border: '2px solid',
+                borderColor: 'primary.main',
                 borderRadius: 3,
                 p: 4,
-                mb: 4,
-                backgroundColor: '#fefefe'
+                mb: 4
               }}
             >
               <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
-                <Typography variant="h5" sx={{ fontWeight: 600, color: '#1f2937', fontFamily: 'monospace' }}>
+                <Typography variant="h5" sx={{ 
+                  fontWeight: 600, 
+                  fontFamily: 'monospace' 
+                }}>
                   {displayedTitle}
                   {isTitleTyping && displayedTitle.length < titleText.length && (
                     <Box
@@ -151,7 +155,7 @@ const Demo = () => {
                         display: 'inline-block',
                         width: '2px',
                         height: '1.2em',
-                        backgroundColor: '#8b5cf6',
+                        backgroundColor: 'primary.main',
                         animation: 'blink 1s infinite',
                         '@keyframes blink': {
                           '0%, 50%': { opacity: 1 },
@@ -165,9 +169,9 @@ const Demo = () => {
               
               <Typography
                 variant="body1"
+                color="text.secondary"
                 sx={{
                   lineHeight: 1.8,
-                  color: '#4b5563',
                   fontSize: '1.1rem',
                   minHeight: '120px',
                   fontFamily: 'monospace'
@@ -181,7 +185,7 @@ const Demo = () => {
                       display: 'inline-block',
                       width: '2px',
                       height: '1.2em',
-                      backgroundColor: '#8b5cf6',
+                      backgroundColor: 'primary.main',
                       animation: 'blink 1s infinite',
                       '@keyframes blink': {
                         '0%, 50%': { opacity: 1 },
@@ -216,16 +220,17 @@ const Demo = () => {
   }
 
   return (
-    <Box sx={{ py: 10, backgroundColor: 'white' }}>
+    <Box sx={{ 
+      py: 10, 
+      backgroundColor: 'background.section'
+    }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
         <Typography
           variant="h2"
           sx={{
             fontSize: '2.25rem',
-            fontWeight: 700,
             textAlign: 'center',
-            mb: 2,
-            color: '#1f2937'
+            mb: 2
           }}
         >
           Real Usage Examples
@@ -233,9 +238,9 @@ const Demo = () => {
         
         <Typography
           variant="h6"
+          color="text.secondary"
           sx={{
             textAlign: 'center',
-            color: '#6b7280',
             mb: 8,
             fontWeight: 400
           }}
@@ -247,8 +252,8 @@ const Demo = () => {
           <Grid item xs={12} md={4}>
             <Card
               sx={{
-                border: '2px solid #8b5cf6',
-                backgroundColor: '#faf5ff',
+                border: '2px solid',
+                borderColor: 'primary.main',
                 mb: 2,
                 borderRadius: 2
               }}
@@ -257,10 +262,10 @@ const Demo = () => {
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Typography sx={{ fontSize: '1.5rem' }}>🎯</Typography>
                   <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                       Dear my diary,
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#6b7280' }}>
+                    <Typography variant="body2" color="text.secondary">
                       📅 June 26, 2025
                     </Typography>
                   </Box>
@@ -273,29 +278,28 @@ const Demo = () => {
               variant="secondary"
               disabled={true}
               sx={{
-                backgroundColor: '#e5e7eb',
-                color: '#6b7280',
+                backgroundColor: 'text.muted',
+                color: 'background.default',
                 '&:disabled': {
-                  backgroundColor: '#e5e7eb',
-                  color: '#6b7280'
+                  backgroundColor: 'text.muted',
+                  color: 'background.default'
                 }
               }}
-            >
-              📊 Analysis Complete!
+            >Analysis Complete!
             </Button>
           </Grid>
 
           <Grid item xs={12} md={8}>
-            <Card sx={{ backgroundColor: '#f8fafc', borderRadius: 2 }}>
+            <Card sx={{ borderRadius: 2 }}>
               <CardContent sx={{ p: 4 }}>
                 <Box sx={{ mb: 4 }}>
                   <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
                     <Typography sx={{ fontSize: '1.5rem' }}>🎯</Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
                       Dear my diary,
                     </Typography>
                   </Stack>
-                  <Typography variant="body1" sx={{ lineHeight: 1.6, color: '#4b5563' }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                     {fullText}
                   </Typography>
                 </Box>
@@ -303,7 +307,7 @@ const Demo = () => {
                 <Box sx={{ mb: 4 }}>
                   <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
                     <Typography sx={{ fontSize: '1.5rem' }}>💗</Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
                       AI Emotion Analysis Results
                     </Typography>
                   </Stack>
@@ -312,10 +316,10 @@ const Demo = () => {
                     {emotions.map((emotion, index) => (
                       <Box key={index}>
                         <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-                          <Typography variant="body1" sx={{ color: '#1f2937', fontWeight: 500 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
                             {emotion.name}
                           </Typography>
-                          <Typography variant="body1" sx={{ color: '#1f2937', fontWeight: 600 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 600 }}>
                             {emotionValues[index]}%
                           </Typography>
                         </Stack>
@@ -323,9 +327,6 @@ const Demo = () => {
                           variant="determinate"
                           value={emotionValues[index]}
                           sx={{
-                            height: 12,
-                            borderRadius: 6,
-                            backgroundColor: '#e5e7eb',
                             transition: 'all 0.3s ease',
                             '& .MuiLinearProgress-bar': {
                               backgroundColor: emotion.color,
@@ -339,14 +340,21 @@ const Demo = () => {
                   </Stack>
                 </Box>
 
-                <Card sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, border: '1px solid #e5e7eb' }}>
+                <Card sx={{ 
+                  backgroundColor: 'background.default',
+                  p: 3, 
+                  borderRadius: 2
+                }}>
                   <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
                     <Typography sx={{ fontSize: '1.5rem' }}>🎯</Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
                       Personalized Advice
                     </Typography>
                   </Stack>
-                  <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6, color: '#4b5563' }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ 
+                    mb: 3, 
+                    lineHeight: 1.6
+                  }}>
                     Your stress and fatigue are high, but you also feel a sense of accomplishment. Make sure to get enough rest and acknowledge your efforts.
                   </Typography>
                   <Button

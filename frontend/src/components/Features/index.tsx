@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 
 const Features = () => {
@@ -25,16 +26,19 @@ const Features = () => {
   ];
 
   return (
-    <Box sx={{ py: 10, backgroundColor: '#f8fafc' }}>
+    <Box 
+      sx={{ 
+        py: 10, 
+        backgroundColor: 'background.section'
+      }}
+    >
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
         <Typography
           variant="h2"
           sx={{
             fontSize: '2.25rem',
-            fontWeight: 700,
             textAlign: 'center',
-            mb: 8,
-            color: '#1f2937'
+            mb: 8
           }}
         >
           Key Features
@@ -43,44 +47,23 @@ const Features = () => {
         <Grid container spacing={3}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card
-                sx={{
-                  height: '100%',
-                  textAlign: 'center',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: 4
-                  }
-                }}
-              >
+              <Card sx={{ height: '100%', textAlign: 'center' }}>
                 <CardContent sx={{ p: 4 }}>
-                  <Typography
-                    sx={{
-                      fontSize: '3rem',
-                      mb: 2
-                    }}
-                  >
+                  <Typography sx={{ fontSize: '3rem', mb: 2 }}>
                     {feature.icon}
                   </Typography>
                   
                   <Typography
                     variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      mb: 1.5,
-                      color: '#1f2937'
-                    }}
+                    sx={{ fontWeight: 600, mb: 1.5 }}
                   >
                     {feature.title}
                   </Typography>
                   
                   <Typography
                     variant="body2"
-                    sx={{
-                      color: '#6b7280',
-                      lineHeight: 1.6
-                    }}
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6 }}
                   >
                     {feature.description}
                   </Typography>
