@@ -1,4 +1,5 @@
-# EmotionLog 개발 가이드라인
+# EmotionLog 개발 가이드라인 (Frontend)
+개발시작전에, cd frontend 로 Frontend 폴더안으로 이동!!
 
 ## 프로젝트 개요
 Emotionlog - 감정 기록 및 분석을 위한 React TypeScript 애플리케이션 (Material-UI 컴포넌트 사용)
@@ -171,6 +172,90 @@ const ComponentName = React.lazy(() => import('../pages/ComponentName'));
 1. **에러 바운더리**: 페이지 레벨 컴포넌트에 구현
 2. **폼 유효성 검사**: 사용자 입력 유효성 검사 처리
 3. **API 에러**: API 호출에 대한 적절한 에러 처리
+
+
+# 🌙 EmotionBlog 다크모드 가이드
+
+## 🚀 기본 사용법
+
+### 배경 색상
+```tsx
+<Box sx={{ backgroundColor: 'background.default' }} />     // 메인 배경
+<Box sx={{ backgroundColor: 'background.section' }} />     // 섹션 배경
+<Box sx={{ backgroundColor: 'background.elevated' }} />    // 카드 배경
+<Box sx={{ background: 'background.hero' }} />             // 히어로 그라데이션
+<Box sx={{ background: 'background.stats' }} />            // 통계 그라데이션
+```
+
+### 텍스트 색상
+```tsx
+<Typography color="text.primary">제목</Typography>         // 제목/강조 텍스트
+<Typography color="text.secondary">설명</Typography>       // 본문/설명 텍스트
+<Typography color="text.muted">힌트</Typography>           // 비활성화/힌트 텍스트
+```
+
+### 기본 UI 색상
+```tsx
+<Button sx={{ color: 'primary.main' }}>버튼</Button>       // 브랜드 색상
+<Divider sx={{ borderColor: 'divider' }} />                // 경계선 색상
+```
+
+## 🎨 감정 색상
+```tsx
+const theme = useTheme();
+
+theme.palette.emotion.achievement  // 성취감 - 밝은 초록 (#10b981)
+theme.palette.emotion.fatigue      // 피로감 - 주황색 (#f59e0b)
+theme.palette.emotion.stress       // 스트레스 - 빨간색 (#ef4444)
+theme.palette.emotion.pride        // 자부심 - 브랜드 보라 (#5046e4)
+```
+
+## 🎛️ 다크모드 토글
+```tsx
+import { useTheme } from '../../contexts/ThemeContext';
+
+const { isDarkMode, toggleTheme } = useTheme();
+
+<IconButton onClick={toggleTheme}>
+  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+</IconButton>
+```
+
+## 💡 사용 예시
+```tsx
+<Box sx={{ backgroundColor: 'background.section', p: 4 }}>
+  <Card sx={{ backgroundColor: 'background.elevated' }}>
+    <Typography color="text.primary">제목</Typography>
+    <Typography color="text.secondary">설명</Typography>
+    <Button sx={{ color: 'primary.main' }}>버튼</Button>
+  </Card>
+</Box>
+```
+
+## 📋 색상 치트시트
+
+| 용도 | 라이트 모드 | 다크 모드 |
+|------|------------|-----------|
+| 메인 배경 | `#ffffff` (흰색) | `#0f172a` (진한 네이비) |
+| 섹션 배경 | `#f8fafc` (연한 회색) | `#1e293b` (중간 회색) |
+| 카드 배경 | `#ffffff` (흰색) | `#334155` (진한 회색) |
+| 제목 텍스트 | `#1f2937` (진한 회색) | `#f8fafc` (거의 흰색) |
+| 본문 텍스트 | `#6b7280` (중간 회색) | `#cbd5e1` (연한 회색) |
+| 힌트 텍스트 | `#9ca3af` (연한 회색) | `#94a3b8` (중간 회색) |
+| 브랜드 색상 | `#5046e4` (보라) | `#5046e4` (동일) |
+| 경계선 | `#e5e7eb` (연한 회색) | `#334155` (진한 회색) |
+
+## 🔧 자동 적용 컴포넌트
+
+이미 테마가 자동 적용되므로 별도 스타일링 불필요:
+- `Card` - 자동 배경색, 경계선, 호버 효과
+- `LinearProgress` - 자동 배경색
+- `Button` - 자동 텍스트 변환, 둥근 모서리
+
+---
+
+**핵심: 시맨틱 색상만 사용하면 라이트/다크 모드가 자동으로 적용됩니다!** 🎉
+
 
 ### 코드 리뷰 체크리스트
 - [ ] 컴포넌트가 명명 규칙을 따르는가
