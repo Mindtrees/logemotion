@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Loading from '../components/Loading';
 import NavBar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 
 const Home = React.lazy(() => import('../pages/Home'));
@@ -27,6 +28,7 @@ const AppLayout: React.FC = () => {
           </Routes>
         </Suspense>
       </main>
+      <Footer />
     </div>
   );
 };
