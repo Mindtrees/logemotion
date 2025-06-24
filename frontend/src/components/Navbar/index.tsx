@@ -23,8 +23,7 @@ import {
   LightMode as LightModeIcon
 } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCustomTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../styles/colors';
+import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
@@ -79,16 +78,15 @@ const NavBar: React.FC = () => {
     handleUserMenuClose();
   };
 
-  const currentColors = isDarkMode ? colors.dark : colors.light;
-
   return (
     <AppBar 
       position="static" 
       elevation={0}
       sx={{ 
-        backgroundColor: currentColors.background.navbar,
-        borderBottom: `1px solid ${currentColors.border}`,
-        color: currentColors.text.primary
+        backgroundColor: 'background.default',
+        borderBottom: '1px solid',
+        borderBottomColor: 'divider',
+        color: 'text.primary'
       }}
     >
       <Container maxWidth="xl">
@@ -99,7 +97,7 @@ const NavBar: React.FC = () => {
             sx={{ 
               cursor: 'pointer',
               fontWeight: 700,
-              color: colors.primary.main,
+              color: 'primary.main',
               fontSize: '1.5rem'
             }}
             onClick={() => navigate('/')}
@@ -115,7 +113,7 @@ const NavBar: React.FC = () => {
                   startIcon={item.icon}
                   onClick={() => handleNavigation(item.path)}
                   sx={{
-                    color: location.pathname === item.path ? colors.primary.main : currentColors.text.secondary,
+                    color: location.pathname === item.path ? 'primary.main' : 'text.secondary',
                     fontWeight: location.pathname === item.path ? 600 : 400,
                     textTransform: 'none',
                     fontSize: '0.95rem',
@@ -124,8 +122,8 @@ const NavBar: React.FC = () => {
                     py: 1,
                     borderRadius: 2,
                     '&:hover': {
-                      backgroundColor: currentColors.hover,
-                      color: colors.primary.main,
+                      backgroundColor: 'action.hover',
+                      color: 'primary.main',
                     },
                   }}
                 >
@@ -139,9 +137,9 @@ const NavBar: React.FC = () => {
             <IconButton
               onClick={toggleTheme}
               sx={{ 
-                color: currentColors.text.secondary,
+                color: 'text.secondary',
                 '&:hover': { 
-                  backgroundColor: currentColors.hover
+                  backgroundColor: 'action.hover'
                 }
               }}
             >
@@ -154,7 +152,7 @@ const NavBar: React.FC = () => {
                   onClick={handleUserMenuOpen}
                   sx={{ ml: 1 }}
                 >
-                  <Avatar sx={{ width: 32, height: 32, bgcolor: colors.primary.main }}>
+                  <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
                     U
                   </Avatar>
                 </IconButton>
@@ -180,14 +178,14 @@ const NavBar: React.FC = () => {
                 startIcon={<PersonIcon />}
                 onClick={handleLogin}
                 sx={{
-                  color: currentColors.text.secondary,
+                  color: 'text.secondary',
                   textTransform: 'none',
                   fontWeight: 500,
                   px: 2,
                   py: 1,
                   borderRadius: 2,
                   '&:hover': {
-                    backgroundColor: currentColors.hover,
+                    backgroundColor: 'action.hover',
                   },
                 }}
               >
@@ -200,9 +198,9 @@ const NavBar: React.FC = () => {
                 <IconButton
                   onClick={handleMenuOpen}
                   sx={{ 
-                    color: currentColors.text.secondary,
+                    color: 'text.secondary',
                     '&:hover': { 
-                      backgroundColor: currentColors.hover
+                      backgroundColor: 'action.hover'
                     }
                   }}
                 >

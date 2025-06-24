@@ -1,86 +1,51 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { colors } from '../styles/colors';
+import { createAppTheme } from '../styles/theme';
 
 interface ThemeContextType {
   isDarkMode: boolean;
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType>({
+  isDarkMode: false,
+  toggleTheme: () => {},
+});
 
-export const useCustomTheme = () => {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useCustomTheme must be used within a CustomThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 };
 
-interface CustomThemeProviderProps {
+interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
-export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ children }) => {
+export const CustomThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = localStorage.getItem('darkMode');
     if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
+      setIsDarkMode(JSON.parse(savedTheme));
     }
   }, []);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
-    localStorage.setItem('theme', newMode ? 'dark' : 'light');
+    localStorage.setItem('darkMode', JSON.stringify(newMode));
   };
 
-  const lightTheme = createTheme({
-    palette: {
-      mode: 'light',
-      primary: colors.primary,
-      secondary: colors.secondary,
-      background: colors.light.background,
-      text: colors.light.text,
-    },
-    typography: {
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-      h1: { fontSize: '2rem', fontWeight: 600 },
-      h2: { fontSize: '1.5rem', fontWeight: 600 },
-      body1: { fontSize: '1rem', lineHeight: 1.6 },
-    },
-    shape: { borderRadius: 8 },
-    spacing: 8,
-  });
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-      primary: {
-        main: colors.primary.light,
-        light: '#a99aec',
-        dark: colors.primary.main,
-      },
-      secondary: colors.secondary,
-      background: colors.dark.background,
-      text: colors.dark.text,
-    },
-    typography: {
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-      h1: { fontSize: '2rem', fontWeight: 600 },
-      h2: { fontSize: '1.5rem', fontWeight: 600 },
-      body1: { fontSize: '1rem', lineHeight: 1.6 },
-    },
-    shape: { borderRadius: 8 },
-    spacing: 8,
-  });
+  const theme = createAppTheme(isDarkMode ? 'dark' : 'light');
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
