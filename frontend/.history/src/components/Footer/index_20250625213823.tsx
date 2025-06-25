@@ -1,25 +1,37 @@
-
-import * as React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Grid, 
+import * as React from "react";
+import {
+  Box,
+  Typography,
+  Grid,
   Link,
+  IconButton,
   Stack,
   Divider,
-  Chip
-} from '@mui/material';
-import {
-  Psychology,
-  Security,
-  Public,
-  SmartToy
-} from '@mui/icons-material';
+  Chip,
+} from "@mui/material";
 
 const Footer = () => {
-  const quickLinks = ['Get Started', 'Features', 'How it Works', 'Pricing', 'About Us'];
-  const resources = ['Blog', 'Help Center', 'Privacy Policy', 'Terms of Service', 'Contact'];
-    
+  const quickLinks = [
+    "Get Started",
+    "Features",
+    "How it Works",
+    "Pricing",
+    "About Us",
+  ];
+  const resources = [
+    "Blog",
+    "Help Center",
+    "Privacy Policy",
+    "Terms of Service",
+    "Contact",
+  ];
+  const socials = [
+    { icon: "📧", label: "Email" },
+    { icon: "📱", label: "Twitter" },
+    { icon: "📘", label: "Facebook" },
+    { icon: "📸", label: "Instagram" },
+  ];
+
   return (
     <Box
       component="footer"
@@ -33,13 +45,13 @@ const Footer = () => {
       <Box sx={{ maxWidth: 1200, mx: "auto", px: 3 }}>
         <Grid container spacing={5} sx={{ mb: 5 }}>
           <Grid item xs={12} md={3}>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
-              <Psychology 
-                sx={{ 
-                  fontSize: '2rem',
-                  color: '#8b5cf6'
-                }} 
-              />
+            <Stack
+              direction="row"
+              spacing={1.5}
+              alignItems="center"
+              sx={{ mb: 2 }}
+            >
+              <Typography sx={{ fontSize: "1.75rem" }}>💭</Typography>
               <Typography
                 variant="h5"
                 sx={{
@@ -148,7 +160,25 @@ const Footer = () => {
             >
               Stay updated with our latest features and emotional wellness tips.
             </Typography>
-            
+
+            <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
+              {socials.map((social, index) => (
+                <IconButton
+                  key={index}
+                  sx={{
+                    backgroundColor: "rgba(139, 92, 246, 0.1)",
+                    border: "1px solid rgba(139, 92, 246, 0.3)",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#8b5cf6",
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  <Typography>{social.icon}</Typography>
+                </IconButton>
+              ))}
+            </Stack>
           </Grid>
         </Grid>
 
@@ -165,8 +195,44 @@ const Footer = () => {
               color: "rgba(255, 255, 255, 0.6)",
             }}
           >
-            © 2024 EmotionBlog. All rights reserved.
+            © 2024 EmotionBlog. We value your emotions ❤️
           </Typography>
+
+          <Stack direction="row" spacing={3}>
+            <Chip
+              icon={<span style={{ fontSize: "0.75rem" }}>🔒</span>}
+              label="Your data is secure"
+              size="small"
+              sx={{
+                backgroundColor: "transparent",
+                color: "rgba(255, 255, 255, 0.6)",
+                border: "none",
+                fontSize: "0.75rem",
+              }}
+            />
+            <Chip
+              icon={<span style={{ fontSize: "0.75rem" }}>🌍</span>}
+              label="Available worldwide"
+              size="small"
+              sx={{
+                backgroundColor: "transparent",
+                color: "rgba(255, 255, 255, 0.6)",
+                border: "none",
+                fontSize: "0.75rem",
+              }}
+            />
+            <Chip
+              icon={<span style={{ fontSize: "0.75rem" }}>🤖</span>}
+              label="AI-Powered"
+              size="small"
+              sx={{
+                backgroundColor: "transparent",
+                color: "rgba(255, 255, 255, 0.6)",
+                border: "none",
+                fontSize: "0.75rem",
+              }}
+            />
+          </Stack>
         </Stack>
       </Box>
     </Box>
