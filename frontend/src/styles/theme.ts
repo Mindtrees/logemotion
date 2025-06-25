@@ -14,11 +14,11 @@ declare module '@mui/material/styles' {
   }
 
   interface Palette {
-    emotion: typeof colors.semantic.emotion;
+    emotions: typeof colors.semantic.emotions;
   }
 
   interface PaletteOptions {
-    emotion?: typeof colors.semantic.emotion;
+    emotions?: typeof colors.semantic.emotions;
   }
 }
 
@@ -53,7 +53,7 @@ export const createAppTheme = (mode: 'light' | 'dark') => {
         muted: getSemanticColor(semantic.text.muted, mode),
       },
       
-      emotion: semantic.emotion,
+      emotions: semantic.emotions,
       
       success: { main: colors.status.success },
       warning: { main: colors.status.warning },

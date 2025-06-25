@@ -7,7 +7,7 @@ import {
   Card, 
   CardContent, 
   LinearProgress, 
-  Stack
+  Stack,
 } from '@mui/material';
 import {
   Notes,
@@ -15,7 +15,7 @@ import {
   CalendarToday,
   Psychology
 } from '@mui/icons-material';
-import Button from '../common/Button';
+import Button from '../../../../components/common/Button';
 
 const Demo = () => {
   const navigate = useNavigate();

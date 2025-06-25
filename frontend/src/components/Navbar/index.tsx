@@ -1,34 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Avatar,
-  useTheme as useMuiTheme,
-  useMediaQuery,
-  Container,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemButton
-} from '@mui/material';
-import {
-  Edit as EditIcon,
-  Article as ArticleIcon,
-  Person as PersonIcon,
-  Menu as MenuIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
-  Close as CloseIcon,
-  Logout as LogoutIcon
-} from '@mui/icons-material';
+import { AppBar,  Toolbar,  Typography,  Button,  Box,  IconButton,  Menu,  MenuItem,  Avatar,  useTheme as useMuiTheme,  useMediaQuery,  Container,  Drawer,  List,  ListItem,  ListItemIcon,  ListItemText,  ListItemButton} from '@mui/material';
+import { Edit as EditIcon,  Article as ArticleIcon, Person as PersonIcon, Menu as MenuIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon, Close as CloseIcon, Logout as LogoutIcon} from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
@@ -79,6 +51,12 @@ const NavBar: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
+  const handleSignup = () => {
+    navigate('/signup');
+    handleUserMenuClose();
+    setMobileMenuOpen(false);
+  };
+
   const handleProfile = () => {
     navigate('/profile');
     handleUserMenuClose();
@@ -97,9 +75,6 @@ const NavBar: React.FC = () => {
 
   const handleThemeToggle = () => {
     toggleTheme();
-    if (isMobile) {
-      setMobileMenuOpen(false);
-    }
   };
 
   const mobileMenuContent = (
@@ -193,49 +168,6 @@ const NavBar: React.FC = () => {
           </List>
         </Box>
 
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'text.secondary',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              fontWeight: 600,
-              mb: 2,
-              fontSize: '0.75rem',
-            }}
-          >
-            Settings
-          </Typography>
-          <List sx={{ p: 0 }}>
-            <ListItem disablePadding sx={{ mb: 1 }}>
-              <ListItemButton
-                onClick={handleThemeToggle}
-                sx={{
-                  borderRadius: 3,
-                  py: 1.5,
-                  px: 2,
-                  '&:hover': {
-                    backgroundColor: 'action.hover',
-                  },
-                  transition: 'all 0.2s ease-in-out',
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-                </ListItemIcon>
-                <ListItemText 
-                  primary={isDarkMode ? 'Light Mode' : 'Dark Mode'}
-                  primaryTypographyProps={{
-                    fontWeight: 500,
-                    fontSize: '1rem',
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Box>
-
         <Box>
           <Typography
             variant="body2"
@@ -311,32 +243,62 @@ const NavBar: React.FC = () => {
                   </ListItem>
               </>
             ) : (
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={handleLogin}
-                  sx={{
-                    borderRadius: 5,
-                    py: 1.5,
-                    px: 2,
-                    backgroundColor: '#3A4550',
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: '#2A3440',
-                    },
-                    transition: 'all 0.2s ease-in-out',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <ListItemText 
-                    primary="Login"
-                    primaryTypographyProps={{
-                      fontWeight: 600,
-                      fontSize: '1rem',
-                      textAlign: 'center',
+              <>
+                <ListItem disablePadding sx={{ mb: 1 }}>
+                  <ListItemButton
+                    onClick={handleLogin}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 2,
+                      backgroundColor: 'transparent',
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      '&:hover': {
+                        backgroundColor: 'action.hover',
+                        borderColor: 'primary.main',
+                      },
+                      transition: 'all 0.2s ease-in-out',
+                      justifyContent: 'center',
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
+                  >
+                    <ListItemText 
+                      primary="Login"
+                      primaryTypographyProps={{
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                        textAlign: 'center',
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={handleSignup}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 2,
+                      backgroundColor: 'primary.main',
+                      color: 'primary.contrastText',
+                      '&:hover': {
+                        backgroundColor: 'primary.dark',
+                      },
+                      transition: 'all 0.2s ease-in-out',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <ListItemText 
+                      primary="Start for free"
+                      primaryTypographyProps={{
+                        fontWeight: 600,
+                        fontSize: '1rem',
+                        textAlign: 'center',
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </>
             )}
           </List>
         </Box>
@@ -457,24 +419,56 @@ const NavBar: React.FC = () => {
                     </Menu>
                   </>
                 ) : (
-                  <Button
-                    startIcon={<PersonIcon />}
-                    onClick={handleLogin}
-                    sx={{
-                      color: 'text.secondary',
-                      textTransform: 'none',
-                      fontWeight: 500,
-                      px: 2,
-                      py: 1,
-                      borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: 'action.hover',
-                      },
-                    }}
-                  >
-                    User
-                  </Button>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Button
+                      onClick={handleLogin}
+                      sx={{
+                        color: 'text.secondary',
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        '&:hover': {
+                          backgroundColor: 'action.hover',
+                        },
+                      }}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      onClick={handleSignup}
+                      variant="contained"
+                      sx={{
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        px: 3,
+                        py: 1,
+                        borderRadius: 2,
+                        backgroundColor: 'primary.main',
+                        '&:hover': {
+                          backgroundColor: 'primary.dark',
+                        },
+                      }}
+                    >
+                      Start for free
+                    </Button>
+                  </Box>
                 )
+              )}
+
+              {isMobile && (
+                <IconButton
+                  onClick={handleThemeToggle}
+                  sx={{ 
+                    color: 'text.secondary',
+                    '&:hover': { 
+                      backgroundColor: 'action.hover'
+                    }
+                  }}
+                >
+                  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+                </IconButton>
               )}
 
               {isMobile && (

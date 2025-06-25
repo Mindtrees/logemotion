@@ -1,6 +1,6 @@
 import { Box, Typography, Stack } from '@mui/material';
-import Button from '../common/Button';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../../../components/common/Button';
 
 const Hero = () => {
   const navigate = useNavigate();
