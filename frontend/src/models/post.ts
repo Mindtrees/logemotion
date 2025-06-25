@@ -10,13 +10,28 @@ export interface PostAnalysisRequest {
 export interface EmotionAnalysisResponse {
   emotions_detected: string[];
   emotion_scores: {
-    [key: string]: number;
+    joy: number;
+    surprise: number;
+    sadness: number;
+    disgust: number;
+    anger: number;
+    fear: number;
   };
   emotions_normalized: {
-    [key: string]: number;
+    joy: number;
+    surprise: number;
+    sadness: number;
+    disgust: number;
+    anger: number;
+    fear: number;
   };
   thresholds_normalized: {
-    [key: string]: number;
+    joy: number;
+    surprise: number;
+    sadness: number;
+    disgust: number;
+    anger: number;
+    fear: number;
   };
   version: string;
   author: string;
@@ -24,3 +39,4 @@ export interface EmotionAnalysisResponse {
   result_code: string;
   result_msg: string;
 }
+
