@@ -1,35 +1,21 @@
-import { Box, Button, InputAdornment, TextField, Typography, styled } from '@mui/material';
-import { Email, Lock as Password } from '@mui/icons-material';
+import { Person as Name, Email, Lock as Password, ArrowBack as Back } from '@mui/icons-material';
+import { Box, Button, InputAdornment, styled, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
-const Login = () => {
+const SignUp = () => {
     const navigate = useNavigate();
 
-    const [emailValue, setEmailValue] = useState<string>('');
-    const [passwordValue, setPasswordValue] = useState<string>('');
-    const [isEmailError, setIsEmailError] = useState<boolean>(false);
-
-    // 이메일
-    // const handleEmailChange = (e: string) => {
-    //     setEmailValue(e);
-    // };
-
-    // 로그인
-    const handleSignIn = () => {
-        if (!emailValue.trim()) {
-            setIsEmailError(true);
-        } else {
-            setIsEmailError(false);
-        }
-    };
-
-    // 회원가입
     const handleSignUp = () => {
-        navigate('/sign-up');
+        // navigate('/login');
+        console.log('회원가입');
     };
 
-    const LoginContainer = styled('div')(({ theme }) => ({
+    const handleGoBack = () => {
+        navigate('/login');
+        console.log('뒤로가기');
+    };
+
+    const SignUpContainer = styled('div')(({ theme }) => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -42,7 +28,7 @@ const Login = () => {
     }));
 
     return (
-        <LoginContainer>
+        <SignUpContainer>
             <Box
                 sx={{
                     width: '30%',
@@ -72,22 +58,29 @@ const Login = () => {
                             textAlign: 'center',
                         }}
                     >
-                        Sign in to your account to start your emotion journal!
+                        Create an account to save your journal entries and track your emotional journey.
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', m: 5 }}>
                     <TextField
+                        label="Name"
+                        type="text"
+                        sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Name />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <TextField
                         label="Email"
-                        // placeholder="emotion@blog.com"
-                        value={emailValue}
-                        // onChange={(e) => handleEmailChange(e.target.value)}
-                        error={isEmailError}
-                        helperText={isEmailError ? 'Please enter your email address.' : ''}
                         sx={{
-                            mb: '20px',
                             width: '100%',
                             maxWidth: '100%',
                             minWidth: '50%',
+                            mb: 2,
                         }}
                         InputProps={{
                             startAdornment: (
@@ -100,6 +93,18 @@ const Login = () => {
                     <TextField
                         label="Password"
                         type="password"
+                        sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Password />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <TextField
+                        label="Confirm Password"
+                        type="password"
                         sx={{ width: '100%', maxWidth: '100%', minWidth: '50%' }}
                         InputProps={{
                             startAdornment: (
@@ -110,33 +115,34 @@ const Login = () => {
                         }}
                     />
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 1,
+                        mt: 2,
+                    }}
+                >
                     <Button
                         sx={{
-                            width: '100%',
-                            maxWidth: '100%',
-                            minWidth: '50%',
+                            flex: 1,
+                            minWidth: 'auto',
                             color: 'primary.main',
-                            fontWeight: '600',
-                            textTransform: 'none',
-                            fontSize: '1.25rem',
-                            px: 2,
+                            px: 1,
                             py: 1,
-                            mb: 1,
                             borderRadius: 2,
                             '&:hover': {
                                 backgroundColor: 'action.hover',
                             },
                         }}
-                        onClick={handleSignIn}
+                        onClick={handleGoBack}
                     >
-                        Sign In
+                        <Back />
                     </Button>
                     <Button
                         sx={{
-                            width: '100%',
-                            maxWidth: '100%',
-                            minWidth: '50%',
+                            flex: 4,
                             color: 'primary.main',
                             fontWeight: '600',
                             textTransform: 'none',
@@ -150,12 +156,12 @@ const Login = () => {
                         }}
                         onClick={handleSignUp}
                     >
-                        Sign Up
+                        Create Account
                     </Button>
                 </Box>
             </Box>
-        </LoginContainer>
+        </SignUpContainer>
     );
 };
 
-export default Login;
+export default SignUp;
