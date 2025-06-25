@@ -1,5 +1,4 @@
 
-import * as React from 'react';
 import { 
   Box, 
   Typography, 
@@ -7,13 +6,9 @@ import {
   Link,
   Stack,
   Divider,
-  Chip
 } from '@mui/material';
 import {
   Psychology,
-  Security,
-  Public,
-  SmartToy
 } from '@mui/icons-material';
 
 const Footer = () => {

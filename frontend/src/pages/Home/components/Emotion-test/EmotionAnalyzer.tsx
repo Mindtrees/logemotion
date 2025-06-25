@@ -26,6 +26,8 @@ const EmotionAnalyzer = () => {
   const [inputText, setInputText] = React.useState('');
   const [animatedValues, setAnimatedValues] = React.useState<number[]>([]);
 
+  console.log(emotions)
+
   React.useEffect(() => {
     if (emotions.length > 0) {
       setAnimatedValues(new Array(emotions.length).fill(0));
