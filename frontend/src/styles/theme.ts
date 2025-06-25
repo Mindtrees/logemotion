@@ -84,12 +84,6 @@ export const createAppTheme = (mode: 'light' | 'dark') => {
             border: `1px solid ${getSemanticColor(semantic.border.main, mode)}`,
             borderRadius: 16,
             transition: 'all 0.3s ease',
-            // '&:hover': {
-            //   transform: 'translateY(-4px)',
-            //   boxShadow: mode === 'dark' 
-            //     ? '0 10px 25px -3px rgba(0, 0, 0, 0.3)'
-            //     : '0 10px 25px -3px rgba(0, 0, 0, 0.1)',
-            // },
           }),
         },
       },
