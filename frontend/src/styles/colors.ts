@@ -46,4 +46,20 @@ export const colors = {
   warning: '#ff9800',
   error: '#f44336',
   info: '#2196f3',
+
+   // Emotion Colors
+  emotions: {
+    //Golden Yellow
+    joy: '#FFD700',
+    // Electric Cyan
+    surprise: '#00FFFF',
+    // Soft Blue
+    sadness: '#5B9BD5',
+    // Crimson Red
+    anger: '#DC143C',
+    //Shadowy Indigo
+    fear: '#2F2F4F',
+    //Mossy Green
+    disgust: '#6B8E23',
+  },
 } as const;
