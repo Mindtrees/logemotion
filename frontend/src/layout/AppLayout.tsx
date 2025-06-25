@@ -15,8 +15,7 @@ const Profile = React.lazy(() => import('../pages/Profile'));
 const AppLayout: React.FC = () => {
   return (
      <div>
-      <NavBar />
-      <main style={{ padding: '20px' }}>
+      <NavBar />=
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -27,7 +26,6 @@ const AppLayout: React.FC = () => {
             <Route path="/login" element={<Login />} />
           </Routes>
         </Suspense>
-      </main>
       <Footer />
     </div>
   );

@@ -27,7 +27,6 @@ const Footer = () => {
         color: 'white',
         pt: 8,
         pb: 3,
-        mt: 8
       }}
     >
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
