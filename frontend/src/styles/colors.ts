@@ -35,19 +35,33 @@ export const colors = {
       main: { light: '#e5e7eb', dark: '#334155' },
       light: { light: '#f3f4f6', dark: '#1e293b' },
     },
-    
-    emotion: {
-      achievement: '#10b981',
-      fatigue: '#f59e0b', 
-      stress: '#ef4444',
-      pride: '#5046e4',
+    text: {
+      primary: '#ffffff',
+      secondary: '#a0aec0',
     },
+    border: '#4a5568',
+    hover: 'rgba(255,255,255,0.1)',
   },
   
-  status: {
-    success: '#10b981',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    info: '#06b6d4',
+  // Status Colors
+  success: '#4caf50',
+  warning: '#ff9800',
+  error: '#f44336',
+  info: '#2196f3',
+
+   // Emotion Colors
+  emotions: {
+    //Golden Yellow
+    joy: '#FFD700',
+    // Electric Cyan
+    surprise: '#00FFFF',
+    // Soft Blue
+    sadness: '#5B9BD5',
+    // Crimson Red
+    anger: '#DC143C',
+    //Shadowy Indigo
+    fear: '#2F2F4F',
+    //Mossy Green
+    disgust: '#6B8E23',
   },
 } as const;
