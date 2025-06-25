@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -11,20 +11,26 @@ import {
   Avatar,
   useTheme as useMuiTheme,
   useMediaQuery,
-  Container
+  Container,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton
 } from '@mui/material';
 import {
   Edit as EditIcon,
   Article as ArticleIcon,
   Person as PersonIcon,
-  Login as LoginIcon,
   Menu as MenuIcon,
   DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon
+  LightMode as LightModeIcon,
+  Close as CloseIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCustomTheme } from '../../contexts/ThemeContext';
-import { colors } from '../../styles/colors';
+import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
@@ -33,9 +39,10 @@ const NavBar: React.FC = () => {
   const { isDarkMode, toggleTheme } = useCustomTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
   
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
     { path: '/write', label: 'Write', icon: <EditIcon /> },
@@ -43,13 +50,15 @@ const NavBar: React.FC = () => {
     { path: '/all-posts', label: 'All Posts', icon: <ArticleIcon /> },
   ];
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setUserMenuAnchor(event.currentTarget);
@@ -61,179 +70,456 @@ const NavBar: React.FC = () => {
 
   const handleNavigation = (path: string) => {
     navigate(path);
-    handleMenuClose();
+    setMobileMenuOpen(false);
   };
 
   const handleLogin = () => {
     navigate('/login');
     handleUserMenuClose();
+    setMobileMenuOpen(false);
   };
 
   const handleProfile = () => {
     navigate('/profile');
     handleUserMenuClose();
+    setMobileMenuOpen(false);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     handleUserMenuClose();
+    setMobileMenuOpen(false);
   };
 
-  const currentColors = isDarkMode ? colors.dark : colors.light;
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
-  return (
-    <AppBar 
-      position="static" 
-      elevation={0}
-      sx={{ 
-        backgroundColor: currentColors.background.navbar,
-        borderBottom: `1px solid ${currentColors.border}`,
-        color: currentColors.text.primary
+  const handleThemeToggle = () => {
+    toggleTheme();
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
+  };
+
+  const mobileMenuContent = (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: 'background.default',
       }}
     >
-      <Container maxWidth="xl">
-        <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-          <Typography 
-            variant="h5" 
-            component="div" 
-            sx={{ 
-              cursor: 'pointer',
-              fontWeight: 700,
-              color: colors.primary.main,
-              fontSize: '1.5rem'
-            }}
-            onClick={() => navigate('/')}
-          >
-            EmotionBlog
-          </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          py: 1,
+          px: 2,
+          height: 64,
+        }}
+      >
+        <IconButton
+          onClick={handleMobileMenuToggle}
+          sx={{ 
+            color: 'text.secondary',
+            backgroundColor: 'action.hover',
+            '&:hover': {
+              backgroundColor: 'action.selected',
+            }
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
 
-          {!isMobile && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item.path}
-                  startIcon={item.icon}
+      <Box sx={{ flex: 1, px: 3 }}>
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              fontWeight: 600,
+              mb: 2,
+              fontSize: '0.75rem',
+            }}
+          >
+            Navigation
+          </Typography>
+          <List sx={{ p: 0 }}>
+            {navItems.map((item) => (
+              <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+                <ListItemButton
                   onClick={() => handleNavigation(item.path)}
+                  selected={location.pathname === item.path}
                   sx={{
-                    color: location.pathname === item.path ? colors.primary.main : currentColors.text.secondary,
-                    fontWeight: location.pathname === item.path ? 600 : 400,
-                    textTransform: 'none',
-                    fontSize: '0.95rem',
-                    minWidth: 'auto',
+                    borderRadius: 3,
+                    py: 1.5,
                     px: 2,
-                    py: 1,
-                    borderRadius: 2,
-                    '&:hover': {
-                      backgroundColor: currentColors.hover,
-                      color: colors.primary.main,
+                    '&.Mui-selected': {
+                      backgroundColor: 'primary.main',
+                      color: 'primary.contrastText',
+                      '& .MuiListItemIcon-root': {
+                        color: 'primary.contrastText',
+                      },
+                      '&:hover': {
+                        backgroundColor: 'primary.dark',
+                      },
                     },
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                    transition: 'all 0.2s ease-in-out',
                   }}
                 >
-                  {item.label}
-                </Button>
-              ))}
-            </Box>
-          )}
+                  <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontWeight: location.pathname === item.path ? 600 : 500,
+                      fontSize: '1rem',
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconButton
-              onClick={toggleTheme}
-              sx={{ 
-                color: currentColors.text.secondary,
-                '&:hover': { 
-                  backgroundColor: currentColors.hover
-                }
-              }}
-            >
-              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-
-            {isLoggedIn ? (
-              <>
-                <IconButton
-                  onClick={handleUserMenuOpen}
-                  sx={{ ml: 1 }}
-                >
-                  <Avatar sx={{ width: 32, height: 32, bgcolor: colors.primary.main }}>
-                    U
-                  </Avatar>
-                </IconButton>
-                <Menu
-                  anchorEl={userMenuAnchor}
-                  open={Boolean(userMenuAnchor)}
-                  onClose={handleUserMenuClose}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                >
-                  <MenuItem onClick={handleProfile}>
-                    <PersonIcon sx={{ mr: 1, fontSize: 20 }} />
-                    Profile
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}>
-                    <LoginIcon sx={{ mr: 1, fontSize: 20 }} />
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <Button
-                startIcon={<PersonIcon />}
-                onClick={handleLogin}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              fontWeight: 600,
+              mb: 2,
+              fontSize: '0.75rem',
+            }}
+          >
+            Settings
+          </Typography>
+          <List sx={{ p: 0 }}>
+            <ListItem disablePadding sx={{ mb: 1 }}>
+              <ListItemButton
+                onClick={handleThemeToggle}
                 sx={{
-                  color: currentColors.text.secondary,
-                  textTransform: 'none',
-                  fontWeight: 500,
+                  borderRadius: 3,
+                  py: 1.5,
                   px: 2,
-                  py: 1,
-                  borderRadius: 2,
                   '&:hover': {
-                    backgroundColor: currentColors.hover,
+                    backgroundColor: 'action.hover',
                   },
+                  transition: 'all 0.2s ease-in-out',
                 }}
               >
-                User
-              </Button>
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+                </ListItemIcon>
+                <ListItemText 
+                  primary={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                  primaryTypographyProps={{
+                    fontWeight: 500,
+                    fontSize: '1rem',
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Box>
+
+        <Box>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              fontWeight: 600,
+              mb: 2,
+              fontSize: '0.75rem',
+            }}
+          >
+            Account
+          </Typography>
+          <List sx={{ p: 0 }}>
+            {isLoggedIn ? (
+              <>
+                <ListItem disablePadding sx={{ mb: 1 }}>
+                  <ListItemButton
+                    onClick={handleProfile}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 2,
+                      '&:hover': {
+                        backgroundColor: 'action.hover',
+                      },
+                      transition: 'all 0.2s ease-in-out',
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                        U
+                      </Avatar>
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary="Profile"
+                      primaryTypographyProps={{
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={handleLogout}
+                    sx={{
+                      borderRadius: 3,
+                      py: 1.5,
+                      px: 2,
+                      '&:hover': {
+                        backgroundColor: 'error.light',
+                        color: 'error.contrastText',
+                        '& .MuiListItemIcon-root': {
+                          color: 'error.contrastText',
+                        },
+                      },
+                      transition: 'all 0.2s ease-in-out',
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <LogoutIcon />
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary="Logout"
+                      primaryTypographyProps={{
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                      }}
+                    />
+                  </ListItemButton>
+                  </ListItem>
+              </>
+            ) : (
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={handleLogin}
+                  sx={{
+                    borderRadius: 5,
+                    py: 1.5,
+                    px: 2,
+                    backgroundColor: '#3A4550',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#2A3440',
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ListItemText 
+                    primary="Login"
+                    primaryTypographyProps={{
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      textAlign: 'center',
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )}
+          </List>
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  return (
+    <>
+      <AppBar 
+        position="fixed"
+        elevation={isScrolled ? 1 : 0}
+        sx={{ 
+          backgroundColor: isScrolled 
+            ? (isDarkMode ? 'rgba(18, 18, 18, 0.85)' : 'rgba(255, 255, 255, 0.85)')
+            : 'background.default',
+          backdropFilter: isScrolled ? 'blur(8px)' : 'none',
+          borderBottom: '1px solid',
+          borderBottomColor: isScrolled ? 'rgba(0, 0, 0, 0.06)' : 'divider',
+          color: 'text.primary',
+          transition: 'all 0.4s ease-out',
+          zIndex: (theme) => theme.zIndex.appBar,
+          paddingTop: 'env(safe-area-inset-top)',
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar 
+            sx={{ 
+              justifyContent: 'space-between', 
+              py: isScrolled ? 0.8 : 1,
+              transition: 'padding 0.4s ease-out',
+            }}
+          >
+            <Typography 
+              variant="h5" 
+              component="div" 
+              sx={{ 
+                cursor: 'pointer',
+                fontWeight: 700,
+                color: 'primary.main',
+                fontSize: isScrolled ? '1.4rem' : '1.5rem',
+                transition: 'font-size 0.4s ease-out',
+              }}
+              onClick={() => navigate('/')}
+            >
+              EmotionBlog
+            </Typography>
+
+            {!isMobile && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                {navItems.map((item) => (
+                  <Button
+                    key={item.path}
+                    startIcon={item.icon}
+                    onClick={() => handleNavigation(item.path)}
+                    sx={{
+                      color: location.pathname === item.path ? 'primary.main' : 'text.secondary',
+                      fontWeight: location.pathname === item.path ? 600 : 400,
+                      textTransform: 'none',
+                      fontSize: '0.95rem',
+                      minWidth: 'auto',
+                      px: 2,
+                      py: 1,
+                      borderRadius: 2,
+                      '&:hover': {
+                        backgroundColor: 'action.hover',
+                        color: 'primary.main',
+                      },
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </Box>
             )}
 
-            {isMobile && (
-              <>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {!isMobile && (
                 <IconButton
-                  onClick={handleMenuOpen}
+                  onClick={handleThemeToggle}
                   sx={{ 
-                    color: currentColors.text.secondary,
+                    color: 'text.secondary',
                     '&:hover': { 
-                      backgroundColor: currentColors.hover
+                      backgroundColor: 'action.hover'
+                    }
+                  }}
+                >
+                  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+                </IconButton>
+              )}
+
+              {!isMobile && (
+                isLoggedIn ? (
+                  <>
+                    <IconButton
+                      onClick={handleUserMenuOpen}
+                      sx={{ ml: 1 }}
+                    >
+                      <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                        U
+                      </Avatar>
+                    </IconButton>
+                    <Menu
+                      anchorEl={userMenuAnchor}
+                      open={Boolean(userMenuAnchor)}
+                      onClose={handleUserMenuClose}
+                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
+                      <MenuItem onClick={handleProfile}>
+                        <PersonIcon sx={{ mr: 1, fontSize: 20 }} />
+                        Profile
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>
+                        <LogoutIcon sx={{ mr: 1, fontSize: 20 }} />
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Button
+                    startIcon={<PersonIcon />}
+                    onClick={handleLogin}
+                    sx={{
+                      color: 'text.secondary',
+                      textTransform: 'none',
+                      fontWeight: 500,
+                      px: 2,
+                      py: 1,
+                      borderRadius: 2,
+                      '&:hover': {
+                        backgroundColor: 'action.hover',
+                      },
+                    }}
+                  >
+                    User
+                  </Button>
+                )
+              )}
+
+              {isMobile && (
+                <IconButton
+                  onClick={handleMobileMenuToggle}
+                  sx={{ 
+                    color: 'text.secondary',
+                    '&:hover': { 
+                      backgroundColor: 'action.hover'
                     }
                   }}
                 >
                   <MenuIcon />
                 </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                >
-                  {navItems.map((item) => (
-                    <MenuItem 
-                      key={item.path}
-                      onClick={() => handleNavigation(item.path)}
-                      selected={location.pathname === item.path}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {item.icon}
-                        {item.label}
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            )}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              )}
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+
+      <Box 
+        sx={{ 
+          height: isScrolled ? 80 : 96, 
+          transition: 'height 0.4s ease-out',
+          paddingTop: 'env(safe-area-inset-top)',
+        }} 
+      />
+
+      <Drawer
+        anchor="right"
+        open={mobileMenuOpen}
+        onClose={handleMobileMenuToggle}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: { xs: '80%', sm: '70%' },
+            maxWidth: '400px',
+            backgroundColor: 'background.default',
+            border: 'none',
+            boxShadow: (theme) => theme.shadows[24],
+          },
+        }}
+      >
+        {mobileMenuContent}
+      </Drawer>
+    </>
   );
 };
 
