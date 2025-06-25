@@ -1,25 +1,30 @@
-import * as React from 'react';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
+import {
+  Edit,
+  Psychology,
+  Analytics,
+  SearchOff as Search
+} from '@mui/icons-material';
 
 const Features = () => {
   const features = [
     {
-      icon: '✍️',
+      icon: <Edit />,
       title: 'Write Posts',
       description: 'Freely record your daily life and emotions, edit anytime'
     },
     {
-      icon: '💗',
+      icon: <Psychology />,
       title: 'Emotion Analysis',
       description: 'AI analyzes your writing to understand your emotional state'
     },
     {
-      icon: '📊',
+      icon: <Analytics />,
       title: 'Visualization',
       description: 'View emotion changes at a glance with charts and graphs'
     },
     {
-      icon: '🔍',
+      icon: <Search />,
       title: 'Search & Tips',
       description: 'Easily find your posts and get personalized tips by emotion'
     }
@@ -38,10 +43,14 @@ const Features = () => {
           sx={{
             fontSize: '2.25rem',
             textAlign: 'center',
-            mb: 8
+            mb:2
           }}
         >
           Key Features
+        </Typography>
+
+        <Typography variant="body1" color="text.secondary" sx={{textAlign: 'center', mb: 5, lineHeight: 1.6}}>
+            Discover the core features designed to nurture your emotional well-being and foster self-understanding.
         </Typography>
         
         <Grid container spacing={3}>
@@ -49,9 +58,19 @@ const Features = () => {
             <Grid item xs={12} sm={6} md={3} key={index}>
               <Card sx={{ height: '100%', textAlign: 'center' }}>
                 <CardContent sx={{ p: 4 }}>
-                  <Typography sx={{ fontSize: '3rem', mb: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      mb: 2,
+                      '& .MuiSvgIcon-root': {
+                        fontSize: '3rem',
+                        color: 'primary.main'
+                      }
+                    }}
+                  >
                     {feature.icon}
-                  </Typography>
+                  </Box>
                   
                   <Typography
                     variant="h6"

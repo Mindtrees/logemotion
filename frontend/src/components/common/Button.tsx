@@ -23,16 +23,32 @@ const Button: React.FC<CustomButtonProps> = ({
         return {
           backgroundColor: '#1f2937',
           color: 'white',
+          boxShadow: '0 2px 4px rgba(31, 41, 55, 0.1)',
           '&:hover': {
-            backgroundColor: '#111827'
+            backgroundColor: '#374151',
+            boxShadow: '0 4px 12px rgba(31, 41, 55, 0.15)',
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            backgroundColor: '#111827',
+            boxShadow: '0 2px 4px rgba(31, 41, 55, 0.1)'
           }
         };
       case 'secondary':
         return {
           backgroundColor: '#8b5cf6',
           color: 'white',
+          boxShadow: '0 2px 4px rgba(139, 92, 246, 0.1)',
           '&:hover': {
-            backgroundColor: '#7c3aed'
+            backgroundColor: '#a78bfa',
+            boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)',
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            backgroundColor: '#7c3aed',
+            boxShadow: '0 2px 4px rgba(139, 92, 246, 0.1)'
           }
         };
       case 'outlined':
@@ -40,10 +56,18 @@ const Button: React.FC<CustomButtonProps> = ({
           color: '#1f2937',
           borderColor: '#1f2937',
           backgroundColor: 'transparent',
+          borderWidth: '1px',
+          borderStyle: 'solid',
           '&:hover': {
-            backgroundColor: '#1f2937',
-            color: 'white',
-            borderColor: '#1f2937'
+            backgroundColor: 'rgba(31, 41, 55, 0.05)',
+            borderColor: '#374151',
+            boxShadow: '0 4px 12px rgba(31, 41, 55, 0.15)',
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            backgroundColor: 'rgba(31, 41, 55, 0.1)',
+            boxShadow: 'none'
           }
         };
       case 'text':
@@ -51,7 +75,13 @@ const Button: React.FC<CustomButtonProps> = ({
           color: '#1f2937',
           backgroundColor: 'transparent',
           '&:hover': {
-            backgroundColor: 'rgba(31, 41, 55, 0.04)'
+            backgroundColor: 'rgba(31, 41, 55, 0.08)',
+            color: '#111827',
+            transform: 'translateY(-1px)'
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            backgroundColor: 'rgba(31, 41, 55, 0.12)'
           }
         };
       default:
@@ -97,7 +127,7 @@ const Button: React.FC<CustomButtonProps> = ({
         ...getSizeStyles(size),
         textTransform: 'none',
         borderRadius: 2,
-        transition: 'all 0.3s ease',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         ...sx
       }}
       {...props}

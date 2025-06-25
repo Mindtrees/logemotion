@@ -3,23 +3,22 @@ import {
   Box, 
   Typography, 
   Grid, 
-  Link, 
-  IconButton, 
+  Link,
   Stack,
   Divider,
   Chip
 } from '@mui/material';
+import {
+  Psychology,
+  Security,
+  Public,
+  SmartToy
+} from '@mui/icons-material';
 
 const Footer = () => {
   const quickLinks = ['Get Started', 'Features', 'How it Works', 'Pricing', 'About Us'];
   const resources = ['Blog', 'Help Center', 'Privacy Policy', 'Terms of Service', 'Contact'];
-  const socials = [
-    { icon: '📧', label: 'Email' },
-    { icon: '📱', label: 'Twitter' },
-    { icon: '📘', label: 'Facebook' },
-    { icon: '📸', label: 'Instagram' }
-  ];
-
+  
   return (
     <Box
       component="footer"
@@ -28,14 +27,19 @@ const Footer = () => {
         color: 'white',
         pt: 8,
         pb: 3,
-        mt: 10
+        mt: 8
       }}
     >
       <Box sx={{ maxWidth: 1200, mx: 'auto', px: 3 }}>
         <Grid container spacing={5} sx={{ mb: 5 }}>
           <Grid item xs={12} md={3}>
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
-              <Typography sx={{ fontSize: '1.75rem' }}>💭</Typography>
+              <Psychology 
+                sx={{ 
+                  fontSize: '2rem',
+                  color: '#8b5cf6'
+                }} 
+              />
               <Typography
                 variant="h5"
                 sx={{
@@ -143,24 +147,6 @@ const Footer = () => {
               Stay updated with our latest features and emotional wellness tips.
             </Typography>
             
-            <Stack direction="row" spacing={1.5} sx={{ mb: 3 }}>
-              {socials.map((social, index) => (
-                <IconButton
-                  key={index}
-                  sx={{
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    border: '1px solid rgba(139, 92, 246, 0.3)',
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: '#8b5cf6',
-                      transform: 'translateY(-2px)'
-                    }
-                  }}
-                >
-                  <Typography>{social.icon}</Typography>
-                </IconButton>
-              ))}
-            </Stack>
           </Grid>
         </Grid>
 
@@ -177,41 +163,50 @@ const Footer = () => {
               color: 'rgba(255, 255, 255, 0.6)'
             }}
           >
-            © 2024 EmotionBlog. We value your emotions ❤️
+            © 2024 EmotionBlog. All rights reserved.
           </Typography>
           
           <Stack direction="row" spacing={3}>
             <Chip
-              icon={<span style={{ fontSize: '0.75rem' }}>🔒</span>}
+              icon={<Security sx={{ fontSize: '1rem' }} />}
               label="Your data is secure"
               size="small"
               sx={{
                 backgroundColor: 'transparent',
                 color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
-                fontSize: '0.75rem'
+                fontSize: '0.75rem',
+                '& .MuiChip-icon': {
+                  color: 'rgba(255, 255, 255, 0.6)'
+                }
               }}
             />
             <Chip
-              icon={<span style={{ fontSize: '0.75rem' }}>🌍</span>}
+              icon={<Public sx={{ fontSize: '1rem' }} />}
               label="Available worldwide"
               size="small"
               sx={{
                 backgroundColor: 'transparent',
                 color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
-                fontSize: '0.75rem'
+                fontSize: '0.75rem',
+                '& .MuiChip-icon': {
+                  color: 'rgba(255, 255, 255, 0.6)'
+                }
               }}
             />
             <Chip
-              icon={<span style={{ fontSize: '0.75rem' }}>🤖</span>}
+              icon={<SmartToy sx={{ fontSize: '1rem' }} />}
               label="AI-Powered"
               size="small"
               sx={{
                 backgroundColor: 'transparent',
                 color: 'rgba(255, 255, 255, 0.6)',
                 border: 'none',
-                fontSize: '0.75rem'
+                fontSize: '0.75rem',
+                '& .MuiChip-icon': {
+                  color: 'rgba(255, 255, 255, 0.6)'
+                }
               }}
             />
           </Stack>

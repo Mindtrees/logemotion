@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -23,7 +23,6 @@ import {
   Edit as EditIcon,
   Article as ArticleIcon,
   Person as PersonIcon,
-  Login as LoginIcon,
   Menu as MenuIcon,
   DarkMode as DarkModeIcon,
   LightMode as LightModeIcon,
@@ -43,12 +42,23 @@ const NavBar: React.FC = () => {
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navItems = [
     { path: '/write', label: 'Write', icon: <EditIcon /> },
     { path: '/my-posts', label: 'My Posts', icon: <ArticleIcon /> },
     { path: '/all-posts', label: 'All Posts', icon: <ArticleIcon /> },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setUserMenuAnchor(event.currentTarget);
@@ -298,7 +308,7 @@ const NavBar: React.FC = () => {
                       }}
                     />
                   </ListItemButton>
-                </ListItem>
+                  </ListItem>
               </>
             ) : (
               <ListItem disablePadding>
@@ -337,17 +347,29 @@ const NavBar: React.FC = () => {
   return (
     <>
       <AppBar 
-        position="static" 
-        elevation={0}
+        position="fixed"
+        elevation={isScrolled ? 1 : 0}
         sx={{ 
-          backgroundColor: 'background.default',
+          backgroundColor: isScrolled 
+            ? (isDarkMode ? 'rgba(18, 18, 18, 0.85)' : 'rgba(255, 255, 255, 0.85)')
+            : 'background.default',
+          backdropFilter: isScrolled ? 'blur(8px)' : 'none',
           borderBottom: '1px solid',
-          borderBottomColor: 'divider',
-          color: 'text.primary'
+          borderBottomColor: isScrolled ? 'rgba(0, 0, 0, 0.06)' : 'divider',
+          color: 'text.primary',
+          transition: 'all 0.4s ease-out',
+          zIndex: (theme) => theme.zIndex.appBar,
+          paddingTop: 'env(safe-area-inset-top)',
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
+          <Toolbar 
+            sx={{ 
+              justifyContent: 'space-between', 
+              py: isScrolled ? 0.8 : 1,
+              transition: 'padding 0.4s ease-out',
+            }}
+          >
             <Typography 
               variant="h5" 
               component="div" 
@@ -355,7 +377,8 @@ const NavBar: React.FC = () => {
                 cursor: 'pointer',
                 fontWeight: 700,
                 color: 'primary.main',
-                fontSize: '1.5rem'
+                fontSize: isScrolled ? '1.4rem' : '1.5rem',
+                transition: 'font-size 0.4s ease-out',
               }}
               onClick={() => navigate('/')}
             >
@@ -472,7 +495,14 @@ const NavBar: React.FC = () => {
         </Container>
       </AppBar>
 
-      {/* 모바일 슬라이드 메뉴 */}
+      <Box 
+        sx={{ 
+          height: isScrolled ? 80 : 96, 
+          transition: 'height 0.4s ease-out',
+          paddingTop: 'env(safe-area-inset-top)',
+        }} 
+      />
+
       <Drawer
         anchor="right"
         open={mobileMenuOpen}

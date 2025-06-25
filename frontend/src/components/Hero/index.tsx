@@ -1,7 +1,9 @@
 import { Box, Typography, Stack } from '@mui/material';
 import Button from '../common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -22,7 +24,7 @@ const Hero = () => {
             lineHeight: 1.2
           }}
         >
-          Record and Analyze Your Emotions
+          How MindTrees Helps You Grow
         </Typography>
         
         <Typography
@@ -44,7 +46,7 @@ const Hero = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Button variant="primary" size="large">
+          <Button variant="primary" size="large" onClick={() => navigate('/login')}>
             Get Started
           </Button>
         </Stack>
