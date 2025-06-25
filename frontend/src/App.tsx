@@ -8,7 +8,7 @@ const AppLayout = React.lazy(() => import('./layout/AppLayout'));
 function App() {
   return (
     <CustomThemeProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Suspense fallback={<Loading />}>
           <AppLayout />
         </Suspense>
