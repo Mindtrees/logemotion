@@ -10,7 +10,7 @@ import {
   Alert,
   CircularProgress,
   Fade,
-  Divider
+  Divider,
 } from '@mui/material';
 import {
   Psychology,
@@ -18,8 +18,8 @@ import {
   InsertEmoticon,
   Analytics
 } from '@mui/icons-material';
-import Button from '../common/Button';
-import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
+import { useEmotionAnalysis } from '../../../../hooks/UseEmotionAnalysis';
+import Button from '../../../../components/common/Button';
 
 const EmotionAnalyzer = () => {
   const { emotions, isLoading, error, analyze, reset } = useEmotionAnalysis();
