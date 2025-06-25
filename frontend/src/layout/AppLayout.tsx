@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Loading from '../components/Loading';
-import NavBar from '../components/Navbar';
-import Footer from '../components/Footer';
+import React, { Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
+import Loading from "../components/Loading";
+import NavBar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Home = React.lazy(() => import('../pages/Home'));
 const Write = React.lazy(() => import('../pages/Write'));
@@ -16,7 +16,6 @@ const AppLayout: React.FC = () => {
     return (
         <div>
             <NavBar />
-            <main style={{ padding: '20px' }}>
                 <Suspense fallback={<Loading />}>
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -28,7 +27,6 @@ const AppLayout: React.FC = () => {
                         <Route path="/sign-up" element={<SignUp />} />
                     </Routes>
                 </Suspense>
-            </main>
             <Footer />
         </div>
     );
