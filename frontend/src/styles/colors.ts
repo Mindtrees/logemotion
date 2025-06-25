@@ -35,6 +35,7 @@ export const colors = {
       main: { light: '#e5e7eb', dark: '#334155' },
       light: { light: '#f3f4f6', dark: '#1e293b' },
     },
+
       emotions: {
         joy: '#FFD700',
         surprise: '#00FFFF',
@@ -52,4 +53,5 @@ export const colors = {
     error: '#f44336',
     info: '#2196f3',
   }
+
 } as const;
