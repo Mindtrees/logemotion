@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Container, Grid, Box, Snackbar, Alert, Stack } from '@mui/material';
+import { Container, Grid, Box, Snackbar, Alert, Stack} from '@mui/material';
 import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
 import { EmotionAnalysisResult } from '../../models/write';
-import { colors } from '../../styles/colors';
 import { EmotionAnalysisResponse } from '../../models/post';
 import { sampleEmotions } from './components/SampleEmotions';
+import { colors } from '../../styles/colors';
+
 
 
 
@@ -31,7 +32,7 @@ const Write: React.FC = () => {
       .map(([emotion, normalizedScore]) => ({
         label: emotion,
         percentage: Math.round(normalizedScore * 100),
-        color: colors.emotions[emotion as keyof typeof colors.emotions] || '#5C6BC0'
+        color: colors.semantic.emotions[emotion as keyof typeof colors.semantic.emotions] || '#5C6BC0'
       }))
       .sort((a, b) => b.percentage - a.percentage); 
   };
@@ -118,6 +119,7 @@ const Write: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+      <Box sx={{ height: '1000px' }} />
     </Container>
   );
 };

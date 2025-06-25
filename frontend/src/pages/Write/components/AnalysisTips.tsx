@@ -4,9 +4,10 @@ import {
   Typography, 
   Paper,
 } from '@mui/material';
-import { colors } from '../../../styles/colors';
+
 import { Lightbulb as LightbulbIcon } from '@mui/icons-material';
 import { EmotionAnalysisResult } from '../../../models/write';
+import { colors } from '../../../styles/colors';
 
 interface AnalysisTipsProps {
   tip: string;
@@ -44,7 +45,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ tip, isVisible, emotions })
         >
           <LightbulbIcon 
             sx={{ 
-              color: colors.warning,
+              color: colors.semantic.emotions.joy,
               fontSize: '1.5rem'
             }} 
           />
