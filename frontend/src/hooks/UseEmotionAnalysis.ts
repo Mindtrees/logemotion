@@ -5,8 +5,14 @@ import { TextAnalyzeEmotion } from "../api/emotionApi";
 export const useEmotionAnalysis = () => {
   const mutation = useMutation({
     mutationFn: TextAnalyzeEmotion,
-    onSuccess: () => {
-      console.log("Text emotion analysis success");
+    onSuccess: (data) => {
+      console.log("Raw API Response:", data);
+      console.log("emotions_normalized:", data.emotions_normalized);
+      
+      if (data) {
+        const transformedData = transformEmotionData(data);
+        console.log("Transformed emotions:", transformedData);
+      }
     },
   }); 
 
