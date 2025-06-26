@@ -44,7 +44,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ tip, isVisible, emotions })
         >
           <LightbulbIcon 
             sx={{ 
-              color: colors.warning,
+              color: colors.status.warning,
               fontSize: '1.5rem'
             }} 
           />
