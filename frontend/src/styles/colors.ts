@@ -37,16 +37,16 @@ export const colors = {
     },
 
       emotions: {
-        joy: '#FFD700',
-        surprise: '#00FFFF',
-        sadness: '#5B9BD5',
-        anger: '#DC143C',
-        fear: '#2F2F4F',
-        disgust: '#6B8E23',
+        joy: '#FF8A65',
+        surprise: '#B39DDB',
+        sadness: '#64B5F6',
+        anger: '#EF5350',
+        fear: '#81C784',
+        disgust: '#FFB74D',
     },
     hover: 'rgba(255,255,255,0.1)',
   },
-  
+
   status:{ 
     success: '#4caf50',
     warning: '#ff9800',
