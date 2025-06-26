@@ -108,7 +108,6 @@ const NavBar: React.FC = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  // 사용자 표시 텍스트 가져오기
   const getUserDisplayText = () => {
     if (user?.displayName) {
       return user.displayName.charAt(0).toUpperCase();
