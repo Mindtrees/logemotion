@@ -6,30 +6,27 @@ import {
 } from '@mui/material';
 import { Lightbulb as LightbulbIcon } from "@mui/icons-material";
 import { EmotionAnalysisRes } from '../../../models/api';
+import { EmotionResult } from '../../../models';
 import { getRandomTipForEmotion } from '../../../utils/emotionTips';
 import { colors } from "../../../styles/colors";
 
 interface AnalysisTipsProps {
   analysisResult: EmotionAnalysisRes | null;
+  emotions: EmotionResult[];
 }
 
-const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult }) => {
+const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions }) => {
   
   const tip = useMemo(() => {
-    if (!analysisResult) return "Write about your emotions today";
+    if (!analysisResult || emotions.length === 0) return "Write about your emotions today";
     
-    const emotionData = analysisResult.emotions_normalized || analysisResult.emotion_scores || {};
-    const emotionEntries = Object.entries(emotionData);
-    
-    if (emotionEntries.length === 0) return "Write about your emotions today";
-    
-    const [primaryEmotionName] = emotionEntries
-      .reduce((prev, current) => prev[1] > current[1] ? prev : current);
+    // Use the first emotion from the sorted transformed data (highest percentage)
+    const primaryEmotionName = emotions[0].name;
     
     return getRandomTipForEmotion(primaryEmotionName);
-  }, [analysisResult]);
+  }, [analysisResult, emotions]);
 
-  const hasAnalysis = !!analysisResult;
+  const hasAnalysis = !!analysisResult && emotions.length > 0;
   const isDefaultTip = tip === "Write about your emotions today";
 
   return (

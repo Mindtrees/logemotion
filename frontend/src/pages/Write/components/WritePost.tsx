@@ -12,6 +12,8 @@ import {
 import { styled } from '@mui/material/styles';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { EmotionAnalysisResponse } from '../../../models';
 
 interface WritePostProps {
   title: string;
@@ -23,6 +25,7 @@ interface WritePostProps {
   error: Error | null;
   analyzeText: (text: string) => void;
   reset: () => void;
+  rawData: EmotionAnalysisResponse | null;
 }
 
 const AppleTextField = styled(TextField)(({ theme }) => ({
@@ -67,6 +70,8 @@ const WritePost: React.FC<WritePostProps> = ({
   loading,
   error,
   analyzeText,
+  reset,
+  rawData,
 }) => {
 
   const handleSave = () => {
@@ -78,7 +83,14 @@ const WritePost: React.FC<WritePostProps> = ({
     analyzeText(combinedText);
   };
 
+  const handleReset = () => {
+    reset();
+    setTitle('');
+    setContent('');
+  };
+
   const isFormValid = content.trim();
+  const hasAnalysisData = !!rawData;
 
   return (
     <Grid 
@@ -215,9 +227,9 @@ const WritePost: React.FC<WritePostProps> = ({
             <Button
               variant="contained"
               size="large"
-              startIcon={<AnalyticsIcon />}
-              onClick={handleAnalyze}
-              disabled={!isFormValid || loading}
+              startIcon={hasAnalysisData ? <RefreshIcon /> : <AnalyticsIcon />}
+              onClick={hasAnalysisData ? handleReset : handleAnalyze}
+              disabled={(!isFormValid && !hasAnalysisData) || loading}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -226,13 +238,13 @@ const WritePost: React.FC<WritePostProps> = ({
                 borderRadius: 1,
                 fontSize: '1rem',
                 minWidth: '200px',
-                backgroundColor: '#1c1c1e',
+                backgroundColor: hasAnalysisData ? '#5046e4' : '#1c1c1e',
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: '#2c2c2e',
+                  backgroundColor: hasAnalysisData ? '#3832a0' : '#2c2c2e',
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.2)',
                   transform: 'translateY(-1px)',
                 },
@@ -248,7 +260,7 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              {loading ? 'Analyzing...' : 'Analyze Emotions'}
+              {loading ? 'Analyzing...' : hasAnalysisData ? 'Reset' : 'Analyze Emotions'}
             </Button>
             
             <Button

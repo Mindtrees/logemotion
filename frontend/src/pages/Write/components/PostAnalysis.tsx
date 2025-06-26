@@ -5,35 +5,14 @@ import {
   Paper, 
   Stack
 } from '@mui/material';
-import { colors } from '../../../styles/colors';
-import { EmotionAnalysisRes } from '../../../models/api';
+import { EmotionResult } from '../../../models';
 
 interface PostAnalysisProps {
-  analysisResult: EmotionAnalysisRes | null;
+  emotions: EmotionResult[];
 }
 
-const PostAnalysis: React.FC<PostAnalysisProps> = ({ analysisResult }) => {
+const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
   
-  const emotionColorMap: { [key: string]: string } = {
-    'joy': colors.semantic.emotions.joy,
-    'surprise': colors.semantic.emotions.surprise,
-    'sadness': colors.semantic.emotions.sadness,
-    'anger': colors.semantic.emotions.anger,
-    'fear': colors.semantic.emotions.fear,
-    'disgust': colors.semantic.emotions.disgust,
-  };
-
-  const emotions = analysisResult 
-    ? Object.entries(analysisResult.emotions_normalized)
-        .map(([emotion, normalizedScore]) => ({
-          name: emotion,
-          label: emotion.charAt(0).toUpperCase() + emotion.slice(1),
-          percentage: Math.round((normalizedScore as number) * 100),
-          color: emotionColorMap[emotion]
-        }))
-        .sort((a, b) => b.percentage - a.percentage)
-    : [];
-
   return (
     <Paper 
       elevation={0}
@@ -103,7 +82,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ analysisResult }) => {
                       }
                     }}
                   >
-                    {emotion.label}
+                    {emotion.name.charAt(0).toUpperCase() + emotion.name.slice(1)}
                   </Typography>
                   <Typography 
                     variant="body2" 
@@ -120,7 +99,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ analysisResult }) => {
                       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
                     }}
                   >
-                    {emotion.percentage}%
+                    {emotion.value}%
                   </Typography>
                 </Box>
                 
@@ -140,7 +119,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ analysisResult }) => {
                   <Box
                     sx={{
                       height: '100%',
-                      width: `${emotion.percentage}%`,
+                      width: `${emotion.value}%`,
                       background: `linear-gradient(135deg, ${emotion.color}F0, ${emotion.color}E0)`,
                       transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                       borderRadius: 6,

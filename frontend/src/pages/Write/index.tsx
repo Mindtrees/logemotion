@@ -17,9 +17,6 @@ const Write: React.FC = () => {
   
   const combinedText = `${title}. ${content}`;
 
-  console.log(rawData);
-  
-
   return (
     <Box 
       sx={{
@@ -53,6 +50,7 @@ const Write: React.FC = () => {
             error={error}
             analyzeText={analyze}
             reset={reset}
+            rawData={rawData}
           />
           
           <Grid 
@@ -79,8 +77,8 @@ const Write: React.FC = () => {
                 spacing={{ xs: 2, sm: 2.5, md: 3 }}
                 sx={{ height: '100%' }}
               >
-                <PostAnalysis analysisResult={rawData} />
-                <AnalysisTips analysisResult={rawData} />
+                <PostAnalysis emotions={emotions} />
+                <AnalysisTips emotions={emotions} analysisResult={null} />
               </Stack>
             </Box>
           </Grid>
