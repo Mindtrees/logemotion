@@ -3,6 +3,7 @@ import { AppBar,  Toolbar,  Typography,  Button,  Box,  IconButton,  Menu,  Menu
 import { Edit as EditIcon,  Article as ArticleIcon, Person as PersonIcon, Menu as MenuIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon, Close as CloseIcon, Logout as LogoutIcon} from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 const NavBar: React.FC = () => {
   const navigate = useNavigate();
@@ -10,9 +11,9 @@ const NavBar: React.FC = () => {
   const muiTheme = useMuiTheme();
   const { isDarkMode, toggleTheme } = useCustomTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
+  const { user, logout } = useAuthContext(); 
   
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -21,6 +22,8 @@ const NavBar: React.FC = () => {
     { path: '/my-posts', label: 'My Posts', icon: <ArticleIcon /> },
     { path: '/all-posts', label: 'All Posts', icon: <ArticleIcon /> },
   ];
+
+  const isLoggedIn = !!user;  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,11 +66,15 @@ const NavBar: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    handleUserMenuClose();
-    setMobileMenuOpen(false);
-  };
+  const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/');
+        } catch (err) {
+            console.error('Logout failed:', err);
+        }
+        setMobileMenuOpen(false);
+    };
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);

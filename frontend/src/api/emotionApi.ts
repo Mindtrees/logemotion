@@ -1,24 +1,7 @@
+import { EmotionAnalysisResponse, EmotionResult, EmotionColors, EmotionNames } from '../models';
+
 const API_KEY = process.env.REACT_APP_TWINWORD_API_KEY;
 const API_HOST = process.env.REACT_APP_TWINWORD_API_HOST;
-
-export interface EmotionAnalysisResponse {
-  emotion_scores: {
-    anger: number;
-    fear: number;
-    joy: number;
-    sadness: number;
-    analytical: number;
-    confident: number;
-    tentative: number;
-  };
-  emotion: string;
-}
-
-export interface EmotionResult {
-  name: string;
-  value: number;
-  color: string;
-}
 
 export const analyzeEmotion = async (text: string): Promise<EmotionResult[]> => {
   if (!API_KEY) {
@@ -60,33 +43,21 @@ export const analyzeEmotion = async (text: string): Promise<EmotionResult[]> => 
 };
 
 const transformEmotionData = (data: EmotionAnalysisResponse): EmotionResult[] => {
-  const emotionColors = {
-    joy: '#FFF3B8',
-    anger: '#FFB3BA',
-    fear: '#FFB68A',
-    sadness: '#D8B7FF',
-    analytical: '#B8E6B8',
-    confident: '#B8D4FF',
-    tentative: '#FFCCF2'
-  };
-
-  const emotionNames = {
-    joy: 'Joy',
-    anger: 'Anger', 
-    fear: 'Fear',
-    sadness: 'Sadness',
-    analytical: 'Analytical',
-    confident: 'Confident',
-    tentative: 'Tentative'
-  };
-
   return Object.entries(data.emotion_scores)
     .map(([key, value]) => ({
-      name: emotionNames[key as keyof typeof emotionNames],
-      value: Math.round(value * 100),
-      color: emotionColors[key as keyof typeof emotionColors]
+      name: EmotionNames[key as keyof typeof EmotionNames],
+      value: Math.round(Number(value) * 100),
+      color: EmotionColors[key as keyof typeof EmotionColors]
     }))
     .filter(emotion => emotion.value > 0)
     .sort((a, b) => b.value - a.value)
     .slice(0, 4);
+};
+
+export const getDominantEmotion = (emotions: EmotionResult[]): string => {
+  return emotions.length > 0 ? emotions[0].name : 'Neutral';
+};
+
+export const getEmotionByName = (emotions: EmotionResult[], name: string): EmotionResult | undefined => {
+  return emotions.find(emotion => emotion.name.toLowerCase() === name.toLowerCase());
 };

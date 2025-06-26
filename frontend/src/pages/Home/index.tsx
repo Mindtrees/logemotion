@@ -1,7 +1,7 @@
 import ExamplePosts from "./components/ExamplePosts"
 import Demo from "./components/Demo"
 import Features from "./components/Features"
-import Hero from "./components/Hero"
+import Hero from "./components/Hero" 
 import EmotionAnalyzer from "./components/Emotion-test/EmotionAnalyzer"
 
 const Home = () => (
@@ -9,8 +9,8 @@ const Home = () => (
     <Hero />
     <Features />
     <Demo />
-    <ExamplePosts />
-    <EmotionAnalyzer />
+    <ExamplePosts />  
+    {/* <EmotionAnalyzer /> */}
   </div>
 )
 

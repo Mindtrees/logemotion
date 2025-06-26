@@ -1,51 +1,39 @@
-import { useState, useCallback } from 'react';
-import { analyzeEmotion, EmotionResult } from '../api/emotionApi';
+import { useState } from 'react';
 
-interface UseEmotionAnalysisReturn {
-  emotions: EmotionResult[];
-  isLoading: boolean;
-  error: string | null;
-  analyze: (text: string) => Promise<void>;
-  reset: () => void;
+interface EmotionResult {
+  name: string;
+  value: number;
+  color: string;
 }
 
-export const useEmotionAnalysis = (): UseEmotionAnalysisReturn => {
+export const useEmotionAnalysis = () => {
   const [emotions, setEmotions] = useState<EmotionResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const analyze = useCallback(async (text: string) => {
-    if (!text.trim()) {
-      setError('Please enter text to analyze.');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const results = await analyzeEmotion(text);
-      setEmotions(results);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred during emotion analysis.';
-      setError(errorMessage);
-      setEmotions([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const reset = useCallback(() => {
-    setEmotions([]);
-    setError(null);
-    setIsLoading(false);
-  }, []);
 
   return {
     emotions,
     isLoading,
     error,
-    analyze,
-    reset
+    analyze: async (text: string) => {
+      console.log('Analyzing:', text);
+      setIsLoading(true);
+      setTimeout(() => {
+        setEmotions([{ name: 'Joy', value: 80, color: '#FFF3B8' }]);
+        setIsLoading(false);
+      }, 1000);
+    },
+    reset: () => {
+      setEmotions([]);
+      setError(null);
+    },
+    isSaving: false,
+    saveError: null,
+    saveText: async () => 'test-id',
+    userTexts: [],
+    textsLoading: false,
+    textsError: null,
+    deleteText: async () => true,
+    updateText: async () => true
   };
 };

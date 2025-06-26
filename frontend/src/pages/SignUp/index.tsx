@@ -1,18 +1,77 @@
-import { Person as Name, Email, Lock as Password, ArrowBack as Back } from '@mui/icons-material';
-import { Box, Button, InputAdornment, styled, TextField, Typography } from '@mui/material';
+import { Person as Name, Email, Lock as Password, ArrowBack as Back, Google } from '@mui/icons-material';
+import { Box, Button, InputAdornment, styled, TextField, Typography, Alert, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const { signup, loginWithGoogle, loading, error } = useAuthContext();
 
-    const handleSignUp = () => {
-        // navigate('/login');
-        console.log('회원가입');
+    const [nameValue, setNameValue] = useState<string>('');
+    const [emailValue, setEmailValue] = useState<string>('');
+    const [passwordValue, setPasswordValue] = useState<string>('');
+    const [confirmPasswordValue, setConfirmPasswordValue] = useState<string>('');
+    
+    const [nameError, setNameError] = useState<boolean>(false);
+    const [emailError, setEmailError] = useState<boolean>(false);
+    const [passwordError, setPasswordError] = useState<boolean>(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
+
+    const handleSignUp = async () => {
+        setNameError(false);
+        setEmailError(false);
+        setPasswordError(false);
+        setConfirmPasswordError(false);
+
+        let hasError = false;
+
+        if (!nameValue.trim()) {
+            setNameError(true);
+            hasError = true;
+        }
+
+        if (!emailValue.trim()) {
+            setEmailError(true);
+            hasError = true;
+        }
+
+        if (!passwordValue.trim()) {
+            setPasswordError(true);
+            hasError = true;
+        }
+
+        if (!confirmPasswordValue.trim() || passwordValue !== confirmPasswordValue) {
+            setConfirmPasswordError(true);
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        try {
+            await signup({
+                name: nameValue,
+                email: emailValue,
+                password: passwordValue,
+                confirmPassword: confirmPasswordValue
+            });
+            navigate('/');
+        } catch (err) {
+            console.error('Signup failed:', err);
+        }
+    };
+
+    const handleGoogleSignUp = async () => {
+        try {
+            await loginWithGoogle();
+            navigate('/');
+        } catch (err) {
+            console.error('Google signup failed:', err);
+        }
     };
 
     const handleGoBack = () => {
         navigate('/login');
-        console.log('뒤로가기');
     };
 
     const SignUpContainer = styled('div')(({ theme }) => ({
@@ -22,9 +81,6 @@ const SignUp = () => {
         width: '100%',
         height: 'auto',
         marginTop: '50px',
-        // [theme.breakpoints.down('md')]: {
-        //     width: '90%',
-        // },
     }));
 
     return (
@@ -53,7 +109,7 @@ const SignUp = () => {
                         sx={{
                             width: '100%',
                             minWidth: '30%',
-                            ccolor: 'text.secondary',
+                            color: 'text.secondary',
                             mt: '10px',
                             textAlign: 'center',
                         }}
@@ -61,10 +117,22 @@ const SignUp = () => {
                         Create an account to save your journal entries and track your emotional journey.
                     </Typography>
                 </Box>
+
+                {error && (
+                    <Box sx={{ m: 2 }}>
+                        <Alert severity="error">{error}</Alert>
+                    </Box>
+                )}
+
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', m: 5 }}>
                     <TextField
                         label="Name"
                         type="text"
+                        value={nameValue}
+                        onChange={(e) => setNameValue(e.target.value)}
+                        error={nameError}
+                        helperText={nameError ? 'Please enter your name.' : ''}
+                        disabled={loading}
                         sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
                         InputProps={{
                             startAdornment: (
@@ -76,6 +144,11 @@ const SignUp = () => {
                     />
                     <TextField
                         label="Email"
+                        value={emailValue}
+                        onChange={(e) => setEmailValue(e.target.value)}
+                        error={emailError}
+                        helperText={emailError ? 'Please enter your email address.' : ''}
+                        disabled={loading}
                         sx={{
                             width: '100%',
                             maxWidth: '100%',
@@ -93,6 +166,11 @@ const SignUp = () => {
                     <TextField
                         label="Password"
                         type="password"
+                        value={passwordValue}
+                        onChange={(e) => setPasswordValue(e.target.value)}
+                        error={passwordError}
+                        helperText={passwordError ? 'Please enter your password.' : ''}
+                        disabled={loading}
                         sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
                         InputProps={{
                             startAdornment: (
@@ -105,6 +183,11 @@ const SignUp = () => {
                     <TextField
                         label="Confirm Password"
                         type="password"
+                        value={confirmPasswordValue}
+                        onChange={(e) => setConfirmPasswordValue(e.target.value)}
+                        error={confirmPasswordError}
+                        helperText={confirmPasswordError ? 'Passwords do not match.' : ''}
+                        disabled={loading}
                         sx={{ width: '100%', maxWidth: '100%', minWidth: '50%' }}
                         InputProps={{
                             startAdornment: (
@@ -115,15 +198,53 @@ const SignUp = () => {
                         }}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: 1,
-                        mt: 2,
-                    }}
-                >
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: 2, mt: 2 }}>
+                    <Button
+                        sx={{
+                            width: '100%',
+                            color: 'primary.main',
+                            fontWeight: '600',
+                            textTransform: 'none',
+                            fontSize: '1.25rem',
+                            px: 2,
+                            py: 1,
+                            borderRadius: 2,
+                            '&:hover': {
+                                backgroundColor: 'action.hover',
+                            },
+                        }}
+                        onClick={handleSignUp}
+                        disabled={loading}
+                    >
+                        {loading ? 'Creating Account...' : 'Create Account'}
+                    </Button>
+
+                    <Divider sx={{ width: '100%', my: 1 }}>OR</Divider>
+
+                    <Button
+                        sx={{
+                            width: '100%',
+                            color: 'primary.main',
+                            fontWeight: '600',
+                            textTransform: 'none',
+                            fontSize: '1.25rem',
+                            px: 2,
+                            py: 1,
+                            borderRadius: 2,
+                            border: '1px solid',
+                            borderColor: 'primary.main',
+                            '&:hover': {
+                                backgroundColor: 'action.hover',
+                            },
+                        }}
+                        onClick={handleGoogleSignUp}
+                        disabled={loading}
+                        startIcon={<Google />}
+                    >
+                        Continue with Google
+                    </Button>
+
                     <Button
                         sx={{
                             flex: 1,
@@ -137,26 +258,10 @@ const SignUp = () => {
                             },
                         }}
                         onClick={handleGoBack}
+                        disabled={loading}
+                        startIcon={<Back />}
                     >
-                        <Back />
-                    </Button>
-                    <Button
-                        sx={{
-                            flex: 4,
-                            color: 'primary.main',
-                            fontWeight: '600',
-                            textTransform: 'none',
-                            fontSize: '1.25rem',
-                            px: 2,
-                            py: 1,
-                            borderRadius: 2,
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                            },
-                        }}
-                        onClick={handleSignUp}
-                    >
-                        Create Account
+                        Back to Login
                     </Button>
                 </Box>
             </Box>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -11,28 +11,48 @@ import {
   CircularProgress,
   Fade,
   Divider,
+  Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import {
   Psychology,
   TextSnippet,
   InsertEmoticon,
-  Analytics
+  Analytics,
+  Save as SaveIcon,
+  CheckCircle as CheckIcon
 } from '@mui/icons-material';
-import { useEmotionAnalysis } from '../../../../hooks/UseEmotionAnalysis';
+import { useAuthContext } from '../../../../contexts/AuthContext';
+import { EmotionResult } from '../../../../models';
 import Button from '../../../../components/common/Button';
 
 const EmotionAnalyzer = () => {
-  const { emotions, isLoading, error, analyze, reset } = useEmotionAnalysis();
-  const [inputText, setInputText] = React.useState('');
-  const [animatedValues, setAnimatedValues] = React.useState<number[]>([]);
+  const { user } = useAuthContext();
+  const { 
+    emotions, 
+    isLoading, 
+    error, 
+    analyze, 
+    reset,
+    isSaving,
+    saveError,
+    saveText
+  } = useEmotionAnalysis();
+  
+  const [inputText, setInputText] = useState('');
+  const [animatedValues, setAnimatedValues] = useState<number[]>([]);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [textTitle, setTextTitle] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
-  console.log(emotions)
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (emotions.length > 0) {
       setAnimatedValues(new Array(emotions.length).fill(0));
       
-      emotions.forEach((emotion, index) => {
+      emotions.forEach((emotion: EmotionResult, index: number) => {
         setTimeout(() => {
           animateBar(index, emotion.value);
         }, index * 200);
@@ -70,9 +90,33 @@ const EmotionAnalyzer = () => {
     reset();
     setInputText('');
     setAnimatedValues([]);
+    setTextTitle('');
   };
 
-  const getEmotionAdvice = (emotions: any[]) => {
+  const handleSaveClick = () => {
+    if (!user) {
+      alert('Please login to save your analysis.');
+      return;
+    }
+    setSaveDialogOpen(true);
+  };
+
+  const handleSaveConfirm = async () => {
+    const savedId = await saveText(inputText, textTitle || undefined);
+    
+    if (savedId) {
+      setSaveSuccess(true);
+      setSaveDialogOpen(false);
+      setTextTitle('');
+    }
+  };
+
+  const handleSaveCancel = () => {
+    setSaveDialogOpen(false);
+    setTextTitle('');
+  };
+
+  const getEmotionAdvice = (emotions: EmotionResult[]) => {
     if (emotions.length === 0) return '';
     
     const topEmotion = emotions[0];
@@ -161,15 +205,37 @@ Example: Today was really challenging. The project deadline is approaching and I
           </Fade>
         )}
 
+        {saveError && (
+          <Fade in={!!saveError}>
+            <Alert severity="error" sx={{ borderRadius: 2 }}>
+              {saveError}
+            </Alert>
+          </Fade>
+        )}
+
         {emotions.length > 0 && (
           <Fade in={emotions.length > 0} timeout={500}>
             <Card sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
               <CardContent sx={{ p: 4 }}>
-                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
-                  <InsertEmoticon sx={{ color: 'primary.main' }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Emotion Analysis Results
-                  </Typography>
+                <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <InsertEmoticon sx={{ color: 'primary.main' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Emotion Analysis Results
+                    </Typography>
+                  </Stack>
+                  
+                  {user && (
+                    <Button
+                      variant="outlined"
+                      onClick={handleSaveClick}
+                      disabled={isSaving}
+                      startIcon={isSaving ? <CircularProgress size={20} /> : <SaveIcon />}
+                      size="small"
+                    >
+                      {isSaving ? 'Saving...' : 'Save Analysis'}
+                    </Button>
+                  )}
                 </Stack>
 
                 <Box sx={{ mb: 4, p: 3, backgroundColor: 'grey.50', borderRadius: 2 }}>
@@ -184,7 +250,7 @@ Example: Today was really challenging. The project deadline is approaching and I
                 <Divider sx={{ mb: 4 }} />
 
                 <Stack spacing={3} sx={{ mb: 4 }}>
-                  {emotions.map((emotion, index) => (
+                  {emotions.map((emotion: EmotionResult, index: number) => (
                     <Box key={index}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
@@ -238,8 +304,58 @@ Example: Today was really challenging. The project deadline is approaching and I
           </Fade>
         )}
       </Stack>
+
+      <Dialog open={saveDialogOpen} onClose={handleSaveCancel} maxWidth="sm" fullWidth>
+        <DialogTitle>Save Emotion Analysis</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Give your analysis a title (optional)
+          </Typography>
+          <TextField
+            fullWidth
+            label="Title"
+            placeholder="e.g., Today's reflection, Work stress analysis..."
+            value={textTitle}
+            onChange={(e) => setTextTitle(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <Box sx={{ p: 2, backgroundColor: 'grey.50', borderRadius: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Text: "{inputText.slice(0, 100)}{inputText.length > 100 ? '...' : ''}"
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleSaveCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSaveConfirm} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={saveSuccess}
+        autoHideDuration={3000}
+        onClose={() => setSaveSuccess(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setSaveSuccess(false)} 
+          severity="success" 
+          sx={{ width: '100%' }}
+          icon={<CheckIcon />}
+        >
+          Analysis saved successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
 export default EmotionAnalyzer;
+
+function useEmotionAnalysis(): { emotions: any; isLoading: any; error: any; analyze: any; reset: any; isSaving: any; saveError: any; saveText: any; } {
+  throw new Error('Function not implemented.');
+}
