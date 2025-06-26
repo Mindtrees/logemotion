@@ -1,39 +1,69 @@
-import { Person as Name, Email, Lock as Password, ArrowBack as Back } from '@mui/icons-material';
+import { Person as Name, Email, Lock as Password } from '@mui/icons-material';
 import { Box, Button, InputAdornment, styled, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { UseCreateAccount } from '../../hooks/UseCreateAccount';
+import React, { useState } from 'react';
+
+const SignUpContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 'auto',
+    // [theme.breakpoints.down('md')]: {
+    //     width: '90%',
+    // },
+}));
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const { signUp } = UseCreateAccount();
+
+    const [userName, setUserName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+    const [userNameErrorText, setUserNameErrorText] = useState<string>('');
+    const [emailErrorText, setEmailErrorText] = useState<string>('');
+    const [passwordErrorText, setPasswordErrorText] = useState<string>('');
+    const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState<string>('');
 
     const handleSignUp = () => {
-        // navigate('/login');
-        console.log('회원가입');
+        setUserNameErrorText('');
+        setEmailErrorText('');
+        setPasswordErrorText('');
+        setConfirmPasswordErrorText('');
+
+        const signUpResult = signUp(userName, email, password, confirmPassword);
+
+        // 유효성검사
+        if (signUpResult) {
+            switch (signUpResult.field) {
+                case 'userName':
+                    setUserNameErrorText(signUpResult.message);
+                    break;
+                case 'email':
+                    setEmailErrorText(signUpResult.message);
+                    break;
+                case 'password':
+                    setPasswordErrorText(signUpResult.message);
+                    break;
+                case 'confirmPassword':
+                    setConfirmPasswordErrorText(signUpResult.message);
+                    break;
+            }
+        }
     };
 
     const handleGoBack = () => {
         navigate('/login');
-        console.log('뒤로가기');
     };
 
-    const SignUpContainer = styled('div')(({ theme }) => ({
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: 'auto',
-        marginTop: '50px',
-        // [theme.breakpoints.down('md')]: {
-        //     width: '90%',
-        // },
-    }));
-
     return (
-        <SignUpContainer>
+        <SignUpContainer sx={{ mb: 4 }}>
             <Box
                 sx={{
-                    width: '30%',
-                    minWidth: '30%',
-                    height: 'auto',
                     border: '2px solid',
                     borderColor: 'primary.main',
                     borderRadius: '10px',
@@ -42,30 +72,22 @@ const SignUp = () => {
                 }}
             >
                 <Box sx={{ mt: '20px' }}>
-                    <Typography
-                        variant="h2"
-                        sx={{ width: '100%', minWidth: '30%', color: 'primary.main', textAlign: 'center' }}
-                    >
+                    <Typography variant="h2" sx={{ color: 'primary.main', textAlign: 'center' }}>
                         Emotion Blog
                     </Typography>
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            width: '100%',
-                            minWidth: '30%',
-                            ccolor: 'text.secondary',
-                            mt: '10px',
-                            textAlign: 'center',
-                        }}
-                    >
-                        Create an account to save your journal entries and track your emotional journey.
+                    <Typography variant="body1" sx={{ color: 'text.secondary', mt: '10px', textAlign: 'center' }}>
+                        Start your emotional journey!
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', m: 5 }}>
                     <TextField
                         label="Name"
                         type="text"
-                        sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        error={!!userNameErrorText}
+                        helperText={userNameErrorText ? 'Please enter your name.' : ''}
+                        sx={{ mb: 2 }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -76,10 +98,12 @@ const SignUp = () => {
                     />
                     <TextField
                         label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={!!emailErrorText}
+                        helperText={emailErrorText}
                         sx={{
-                            width: '100%',
-                            maxWidth: '100%',
-                            minWidth: '50%',
                             mb: 2,
                         }}
                         InputProps={{
@@ -93,7 +117,11 @@ const SignUp = () => {
                     <TextField
                         label="Password"
                         type="password"
-                        sx={{ width: '100%', maxWidth: '100%', minWidth: '50%', mb: 2 }}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        error={!!passwordErrorText}
+                        helperText={passwordErrorText}
+                        sx={{ mb: 2 }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -105,7 +133,10 @@ const SignUp = () => {
                     <TextField
                         label="Confirm Password"
                         type="password"
-                        sx={{ width: '100%', maxWidth: '100%', minWidth: '50%' }}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        error={!!confirmPasswordErrorText}
+                        helperText={confirmPasswordErrorText}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -115,48 +146,39 @@ const SignUp = () => {
                         }}
                     />
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: 1,
-                        mt: 2,
-                    }}
-                >
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                     <Button
+                        variant="contained"
                         sx={{
-                            flex: 1,
-                            minWidth: 'auto',
-                            color: 'primary.main',
-                            px: 1,
+                            width: '90%',
+                            minWidth: '50%',
+                            fontWeight: '600',
+                            textTransform: 'none',
+                            fontSize: '1.25rem',
+                            px: 2,
                             py: 1,
+                            mb: 1,
                             borderRadius: 2,
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                            },
                         }}
-                        onClick={handleGoBack}
+                        onClick={handleSignUp}
                     >
-                        <Back />
+                        Create Account
                     </Button>
                     <Button
+                        variant="contained"
                         sx={{
-                            flex: 4,
-                            color: 'primary.main',
+                            width: '90%',
+                            minWidth: '50%',
                             fontWeight: '600',
                             textTransform: 'none',
                             fontSize: '1.25rem',
                             px: 2,
                             py: 1,
                             borderRadius: 2,
-                            '&:hover': {
-                                backgroundColor: 'action.hover',
-                            },
                         }}
-                        onClick={handleSignUp}
+                        onClick={handleGoBack}
                     >
-                        Create Account
+                        Cancel
                     </Button>
                 </Box>
             </Box>
