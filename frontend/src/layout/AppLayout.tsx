@@ -24,7 +24,7 @@ const AppLayout: React.FC = () => {
                         <Route path="/all-posts" element={<AllPosts />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/sign-up" element={<SignUp />} />
+                        <Route path="/signup" element={<SignUp />} />
                     </Routes>
                 </Suspense>
             <Footer />
