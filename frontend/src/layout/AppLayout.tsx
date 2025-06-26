@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-import Loading from "../components/Loading";
-import NavBar from "../components/Navbar";
-import Footer from "../components/Footer";
+import React, { Suspense, useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Loading from '../components/Loading';
+import NavBar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const Home = React.lazy(() => import("../pages/Home"));
 const Write = React.lazy(() => import("../pages/Write"));
@@ -30,7 +30,6 @@ const AppLayout: React.FC = () => {
       <Footer />
     </div>
   );
-
 };
 
 export default AppLayout;
