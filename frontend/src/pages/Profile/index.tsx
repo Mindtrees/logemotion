@@ -1,60 +1,100 @@
-import { Box, Avatar, Typography, TextField, Button, IconButton } from '@mui/material';
+import { Box, Avatar, Typography, TextField, Button, IconButton, Alert } from '@mui/material';
 import { FavoriteBorder as Like } from '@mui/icons-material';
 import { BookmarkBorder as Bookmark } from '@mui/icons-material';
-import { User } from '../../models';
 import { useEffect, useState } from 'react';
-import { UseUpdateAccount } from '../../hooks/UseUpdateAccount';
+import { useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
+import { auth } from '../../utils/firebase';
+import { useAuthState } from '../../hooks/UseLogin';
 
 const Profile = () => {
-    const [user, setUser] = useState<User | null>(null); //기존 데이터
-    const [isEditMode, setIsEditMode] = useState<boolean>(false); // 수정모드
-    const [editUser, setEditUser] = useState<User | null>(null); //수정중인 데이터
+    const { user, isAuthenticated } = useAuthState();
+    const navigate = useNavigate();
+    
+    const [editUser, setEditUser] = useState({
+        userName: '',
+        email: '',
+        password: ''
+    }); 
+    const [isEditMode, setIsEditMode] = useState<boolean>(false); 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [successMessage, setSuccessMessage] = useState<string>('');
 
-    const { updateUser } = UseUpdateAccount();
-
-    // 현재 유저 정보 가져오기
     useEffect(() => {
-        const currentUser = sessionStorage.getItem('currentUser');
-        if (currentUser) {
-            const userData: User = JSON.parse(currentUser);
-            setEditUser(userData);
-            setUser(userData);
+        if (user) {
+            setEditUser({
+                userName: user.displayName || '',
+                email: user.email || '',
+                password: ''
+            });
         }
-    }, []);
+    }, [user]);
 
-    // 수정 모드
+    if (!isAuthenticated || !user) {
+        return (
+            <Box sx={{ maxWidth: 800, p: 4, mx: 'auto', textAlign: 'center' }}>
+                <Alert severity="info">Please login to view your profile</Alert>
+            </Box>
+        );
+    }
+
     const handleEditChange = () => {
         setIsEditMode(true);
+        setSuccessMessage('');
     };
 
-    // 수정 취소
     const handleCancel = () => {
         setIsEditMode(false);
-        setEditUser(user);
+        setEditUser({
+            userName: user.displayName || '',
+            email: user.email || '',
+            password: ''
+        });
     };
 
-    // 입력값
-    const handleInputChange = (field: keyof User, value: string) => {
-        if (!editUser) return;
+    const handleInputChange = (field: string, value: string) => {
         setEditUser({ ...editUser, [field]: value });
     };
 
-    // 변경사항 저장
-    const handleSave = () => {
-        if (editUser) {
-            updateUser(editUser); // 수정한 데이터 업데이트
-            setUser(editUser);
-            setIsEditMode(false);
-            alert('User profile updated.');
+    const handleSave = async () => {
+        if (!editUser.userName.trim()) {
+            alert('Please enter a name');
+            return;
         }
+
+        setIsLoading(true);
+        try {
+            await updateProfile(auth.currentUser!, {
+                displayName: editUser.userName.trim()
+            });
+
+            setIsEditMode(false);
+            setSuccessMessage('Profile updated successfully!');
+            
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
+            
+        } catch (error: any) {
+            alert('Failed to update profile: ' + error.message);
+        }
+        setIsLoading(false);
     };
 
     return (
-        <Box sx={{ maxWidth: 800, p: 4, mx: 'auto' }}>
+        <Box sx={{ maxWidth: 800, px: 4, mx: 'auto', py:14 }}>
+            {successMessage && (
+                <Alert severity="success" sx={{ mb: 3 }}>
+                    {successMessage} Redirecting to home...
+                </Alert>
+            )}
+            
             <Box sx={{ display: 'flex', gap: 4, alignItems: 'flex-start' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '30%' }}>
                     <IconButton>
-                        <Avatar sx={{ width: 120, height: 120, bgcolor: 'primary.main' }}>J</Avatar>
+                        <Avatar sx={{ width: 120, height: 120, bgcolor: 'primary.main' }}>
+                            {editUser.userName?.charAt(0) || editUser.email?.charAt(0) || 'U'}
+                        </Avatar>
                     </IconButton>
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                         <Like sx={{ mr: 1 }} />
@@ -81,34 +121,41 @@ const Profile = () => {
                         label="Email"
                         type="email"
                         value={editUser?.email || ''}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        InputProps={{ readOnly: !isEditMode }}
+                        InputProps={{ readOnly: true }}
                         sx={{
                             input: {
-                                backgroundColor: isEditMode ? 'white' : '#f0f0f0',
+                                backgroundColor: '#f0f0f0',
                             },
                         }}
                     />
                     <TextField
                         label="Password"
                         type="password"
-                        value={editUser?.password || ''}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                        InputProps={{ readOnly: !isEditMode }}
+                        value="******"
+                        InputProps={{ readOnly: true }}
                         sx={{
                             input: {
-                                backgroundColor: isEditMode ? 'white' : '#f0f0f0',
+                                backgroundColor: '#f0f0f0',
                             },
                         }}
                     />
                     <Box sx={{ textAlign: 'right', mt: 2 }}>
                         {isEditMode ? (
                             <>
-                                <Button variant="contained" onClick={handleCancel}>
+                                <Button 
+                                    variant="outlined" 
+                                    onClick={handleCancel}
+                                    disabled={isLoading}
+                                    sx={{ mr: 1 }}
+                                >
                                     Cancel
                                 </Button>
-                                <Button variant="contained" onClick={handleSave}>
-                                    Save
+                                <Button 
+                                    variant="contained" 
+                                    onClick={handleSave}
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? 'Saving...' : 'Save'}
                                 </Button>
                             </>
                         ) : (
