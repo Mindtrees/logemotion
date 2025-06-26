@@ -79,15 +79,14 @@ export const useLogout = () => {
   });
 
   return {
-    logout: mutation.mutate, // 사용예시: logout()
+    logout: mutation.mutate, 
     isLoading: mutation.isPending,
     error: mutation.error,
     isSuccess: mutation.isSuccess,
     reset: mutation.reset,
   };
 };
-
-// 현재 사용자 상태를 관리하는 훅
+ 
 export const useAuthState = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);

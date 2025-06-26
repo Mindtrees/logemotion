@@ -20,7 +20,6 @@ const Write: React.FC = () => {
   console.log(rawData);
   
 
-
   return (
     <Box 
       sx={{

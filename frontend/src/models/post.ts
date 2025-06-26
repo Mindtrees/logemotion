@@ -1,4 +1,23 @@
-export interface Posts {}
+import { Timestamp } from 'firebase/firestore';
+
+export interface Posts {
+  id?: string;
+  title: string;
+  content: string;
+  userId: string;
+  userEmail: string;
+  emotionAnalysis?: EmotionAnalysisResponse;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface CreatePostData {
+  title: string;
+  content: string;
+  userId: string;
+  userEmail: string;
+  emotionAnalysis?: EmotionAnalysisResponse;
+}
 
 export interface EmotionScores {
   joy: number;
@@ -8,6 +27,7 @@ export interface EmotionScores {
   anger: number;
   fear: number;
 }
+
 export interface EmotionAnalysisResponse {
   emotions_detected: string[];
   emotion_scores: EmotionScores;
