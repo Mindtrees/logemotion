@@ -50,7 +50,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
 
     // 회원가입
     const handleSignUp = () => {
-        navigate('/sign-up');
+        navigate('/signup');
     };
 
     const [rememberUser, setRememberUser] = useState<boolean>(false);

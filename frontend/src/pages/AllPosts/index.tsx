@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import WriteExample from "../../components/WriteExample";
 
 const AllPosts = () => {
   return (
-    <div>AllPosts</div>
-  )
-}
+    <div>
+      AllPosts
+      <WriteExample />
+    </div>
+  );
+};
 
-export default AllPosts
+export default AllPosts;
