@@ -1,6 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { useEmotionAnalysis } from "../../hooks/refactoredUseEmotionAnalysis";
+import { useEmotionAnalysis } from "../../hooks/useEmotionAnalysis";
 
 const WriteExample = () => {
   const { analyze, emotions, isLoading, error, reset } = useEmotionAnalysis();

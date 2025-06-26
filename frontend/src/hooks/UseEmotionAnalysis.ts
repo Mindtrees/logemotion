@@ -1,53 +1,21 @@
-// import { useState, useCallback } from 'react';
-// import { analyzeEmotion, EmotionResult } from '../api/emotionApi';
+import { useMutation } from "@tanstack/react-query";
+import transformEmotionData from "../utils/transformEmotionData";
+import { TextAnalyzeEmotion } from "../api/emotionApi";
 
-// interface UseEmotionAnalysisReturn {
-//   emotions: EmotionResult[];
-//   isLoading: boolean;
-//   error: string | null;
-//   analyze: (text: string) => Promise<void>;
-//   reset: () => void;
-// }
-// //
-// export const useEmotionAnalysis = (): UseEmotionAnalysisReturn => {
-//   const [emotions, setEmotions] = useState<EmotionResult[]>([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
+export const useEmotionAnalysis = () => {
+  const mutation = useMutation({
+    mutationFn: TextAnalyzeEmotion,
+    onSuccess: () => {
+      console.log("Text emotion analysis success");
+    },
+  }); 
 
-//   const analyze = useCallback(async (text: string) => {
-//     if (!text.trim()) {
-//       setError('Please enter text to analyze.');
-//       return;
-//     }
-
-//     setIsLoading(true);
-//     setError(null);
-
-//     try {
-//       const results = await analyzeEmotion(text);
-//       setEmotions(results);
-//     } catch (err) {
-//       const errorMessage = err instanceof Error ? err.message : 'An error occurred during emotion analysis.';
-//       setError(errorMessage);
-//       setEmotions([]);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   }, []);
-
-//   const reset = useCallback(() => {
-//     setEmotions([]);
-//     setError(null);
-//     setIsLoading(false);
-//   }, []);
-
-//   return {
-//     emotions,
-//     isLoading,
-//     error,
-//     analyze,
-//     reset
-//   };
-// };
-
-export {};
+  return {
+    analyze: mutation.mutate, // 사용예시: analyze(textArea)
+    emotions: mutation.data ? transformEmotionData(mutation.data) : [],
+    rawData: mutation.data || null, // Raw data for components that need it
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    reset: mutation.reset, // mutation 상태 초기화할 때. 동시에 write 입력창도 비우면 좋을 듯.
+  };
+};

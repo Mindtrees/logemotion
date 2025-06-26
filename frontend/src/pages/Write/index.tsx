@@ -4,7 +4,7 @@ import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
-import { useEmotionAnalysis } from '../../hooks/refactoredUseEmotionAnalysis';
+import { useEmotionAnalysis } from '../../hooks/useEmotionAnalysis';
 
 const Write: React.FC = () => {
   const [title, setTitle] = useState('');
