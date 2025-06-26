@@ -1,54 +1,109 @@
-// UseLogin.ts
-import { useNavigate } from 'react-router-dom';
-import { User } from '../models';
+import { useMutation } from "@tanstack/react-query";
+import { LoginWithEmail, SignupWithEmail, LoginWithGoogle, Logout } from "../api/authApi";
+import { useState, useEffect } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
-type LoginErrorStatus = {
-    field: 'email' | 'password';
-    message: string;
-} | null;
+export const useLogin = () => {
+  const mutation = useMutation({
+    mutationFn: LoginWithEmail,
+    onSuccess: () => {
+      console.log("Login success");
+    },
+    onError: (error) => {
+      console.log("Login failed:", error);
+    },
+  });
 
-// 로그인
-export const UseLogin = (setIsLoggedIn: (val: boolean) => void) => {
-    const navigate = useNavigate();
+  return {
+    login: mutation.mutate,
+    user: mutation.data,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+    reset: mutation.reset,
+  };
+};
 
-    const login = (email: string, password: string): LoginErrorStatus => {
-        // 로컬스토리지에 저장되어 있는 유저 리스트 체크
-        const userList: User[] = JSON.parse(localStorage.getItem('users') || '[]');
-        const checkUser = userList.find((user) => user.email === email);
+export const useSignup = () => {
+  const mutation = useMutation({
+    mutationFn: SignupWithEmail,
+    onSuccess: () => {
+      console.log("Signup success");
+    },
+    onError: (error) => {
+      console.log("Signup failed:", error);
+    },
+  });
 
-        if (!email.trim()) {
-            return {
-                field: 'email',
-                message: 'Please enter your email address.',
-            };
-        }
-        if (!password.trim()) {
-            return {
-                field: 'password',
-                message: 'Please enter your password.',
-            };
-        }
+  return {
+    signup: mutation.mutate,
+    user: mutation.data,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+    reset: mutation.reset,
+  };
+};
 
-        if (!checkUser) {
-            return {
-                field: 'email',
-                message: 'The email address is not registered. Please check again.',
-            };
-        }
+export const useGoogleLogin = () => {
+  const mutation = useMutation({
+    mutationFn: LoginWithGoogle,
+    onSuccess: () => {
+      console.log("Google login success");
+    },
+    onError: (error) => {
+      console.log("Google login failed:", error);
+    },
+  });
 
-        if (checkUser.password !== password) {
-            return {
-                field: 'password',
-                message: 'The password is incorrect. Please try again.',
-            };
-        }
+  return {
+    loginWithGoogle: mutation.mutate,
+    user: mutation.data,
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+    reset: mutation.reset,
+  };
+};
 
-        // 현재 로그인한 유저 데이터 저장
-        sessionStorage.setItem('currentUser', JSON.stringify(checkUser));
-        setIsLoggedIn(true);
-        navigate('/');
-        return null; //로그인성공
-    };
+export const useLogout = () => {
+  const mutation = useMutation({
+    mutationFn: Logout,
+    onSuccess: () => {
+      console.log("Logout success");
+    },
+    onError: (error) => {
+      console.log("Logout failed:", error);
+    },
+  });
 
-    return { login };
+  return {
+    logout: mutation.mutate, // 사용예시: logout()
+    isLoading: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+    reset: mutation.reset,
+  };
+};
+
+// 현재 사용자 상태를 관리하는 훅
+export const useAuthState = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return {
+    user,
+    loading,
+    isAuthenticated: !!user,
+  };
 };
