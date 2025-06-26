@@ -18,11 +18,12 @@ import {
   InsertEmoticon,
   Analytics,
 } from "@mui/icons-material";
-import { useEmotionAnalysis } from "../../../../hooks/UseEmotionAnalysis";
+
 import Button from "../../../../components/common/Button";
+import { useEmotionAnalysis } from "../../../../hooks/refactoredUseEmotionAnalysis";
 
 const EmotionAnalyzer = () => {
-  const { emotions, isLoading, error, analyze, reset } = useEmotionAnalysis();
+  const { analyze, emotions, isLoading, error, reset } = useEmotionAnalysis();
   const [inputText, setInputText] = React.useState("");
   const [animatedValues, setAnimatedValues] = React.useState<number[]>([]);
 
@@ -177,13 +178,13 @@ Example: Today was really challenging. The project deadline is approaching and I
           </CardContent>
         </Card>
 
-        {error && (
+{/*         {error && (
           <Fade in={!!error}>
             <Alert severity="error" sx={{ borderRadius: 2 }}>
               {error}
             </Alert>
           </Fade>
-        )}
+        )} */}
 
         {emotions.length > 0 && (
           <Fade in={emotions.length > 0} timeout={500}>

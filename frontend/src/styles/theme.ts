@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 
+
 declare module '@mui/material/styles' {
   interface TypeBackground {
     hero: string;

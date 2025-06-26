@@ -13,9 +13,19 @@ const SignUp = React.lazy(() => import("../pages/SignUp"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 
 const AppLayout: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is already logged in on app start
+  useEffect(() => {
+    const currentUser = sessionStorage.getItem('currentUser');
+    if (currentUser) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <div>
-      <NavBar />
+      <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,7 +33,7 @@ const AppLayout: React.FC = () => {
           <Route path="/my-posts" element={<MyPosts />} />
           <Route path="/all-posts" element={<AllPosts />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Routes>
       </Suspense>
