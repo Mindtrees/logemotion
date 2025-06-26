@@ -24,11 +24,11 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ analysisResult }) => {
   };
 
   const emotions = analysisResult 
-    ? Object.entries(analysisResult.emotions_normalized || {})
-        .map(([emotion, score]) => ({
+    ? Object.entries(analysisResult.emotions_normalized)
+        .map(([emotion, normalizedScore]) => ({
           name: emotion,
           label: emotion.charAt(0).toUpperCase() + emotion.slice(1),
-          percentage: Math.round((score as number) * 100),
+          percentage: Math.round((normalizedScore as number) * 100),
           color: emotionColorMap[emotion]
         }))
         .sort((a, b) => b.percentage - a.percentage)

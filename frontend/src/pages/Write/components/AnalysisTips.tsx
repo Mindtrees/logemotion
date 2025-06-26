@@ -4,8 +4,10 @@ import {
   Typography, 
   Paper
 } from '@mui/material';
+import { Lightbulb as LightbulbIcon } from "@mui/icons-material";
 import { EmotionAnalysisRes } from '../../../models/api';
 import { getRandomTipForEmotion } from '../../../utils/emotionTips';
+import { colors } from "../../../styles/colors";
 
 interface AnalysisTipsProps {
   analysisResult: EmotionAnalysisRes | null;
@@ -60,6 +62,12 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult }) => {
           gap: { xs: 1.5, sm: 2 }
         }}
       >
+        <LightbulbIcon 
+          sx={{ 
+            color: colors.status.warning,
+            fontSize: '1.5rem'
+          }} 
+        />
         <Typography 
           variant="h4" 
           component="h2" 
@@ -70,7 +78,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult }) => {
             letterSpacing: '-0.01em'
           }}
         >
-          Today's Tip
+          {hasAnalysis && !isDefaultTip ? "Personalized Tip" : "Today's Tip"}
         </Typography>
       </Box>
 
@@ -109,7 +117,10 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult }) => {
                 opacity: 0.6
               }}
             >
-              Analyze your emotions to receive personalized wellness tips
+              {tip === "Write about your emotions today" 
+                ? "Analyze your emotions to receive personalized wellness tips"
+                : tip
+              }
             </Typography>
           </Box>
         )}

@@ -4,24 +4,22 @@ import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
-import useAnalyze from '../../hooks/UseAnalyze';
+import { useEmotionAnalysis } from '../../hooks/refactoredUseEmotionAnalysis';
 
 const Write: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const emotionMutation = useAnalyze();
+  const emotionMutation = useEmotionAnalysis();
 
   const {
-    data: analysisResult,
-    isPending: loading,
-    error,
-    mutate: analyzeText,
-    reset,
+    analyze, emotions, rawData, isLoading, error, reset
   } = emotionMutation;
   
   const combinedText = `${title}. ${content}`;
 
-  console.log()
+  console.log(rawData);
+  
+
 
   return (
     <Box 
@@ -46,15 +44,15 @@ const Write: React.FC = () => {
           spacing={{ xs: 3, md: 4 }}
           sx={{ alignItems: 'stretch' }}
         >
-          <WritePost 
+          <WritePost
             title={title}
             content={content}
             setTitle={setTitle}
             setContent={setContent}
             combinedText={combinedText}
-            loading={loading}
+            loading={isLoading}
             error={error}
-            analyzeText={analyzeText}
+            analyzeText={analyze}
             reset={reset}
           />
           
@@ -82,8 +80,8 @@ const Write: React.FC = () => {
                 spacing={{ xs: 2, sm: 2.5, md: 3 }}
                 sx={{ height: '100%' }}
               >
-                <PostAnalysis analysisResult={analysisResult || null} />
-                <AnalysisTips analysisResult={analysisResult || null} />
+                <PostAnalysis analysisResult={rawData} />
+                <AnalysisTips analysisResult={rawData} />
               </Stack>
             </Box>
           </Grid>
