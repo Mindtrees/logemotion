@@ -1,100 +1,124 @@
-import { Box, Button, Checkbox, FormControlLabel, InputAdornment, TextField, Typography, styled } from '@mui/material';
-import { Email, Lock as Password } from '@mui/icons-material';
+import { Box, Button, InputAdornment, TextField, Typography, styled, Alert, Divider } from '@mui/material';
+import { Email, Lock as Password, Google } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { UseLogin } from '../../hooks/UseLogin';
+import { useState, useEffect } from 'react';
+import { useGoogleLogin, useLogin } from '../../hooks/UseLogin';
 
-type LoginProps = {
-    setIsLoggedIn: (val: boolean) => void;
-};
-
-const LoginContainer = styled('div')(({ theme }) => ({
+const LoginContainer = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: 'auto',
-    // [theme.breakpoints.down('md')]: {
-    //     width: '90%',
-    // },
-}));
+    marginTop: '50px',
+});
 
-const Login = ({ setIsLoggedIn }: LoginProps) => {
+const Login = () => {
     const navigate = useNavigate();
-    const { login } = UseLogin(setIsLoggedIn);
+    const { login, isLoading: loginLoading, error: loginError, isSuccess: loginSuccess, reset: resetLogin } = useLogin();
+    const { loginWithGoogle, isLoading: googleLoading, error: googleError, isSuccess: googleSuccess, reset: resetGoogle } = useGoogleLogin();
 
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [emailValue, setEmailValue] = useState<string>('');
+    const [passwordValue, setPasswordValue] = useState<string>('');
+    const [isEmailError, setIsEmailError] = useState<boolean>(false);
+    const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
 
-    const [emailErrorText, setEmailErrorText] = useState<string>('');
-    const [passwordErrorText, setPasswordErrorText] = useState<string>('');
+    const isLoading = loginLoading || googleLoading;
+    const error = loginError || googleError;
 
-    // 로그인
-    const handleSignIn = () => {
-        setEmailErrorText('');
-        setPasswordErrorText('');
-
-        const loginResult = login(email, password);
-
-        if (loginResult) {
-            switch (loginResult.field) {
-                case 'email':
-                    setEmailErrorText(loginResult.message);
-                    break;
-                case 'password':
-                    setPasswordErrorText(loginResult.message);
-                    break;
-            }
+    // 로그인 성공시 홈으로 이동
+    useEffect(() => {
+        if (loginSuccess || googleSuccess) {
+            navigate('/');
         }
+    }, [loginSuccess, googleSuccess, navigate]);
+
+    const handleSignIn = async () => {
+        setIsEmailError(false);
+        setIsPasswordError(false);
+        resetLogin();
+        resetGoogle();
+
+        if (!emailValue.trim()) {
+            setIsEmailError(true);
+            return;
+        }
+
+        if (!passwordValue.trim()) {
+            setIsPasswordError(true);
+            return;
+        }
+
+        login({ email: emailValue, password: passwordValue });
     };
 
-    // 회원가입
+    const handleGoogleSignIn = async () => {
+        resetLogin();
+        resetGoogle();
+        loginWithGoogle();
+    };
+
     const handleSignUp = () => {
         navigate('/signup');
     };
 
-    const [rememberUser, setRememberUser] = useState<boolean>(false);
-
-    const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRememberUser(e.target.checked);
-    };
-
     return (
-        <LoginContainer sx={{ mb: 4 }}>
+        <LoginContainer>
             <Box
                 sx={{
+                    width: '30%',
+                    minWidth: '400px',
+                    height: 'auto',
                     border: '2px solid',
                     borderColor: 'primary.main',
                     borderRadius: '10px',
                     boxShadow: 3,
-                    p: 2,
+                    p: 4,
                 }}
             >
-                <Box sx={{ mt: '20px' }}>
-                    <Typography variant="h2" sx={{ color: 'primary.main', textAlign: 'center' }}>
+                <Box sx={{ mt: 2, mb: 4 }}>
+                    <Typography
+                        variant="h2"
+                        sx={{ 
+                            width: '100%', 
+                            color: 'primary.main', 
+                            textAlign: 'center',
+                            fontSize: '2.5rem',
+                            fontWeight: 'bold'
+                        }}
+                    >
                         Emotion Blog
                     </Typography>
                     <Typography
                         variant="body1"
                         sx={{
+                            width: '100%',
                             color: 'text.secondary',
-                            mt: '10px',
+                            mt: 2,
                             textAlign: 'center',
+                            fontSize: '1.1rem'
                         }}
                     >
                         Sign in to your account to start your emotion journal!
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', mt: 4 }}>
+
+                {error && (
+                    <Box sx={{ mb: 3 }}>
+                        <Alert severity="error">{error?.message || 'An error occurred'}</Alert>
+                    </Box>
+                )}
+
+                <Box sx={{ mb: 4 }}>
                     <TextField
                         label="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        error={!!emailErrorText}
-                        helperText={emailErrorText}
-                        sx={{
-                            mb: '20px',
-                        }}
+                        value={emailValue}
+                        onChange={(e) => setEmailValue(e.target.value)}
+                        error={isEmailError}
+                        helperText={isEmailError ? 'Please enter your email address.' : ''}
+                        disabled={isLoading}
+                        fullWidth
+                        sx={{ mb: 3 }}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -106,10 +130,12 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
                     <TextField
                         label="Password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        error={!!passwordErrorText}
-                        helperText={passwordErrorText}
+                        value={passwordValue}
+                        onChange={(e) => setPasswordValue(e.target.value)}
+                        error={isPasswordError}
+                        helperText={isPasswordError ? 'Please enter your password.' : ''}
+                        disabled={isLoading}
+                        fullWidth
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -119,59 +145,56 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
                         }}
                     />
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-                    <FormControlLabel
-                        control={<Checkbox checked={rememberUser} onChange={handleRememberMeChange} />}
-                        label="Remember Me"
-                    />
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <Button
                         variant="contained"
-                        sx={{
-                            width: '90%',
-                            minWidth: '50%',
-                            fontWeight: '600',
-                            textTransform: 'none',
-                            fontSize: '1.25rem',
-                            px: 2,
-                            py: 1,
-                            mb: 1,
-                            borderRadius: 2,
-                        }}
                         onClick={handleSignIn}
-                    >
-                        Sign In
-                    </Button>
-                    <Button
-                        variant="contained"
+                        disabled={isLoading}
+                        fullWidth
                         sx={{
-                            width: '90%',
-                            minWidth: '50%',
+                            py: 1.5,
+                            fontSize: '1.1rem',
                             fontWeight: '600',
                             textTransform: 'none',
-                            fontSize: '1.25rem',
-                            px: 2,
-                            py: 1,
-                            borderRadius: 2,
                         }}
-                        onClick={handleSignUp}
                     >
-                        Sign Up
+                        {isLoading ? 'Signing In...' : 'Sign In'}
                     </Button>
-                    <Typography
+
+                    <Divider sx={{ my: 1 }}>OR</Divider>
+
+                    <Button
+                        variant="outlined"
+                        onClick={handleGoogleSignIn}
+                        disabled={isLoading}
+                        fullWidth
+                        startIcon={<Google />}
                         sx={{
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            color: 'text.secondary',
-                            mt: 2,
-                            '&:hover': {
-                                color: 'text.primary',
-                            },
+                            py: 1.5,
+                            fontSize: '1.1rem',
+                            fontWeight: '600',
+                            textTransform: 'none',
                         }}
                     >
-                        Forgot Password
-                    </Typography>
+                        Continue with Google
+                    </Button>
+
+                    <Button
+                        variant="text"
+                        onClick={handleSignUp}
+                        disabled={isLoading}
+                        fullWidth
+                        sx={{
+                            py: 1.5,
+                            fontSize: '1.1rem',
+                            fontWeight: '600',
+                            textTransform: 'none',
+                            mt: 1
+                        }}
+                    >
+                        Create New Account
+                    </Button>
                 </Box>
             </Box>
         </LoginContainer>
