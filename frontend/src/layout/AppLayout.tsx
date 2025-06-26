@@ -30,6 +30,7 @@ const AppLayout: React.FC = () => {
       <Footer />
     </div>
   );
+
 };
 
 export default AppLayout;

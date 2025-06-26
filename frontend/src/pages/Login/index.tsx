@@ -26,7 +26,7 @@ const Login = () => {
 
     // 회원가입
     const handleSignUp = () => {
-        navigate('/sign-up');
+        navigate('/signup');
     };
 
     const LoginContainer = styled('div')(({ theme }) => ({

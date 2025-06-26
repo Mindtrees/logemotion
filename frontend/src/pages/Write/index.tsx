@@ -32,10 +32,7 @@ const Write: React.FC = () => {
       .map(([emotion, normalizedScore]) => ({
         label: emotion,
         percentage: Math.round(normalizedScore * 100),
-        color:
-          colors.semantic.emotions[
-            emotion as keyof typeof colors.semantic.emotions
-          ] || "#5C6BC0",
+        color: colors.semantic.emotions[emotion as keyof typeof colors.semantic.emotions] || '#5C6BC0'
       }))
       .sort((a, b) => b.percentage - a.percentage);
   };

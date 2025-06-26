@@ -45,11 +45,11 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({
             gap: 1.5,
           }}
         >
-          <LightbulbIcon
-            sx={{
+          <LightbulbIcon 
+            sx={{ 
               color: colors.status.warning,
-              fontSize: "1.5rem",
-            }}
+              fontSize: '1.5rem'
+            }} 
           />
           <Typography
             variant="h6"
