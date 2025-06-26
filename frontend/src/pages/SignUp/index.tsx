@@ -98,7 +98,7 @@ const SignUp = () => {
     const isEmailAlreadyInUse = error?.message?.includes('already registered');
 
     return (
-        <SignUpContainer sx={{ mb: 4 }}>
+        <SignUpContainer sx={{ mb: 14 }}>
             <Box
                 sx={{
                     width: '30%',
