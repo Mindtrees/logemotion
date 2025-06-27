@@ -10,6 +10,7 @@ import {
   Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -28,6 +29,7 @@ interface WritePostProps {
   analyzeText: (text: string) => void;
   reset: () => void;
   emotions: Emotions[];
+  isLoggedIn: boolean;
 }
 
 const AppleTextField = styled(TextField)(({ theme }) => ({
@@ -74,9 +76,12 @@ const WritePost: React.FC<WritePostProps> = ({
   analyzeText,
   reset,
   emotions,
+  isLoggedIn,
 }) => {
   const { user } = useAuthState();
+  const navigate = useNavigate();
   const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
+  const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
 
   const handleSave = async () => {
@@ -108,6 +113,9 @@ const WritePost: React.FC<WritePostProps> = ({
       
       handleReset();
       
+      // myPost 페이지로 이동
+      navigate('/my-posts');
+      
     } catch (error) {
       console.error('Failed to save post:', error);
 
@@ -115,6 +123,10 @@ const WritePost: React.FC<WritePostProps> = ({
   };
 
   const handleAnalyze = () => {
+    if (!isLoggedIn) {
+      setShowLoginWarning(true);
+      return;
+    }
     if (!combinedText.trim()) return;
     setHasBeenAnalyzed(true);
     analyzeText(combinedText);
@@ -122,9 +134,32 @@ const WritePost: React.FC<WritePostProps> = ({
 
   const handleReset = () => {
     setHasBeenAnalyzed(false);
+    setShowLoginWarning(false);
     reset();
     setTitle('');
     setContent('');
+  };
+
+  const handleInputFocus = () => {
+    if (!isLoggedIn) {
+      setShowLoginWarning(true);
+    }
+  };
+
+  const handleTitleChange = (value: string) => {
+    if (!isLoggedIn) {
+      setShowLoginWarning(true);
+      return;
+    }
+    setTitle(value);
+  };
+
+  const handleContentChange = (value: string) => {
+    if (!isLoggedIn) {
+      setShowLoginWarning(true);
+      return;
+    }
+    setContent(value);
   };
 
   const isFormValid = content.trim() && title.trim();
@@ -177,6 +212,12 @@ const WritePost: React.FC<WritePostProps> = ({
               {error.message}
             </Alert>
           )}
+
+          {showLoginWarning && (
+            <Alert severity="warning" sx={{ borderRadius: 2 }}>
+              Please login to analyze your emotions.
+            </Alert>
+          )}
           
           <Box>
             <Typography 
@@ -193,7 +234,8 @@ const WritePost: React.FC<WritePostProps> = ({
             <AppleTextField
               name="title"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              onFocus={handleInputFocus}
               placeholder="Enter your post title"
               required
               fullWidth
@@ -216,7 +258,8 @@ const WritePost: React.FC<WritePostProps> = ({
             <AppleTextField
               name="content"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => handleContentChange(e.target.value)}
+              onFocus={handleInputFocus}
               placeholder="Share your thoughts and emotions..."
               required
               multiline

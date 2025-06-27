@@ -532,7 +532,7 @@ const NavBar: React.FC = () => {
 
       <Box 
         sx={{ 
-          height: isScrolled ? 80 : 96, 
+          height: isScrolled ? 50 : 65, 
           transition: 'height 0.4s ease-out',
           paddingTop: 'env(safe-area-inset-top)',
         }} 

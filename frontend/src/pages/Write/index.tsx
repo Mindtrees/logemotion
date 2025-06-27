@@ -5,11 +5,15 @@ import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
 import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
+import { useAuthState } from '../../hooks/UseLogin';
 
 const Write: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const emotionMutation = useEmotionAnalysis();
+  const { user } = useAuthState();
+
+  const isLoggedIn = !!user;
 
   const {
     analyze, emotions, rawData, isLoading, error, reset
@@ -23,22 +27,29 @@ const Write: React.FC = () => {
         backgroundColor: "background.section",
         minHeight: "100vh",
         width: "100vw",
+        pt: 8,
+        pb: 14,
+        px: { xs: 2, sm: 5, md: 6, lg: 8 }
       }}
     >
       <WritePostHeading />
       <Container 
-        maxWidth="xl" 
+        maxWidth="lg"
         sx={{ 
           pb: { xs: 2, md: 3 },
-          px: { xs: 2, sm: 3 },
+          px: { xs: 2, sm: 5, md: 6, lg: 8 },
           position: 'relative',
           zIndex: 1
         }}
       >
         <Grid 
           container 
-          spacing={{ xs: 3, md: 4 }}
-          sx={{ alignItems: 'stretch' }}
+          spacing={{ xs: 3, sm: 4, md: 5 }}
+          sx={{ 
+            alignItems: 'stretch',
+            maxWidth: '100%',
+            mx: 'auto'
+          }}
         >
           <WritePost
             title={title}
@@ -51,6 +62,7 @@ const Write: React.FC = () => {
             analyzeText={analyze}
             reset={reset}
             emotions={emotions}
+            isLoggedIn={isLoggedIn}
           />
           
           <Grid 
@@ -60,7 +72,8 @@ const Write: React.FC = () => {
             sx={{ 
               display: 'flex', 
               flexDirection: 'column',
-              mt: { xs: 2, lg: 0 }
+              mt: { xs: 2, lg: 0 },
+              px: { xs: 1, sm: 2.5, md: 3 }
             }}
           >
             <Box 
