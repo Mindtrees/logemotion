@@ -60,7 +60,8 @@ const WritePostHeading: React.FC = () => {
             fontWeight: 400,
             letterSpacing: '-0.015em',
             lineHeight: 1.4,
-            mb: { xs: 3, md: 4 },
+            mt: { xs: 1, md: 2 },
+            mb: { xs: 2, md: 3 },
             fontSize: { xs: '1.375rem', sm: '1.625rem', md: '1.875rem' }
           }}
         >

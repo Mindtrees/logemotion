@@ -51,7 +51,17 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
 
   const handleClickEdit = (postId?: string) => {
     if (!postId) return;
-    navigate(`/write/${postId}`);
+    // Pass the post data through router state for editing
+    navigate('/write', { 
+      state: { 
+        editMode: true, 
+        postData: {
+          id: post.id,
+          title: post.title,
+          content: post.content
+        }
+      } 
+    });
   };
 
   const handleClickDelete = (postId?: string) => {

@@ -17,6 +17,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { Emotions } from '../../../models';
 import { useAuthState } from '../../../hooks/UseLogin'; 
 import { useAddDocument } from '../../../hooks/UseAddDocument';
+import { useUpdatePost } from '../../../hooks/UsePost';
 
 interface WritePostProps {
   title: string;
@@ -30,6 +31,7 @@ interface WritePostProps {
   reset: () => void;
   emotions: Emotions[];
   isLoggedIn: boolean;
+  editingPostId?: string | null;
 }
 
 const InputTextField = styled(TextField)(({ theme }) => ({
@@ -77,12 +79,16 @@ const WritePost: React.FC<WritePostProps> = ({
   reset,
   emotions,
   isLoggedIn,
+  editingPostId,
 }) => {
   const { user } = useAuthState();
   const navigate = useNavigate();
   const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
   const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
+  const updatePostMutation = useUpdatePost();
+  
+  const isEditMode = !!editingPostId;
 
   const handleSave = async () => {
     if (!user || !emotions) {
@@ -91,34 +97,45 @@ const WritePost: React.FC<WritePostProps> = ({
     }
 
     try {
-  
       const emotionAnalysis = emotions.map(emotion => ({
         color: emotion.color || 'text.muted', 
         name: emotion.name,
         value: emotion.value,
       })) || [];
 
-      const postData = {
-        content: content.trim(),
-        title: title.trim() || 'Untitled Post', 
-        userEmail: user.email || '',
-        userId: user.uid || '',
-        emotionAnalysis
-      };
+      if (isEditMode && editingPostId) {
+        // Update existing post
+        const updatedData = {
+          content: content.trim(),
+          title: title.trim() || 'Untitled Post',
+          emotionAnalysis
+        };
+        
+        updatePostMutation.updatePost({
+          postId: editingPostId,
+          updatedData
+        });
+        
+        console.log('Post updated successfully!');
+      } else {
+        // Create new post
+        const postData = {
+          content: content.trim(),
+          title: title.trim() || 'Untitled Post', 
+          userEmail: user.email || '',
+          userId: user.uid || '',
+          emotionAnalysis
+        };
 
-      await addPostMutation.addDocument(postData);
-      
-
-      console.log('Post saved successfully!');
+        await addPostMutation.addDocument(postData);
+        console.log('Post saved successfully!');
+      }
       
       handleReset();
-      
-
       navigate('/my-posts');
       
     } catch (error) {
-      console.error('Failed to save post:', error);
-
+      console.error(`Failed to ${isEditMode ? 'update' : 'save'} post:`, error);
     }
   };
 
@@ -138,6 +155,11 @@ const WritePost: React.FC<WritePostProps> = ({
     reset();
     setTitle('');
     setContent('');
+    
+    // Clear router state when resetting to go back to "create new post" mode
+    if (isEditMode) {
+      navigate('/write', { replace: true });
+    }
   };
 
   const handleInputFocus = () => {
@@ -165,7 +187,7 @@ const WritePost: React.FC<WritePostProps> = ({
   const isFormValid = content.trim() && title.trim();
   const hasAnalysisData = emotions && emotions.length > 0;
   const canSave = isFormValid && hasAnalysisData && user;
-  const isSaving = addPostMutation.isLoading;
+  const isSaving = addPostMutation.isLoading || updatePostMutation.isLoading;
 
   return (
     <Grid 
@@ -203,7 +225,7 @@ const WritePost: React.FC<WritePostProps> = ({
             letterSpacing: '-0.01em'
           }}
         >
-          Write New Post
+          {isEditMode ? 'Edit Post' : 'Write New Post'}
         </Typography>
         
         <Stack spacing={4} sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -239,7 +261,7 @@ const WritePost: React.FC<WritePostProps> = ({
               required
               fullWidth
               variant="outlined"
-              disabled={hasBeenAnalyzed}
+              disabled={hasBeenAnalyzed && !isEditMode}
             />
           </Box>
 
@@ -264,7 +286,7 @@ const WritePost: React.FC<WritePostProps> = ({
               multiline
               fullWidth
               variant="outlined"
-              disabled={hasBeenAnalyzed}
+              disabled={hasBeenAnalyzed && !isEditMode}
               sx={{
                 flex: 1,
                 display: 'flex',
@@ -354,7 +376,7 @@ const WritePost: React.FC<WritePostProps> = ({
               variant="contained"
               startIcon={<SaveIcon />}
               onClick={handleSave}
-              disabled={!isFormValid}
+              disabled={!canSave}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -388,7 +410,7 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              Save
+              {isEditMode ? 'Update' : 'Save'}
             </Button>
           </Stack>
         </Stack>

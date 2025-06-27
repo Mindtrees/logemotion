@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Grid, Box, Stack } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
@@ -8,8 +9,10 @@ import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
 import { useAuthState } from '../../hooks/UseLogin';
 
 const Write: React.FC = () => {
+  const location = useLocation();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const emotionMutation = useEmotionAnalysis();
   const { user } = useAuthState();
 
@@ -20,6 +23,20 @@ const Write: React.FC = () => {
   } = emotionMutation;
   
   const combinedText = `${title}. ${content}`;
+
+  useEffect(() => {
+    const state = location.state as { editMode?: boolean; postData?: { id: string; title: string; content: string } };
+    if (state?.editMode && state?.postData) {
+      setTitle(state.postData.title);
+      setContent(state.postData.content);
+      setEditingPostId(state.postData.id);
+    } else {
+
+      setTitle('');
+      setContent('');
+      setEditingPostId(null);
+    }
+  }, [location.state]);
 
   return (
     <Box 
@@ -63,6 +80,7 @@ const Write: React.FC = () => {
             reset={reset}
             emotions={emotions}
             isLoggedIn={isLoggedIn}
+            editingPostId={editingPostId}
           />
           
           <Grid 
