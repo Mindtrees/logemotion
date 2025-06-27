@@ -31,7 +31,7 @@ interface WritePostProps {
   isLoggedIn: boolean;
 }
 
-const AppleTextField = styled(TextField)(({ theme }) => ({
+const InputTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     backdropFilter: 'blur(20px)',
@@ -93,7 +93,7 @@ const WritePost: React.FC<WritePostProps> = ({
       const emotionAnalysis = emotions.map(emotion => ({
         color: emotion.color || '#CCCCCC', 
         name: emotion.name,
-        value: emotion.value || 0 
+        value: emotion.value,
       })) || [];
 
       const postData = {
@@ -226,7 +226,7 @@ const WritePost: React.FC<WritePostProps> = ({
             >
               Title
             </Typography>
-            <AppleTextField
+            <InputTextField
               name="title"
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
@@ -235,6 +235,7 @@ const WritePost: React.FC<WritePostProps> = ({
               required
               fullWidth
               variant="outlined"
+              disabled={hasBeenAnalyzed}
             />
           </Box>
 
@@ -250,7 +251,7 @@ const WritePost: React.FC<WritePostProps> = ({
             >
               Content
             </Typography>
-            <AppleTextField
+            <InputTextField
               name="content"
               value={content}
               onChange={(e) => handleContentChange(e.target.value)}
@@ -260,6 +261,7 @@ const WritePost: React.FC<WritePostProps> = ({
               multiline
               fullWidth
               variant="outlined"
+              disabled={hasBeenAnalyzed}
               sx={{
                 flex: 1,
                 display: 'flex',
@@ -280,7 +282,11 @@ const WritePost: React.FC<WritePostProps> = ({
                   fontSize: '1rem',
                   lineHeight: 1.6,
                   padding: '40px !important',
-                  paddingRight: '60px !important', 
+                  paddingRight: '60px !important',
+                  scrollbarWidth: 'none', // Firefox
+                  '&::-webkit-scrollbar': {
+                    display: 'none', // Chrome, Safari, Edge
+                  },
                 }
               }}
               InputProps={{

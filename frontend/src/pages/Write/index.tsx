@@ -91,7 +91,7 @@ const Write: React.FC = () => {
                 sx={{ height: '100%' }}
               >
                 <PostAnalysis emotions={emotions} />
-                <AnalysisTips emotions={emotions} analysisResult={null} />
+                <AnalysisTips emotions={emotions} />
               </Stack>
             </Box>
           </Grid>

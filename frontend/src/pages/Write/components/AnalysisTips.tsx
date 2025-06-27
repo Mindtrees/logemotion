@@ -5,29 +5,18 @@ import {
   Paper
 } from '@mui/material';
 import { Lightbulb as LightbulbIcon } from "@mui/icons-material";
-import { EmotionAnalysisRes } from '../../../models/api';
 import { EmotionResult } from '../../../models';
 import { getRandomTipForEmotion } from '../../../utils/emotionTips';
 import { colors } from "../../../styles/colors";
 
 interface AnalysisTipsProps {
-  analysisResult: EmotionAnalysisRes | null;
   emotions: EmotionResult[];
 }
 
-const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions }) => {
-  
-  const tip = useMemo(() => {
-    if (!analysisResult || emotions.length === 0) return "Write about your emotions today";
-    
-    // Use the first emotion from the sorted transformed data (highest percentage)
-    const primaryEmotionName = emotions[0].name;
-    
-    return getRandomTipForEmotion(primaryEmotionName);
-  }, [analysisResult, emotions]);
+const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
 
-  const hasAnalysis = !!analysisResult && emotions.length > 0;
-  const isDefaultTip = tip === "Write about your emotions today";
+  const hasAnalysis = emotions && emotions.length > 0;
+  const primaryEmotionName = emotions[0]?.name;
 
   return (
     <Paper 
@@ -39,9 +28,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions })
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
-        height: '100%',
-        minHeight: '250px',
-        maxHeight: '300px',
+        height: '300px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -75,25 +62,47 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions })
             letterSpacing: '-0.01em'
           }}
         >
-          {hasAnalysis && !isDefaultTip ? "Personalized Tip" : "Today's Tip"}
+          Today's Tip
         </Typography>
       </Box>
 
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {hasAnalysis && !isDefaultTip ? (
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        {hasAnalysis ? (
+                  <Box
+          sx={{
+            flex: 1,
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 1,
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 8px 32px rgba(86, 86, 86, 0.06)',
+            padding: 1.5,
+            overflow: 'auto',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            scrollbarWidth: 'none', // Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome, Safari, Edge
+            },
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
+              borderColor: 'rgba(80, 70, 228, 0.3)',
+            },
+          }}
+        >
           <Typography 
             variant="body1" 
             sx={{ 
               color: 'text.primary',
               lineHeight: 1.7,
               fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
-              flex: 1,
               fontWeight: 400,
-              opacity: 0.8
+              opacity: 0.9
             }}
           >
-            {tip}
+            {primaryEmotionName ? getRandomTipForEmotion(primaryEmotionName) : 'Loading tip...'}
           </Typography>
+        </Box>
         ) : (
           <Box 
             sx={{ 
@@ -114,10 +123,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions })
                 opacity: 0.6
               }}
             >
-              {tip === "Write about your emotions today" 
-                ? "Analyze your emotions to receive personalized wellness tips"
-                : tip
-              }
+              Analyze your post to receive personalized wellness tips
             </Typography>
           </Box>
         )}

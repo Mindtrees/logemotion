@@ -24,7 +24,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
         border: '1px solid rgba(255, 255, 255, 0.2)',
         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
         height: '100%',
-        minHeight: '600px',
+        minHeight: '500px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
