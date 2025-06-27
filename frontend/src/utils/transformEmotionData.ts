@@ -12,6 +12,7 @@ const emotionColors: Record<string, string> = {
 const transformEmotionData = (
   data: EmotionAnalysisResponse
 ): EmotionResult[] => {
+  if (!data || !data.emotions_normalized) return [];
   const topEmotions = Object.entries(data.emotions_normalized)
     .filter(([, value]) => value > 0)
     .sort(([, a], [, b]) => b - a)
