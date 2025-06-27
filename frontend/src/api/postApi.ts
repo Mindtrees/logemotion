@@ -150,8 +150,7 @@ export const GetAllPosts = async () => {
   }
 };
 
-// 단일 포스트 가져오기
-// api/posts.js에 추가
+// get SinglePost api
 export const getPost = async (postId: string) => {
   try {
     if (!postId) throw new Error("Post ID is required");

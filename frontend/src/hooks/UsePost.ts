@@ -146,7 +146,7 @@ export const useGetAllPosts = () => {
   };
 };
 
-// 단일포스트 가져오기
+// get SinglePost hook
 export const useGetPost = (postId?: string) => {
   return useQuery({
     queryKey: ['post', postId],
