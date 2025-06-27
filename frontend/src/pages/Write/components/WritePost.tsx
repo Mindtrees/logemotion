@@ -113,7 +113,7 @@ const WritePost: React.FC<WritePostProps> = ({
       
       handleReset();
       
-      // Navigate to my-posts page after successful save
+
       navigate('/my-posts');
       
     } catch (error) {
@@ -197,7 +197,7 @@ const WritePost: React.FC<WritePostProps> = ({
           variant="h4" 
           component="h2" 
           sx={{ 
-            mb: 4, 
+            mb: { xs: 2, sm: 2.5, md: 3 }, 
             fontWeight: 700,
             color: 'text.primary',
             letterSpacing: '-0.01em'

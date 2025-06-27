@@ -4,10 +4,8 @@ import {
   Typography, 
   Paper
 } from '@mui/material';
-import { Lightbulb as LightbulbIcon } from "@mui/icons-material";
 import { EmotionResult } from '../../../models';
 import { getRandomTipForEmotion } from '../../../utils/emotionTips';
-import { colors } from "../../../styles/colors";
 
 interface AnalysisTipsProps {
   emotions: EmotionResult[];
@@ -39,32 +37,18 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
         }
       }}
     >
-      <Box 
+      <Typography 
+        variant="h4" 
+        component="h2" 
         sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          mb: { xs: 2, sm: 2.5, md: 3 },
-          gap: { xs: 1.5, sm: 2 }
+          mb: { xs: 2, sm: 2.5, md: 3 }, 
+          fontWeight: 700,
+          color: 'text.primary',
+          letterSpacing: '-0.01em'
         }}
       >
-        <LightbulbIcon 
-          sx={{ 
-            color: colors.status.warning,
-            fontSize: (theme) => theme.typography.h4.fontSize
-          }} 
-        />
-        <Typography 
-          variant="h4" 
-          component="h2" 
-          sx={{ 
-            fontWeight: 700,
-            color: 'text.primary',
-            letterSpacing: '-0.01em'
-          }}
-        >
-          Today's Tip
-        </Typography>
-      </Box>
+        Today's Tip
+      </Typography>
 
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {hasAnalysis ? (
@@ -114,12 +98,12 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
             }}
           >
             <Typography 
-              variant="body1" 
+              variant="body2" 
               sx={{ 
                 fontStyle: 'italic', 
                 textAlign: 'center',
                 color: 'text.primary',
-                opacity: 0.6
+                opacity: 0.7
               }}
             >
               Analyze your post to receive personalized wellness tips
