@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Emotions } from '../../../models';
+import { Emotions, Posts } from '../../../models';
 import { useAuthState } from '../../../hooks/UseLogin'; 
 import { useAddDocument } from '../../../hooks/UseAddDocument';
 
@@ -30,6 +30,9 @@ interface WritePostProps {
   reset: () => void;
   emotions: Emotions[];
   isLoggedIn: boolean;
+  isEditMode?: boolean;
+  postId?: string;
+  existingPost?: Posts | null;
 }
 
 const AppleTextField = styled(TextField)(({ theme }) => ({

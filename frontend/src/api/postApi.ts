@@ -10,6 +10,7 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import {
@@ -146,5 +147,26 @@ export const GetAllPosts = async () => {
     return posts;
   } catch (error: any) {
     throw new Error(error.message || "Failed to fetch all posts");
+  }
+};
+
+// get SinglePost api
+export const getPost = async (postId: string) => {
+  try {
+    if (!postId) throw new Error("Post ID is required");
+    
+    const postRef = doc(db, "posts", postId);
+    const postSnap = await getDoc(postRef);
+    
+    if (!postSnap.exists()) {
+      throw new Error("Post not found");
+    }
+    
+    return {
+      id: postSnap.id,
+      ...postSnap.data()
+    } as Posts;
+  } catch (error: any) {
+    throw new Error(error.message || "Failed to fetch post");
   }
 };
