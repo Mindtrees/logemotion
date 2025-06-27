@@ -26,11 +26,6 @@ interface WritePostProps {
   analyzeText: (text: string) => void;
   reset: () => void;
   rawData: EmotionAnalysisResponse | null;
-  emotions: any[];
-  savePost: (data: { title: string; content: string; emotionAnalysis?: any }) => void;
-  isSaving: boolean;
-  saveError: Error | null;
-  saveSuccess: boolean;
 }
 
 const AppleTextField = styled(TextField)(({ theme }) => ({
@@ -77,19 +72,10 @@ const WritePost: React.FC<WritePostProps> = ({
   analyzeText,
   reset,
   rawData,
-  emotions,
-  savePost,
-  isSaving,
-  saveError,
-  saveSuccess,
 }) => {
 
   const handleSave = () => {
-    savePost({
-      title,
-      content,
-      emotionAnalysis: emotions || undefined
-    });
+    console.log('Saving:', { title, content });
   };
 
   const handleAnalyze = () => {
@@ -149,18 +135,6 @@ const WritePost: React.FC<WritePostProps> = ({
           {error && (
             <Alert severity="error" sx={{ borderRadius: 2 }}>
               {error.message}
-            </Alert>
-          )}
-          
-          {saveError && (
-            <Alert severity="error" sx={{ borderRadius: 2 }}>
-              {saveError.message}
-            </Alert>
-          )}
-          
-          {saveSuccess && (
-            <Alert severity="success" sx={{ borderRadius: 2 }}>
-              Post saved successfully with emotion analysis!
             </Alert>
           )}
           
@@ -293,7 +267,7 @@ const WritePost: React.FC<WritePostProps> = ({
               variant="contained"
               startIcon={<SaveIcon />}
               onClick={handleSave}
-              disabled={!isFormValid || isSaving}
+              disabled={!isFormValid}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -326,7 +300,7 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              {isSaving ? 'Saving...' : 'Save'}
+              Save
             </Button>
           </Stack>
         </Stack>
