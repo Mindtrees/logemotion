@@ -9,9 +9,15 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../utils/firebase";
-import { Posts, CreatePostData } from "../models";
+import {
+  Posts,
+  CreatePostData,
+  AddPostRequest,
+  AddPostResponse,
+} from "../models";
 
 export const SavePost = async (postData: CreatePostData): Promise<string> => {
   try {
@@ -66,38 +72,40 @@ export const GetUserPosts = async (userId: string): Promise<Posts[]> => {
 };
 
 export const addDocument = async (
-  collectionName: string, 
+  collectionName: string,
   documentData: AddPostRequest
 ): Promise<AddPostResponse> => {
   try {
     if (!documentData.title?.trim() || !documentData.content?.trim()) {
       throw new Error("Please enter title and content");
     }
-    
+
     if (!documentData.userId) {
       throw new Error("Please login first");
     }
 
+    const dataWithTimestamp = {
+      ...documentData,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
 
-      const dataWithTimestamp = {
-          ...documentData,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-      };
-      
-             const docRef = await addDoc(collection(db, collectionName), dataWithTimestamp);
-       console.log(`Document written to ${collectionName} with ID: `, docRef.id);
-       return {
-           id: docRef.id,
-           ...documentData,
-           createdAt: Timestamp.now(),
-           updatedAt: Timestamp.now()
-       };
-
+    const docRef = await addDoc(
+      collection(db, collectionName),
+      dataWithTimestamp
+    );
+    console.log(`Document written to ${collectionName} with ID: `, docRef.id);
+    return {
+      id: docRef.id,
+      ...documentData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    };
   } catch (error) {
-      console.error(`Error adding document to ${collectionName}: `, error);
-      throw new Error(`Failed to add document to ${collectionName}`);
-
+    console.error(`Error adding document to ${collectionName}: `, error);
+    throw new Error(`Failed to add document to ${collectionName}`);
+  }
+};
 export const UpdatePost = async (
   postId: string,
   updatedData: Partial<Posts>
