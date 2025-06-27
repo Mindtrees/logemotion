@@ -1,11 +1,20 @@
 import { Alert, Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { useGetUserPosts } from "../../hooks/UsePost";
 import PostCard from "../PostCard";
+import { Posts } from "../../models";
 
-const PostList = () => {
-  const { posts, isLoading, error } = useGetUserPosts();
-  // console.log("posts", posts);
+interface PostListProps {
+  posts: Posts[];
+  isLoading: boolean;
+  error: Error | null;
+  currentUserId?: string;
+}
 
+const PostList = ({
+  posts,
+  isLoading,
+  error,
+  currentUserId,
+}: PostListProps) => {
   return (
     <>
       {isLoading && (
@@ -19,12 +28,16 @@ const PostList = () => {
         </Alert>
       )}
 
-      {posts.length === 0 ? (
+      {posts?.length === 0 ? (
         <Typography>No posts found. Create your first post.</Typography>
       ) : (
         <Stack spacing={2}>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard
+              key={post.id}
+              post={post}
+              currentUserId={currentUserId || ""}
+            />
           ))}
         </Stack>
       )}

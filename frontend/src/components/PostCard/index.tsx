@@ -15,13 +15,15 @@ import {
 import { useState } from "react";
 import dayjs from "dayjs";
 import transformEmotionData from "../../utils/transformEmotionData";
+import { useNavigate } from "react-router-dom";
+import { useDeletePost } from "../../hooks/UsePost";
 
-type PostCardProps = {
+interface PostCardProps {
   post: Posts;
-};
+  currentUserId: string;
+}
 
 const EmotionCircleStyle = {
-  //   backgroundColor: "#1976d2",
   color: "white",
   borderRadius: 20,
   display: "inline-flex",
@@ -32,16 +34,29 @@ const EmotionCircleStyle = {
   padding: "0 8px",
   whiteSpace: "nowrap",
   gap: 0.5,
-  userSelect: "none", // 드래그 방지.
+  userSelect: "none",
 };
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = ({ post, currentUserId }: PostCardProps) => {
   //   console.log("post", post);
+  const navigate = useNavigate();
+  const { deletePost } = useDeletePost();
   const [isPostLiked, setIsPostLiked] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const isMyPost = post.userId === currentUserId;
 
   const handleClickLike = () => {
     setIsPostLiked((prev) => !prev);
+  };
+
+  const handleClickEdit = (postId?: string) => {
+    if (!postId) return;
+    navigate(`/write/${postId}`);
+  };
+
+  const handleClickDelete = (postId?: string) => {
+    if (!postId) return;
+    deletePost(postId);
   };
 
   const handleClickExpand = () => {
@@ -100,14 +115,29 @@ const PostCard = ({ post }: PostCardProps) => {
             >
               <FavoriteIcon fontSize="small" />
             </IconButton>
-            {/* 수정 */}
-            <IconButton size="small" aria-label="edit" color="primary">
-              <EditIcon fontSize="small" />
-            </IconButton>
-            {/* 삭제 */}
-            <IconButton size="small" aria-label="delete" color="inherit">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+
+            {isMyPost && (
+              <>
+                {/* 수정 */}
+                <IconButton
+                  size="small"
+                  aria-label="edit"
+                  color="primary"
+                  onClick={() => handleClickEdit(post.id)}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                {/* 삭제 */}
+                <IconButton
+                  size="small"
+                  aria-label="delete"
+                  color="inherit"
+                  onClick={() => handleClickDelete(post.id)}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </>
+            )}
           </Box>
         </Box>
 
