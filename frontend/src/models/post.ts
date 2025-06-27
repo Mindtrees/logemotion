@@ -6,7 +6,7 @@ export interface Posts {
   content: string;
   userId: string;
   userEmail: string;
-  emotionAnalysis?: EmotionAnalysisResponse;
+  emotionAnalysis?: Emotions[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -16,8 +16,34 @@ export interface CreatePostData {
   content: string;
   userId: string;
   userEmail: string;
-  emotionAnalysis?: EmotionAnalysisResponse;
+  emotionAnalysis?: Emotions[];
 }
+
+export interface Emotions {
+  color: string;
+  name: string;
+  value: number;
+}[]
+
+export interface AddPostResponse {
+  id: string;
+  title: string;
+  content: string;
+  userId: string;
+  userEmail: string;
+  emotionAnalysis?: Emotions[] | '';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export interface AddPostRequest {
+  title: string;
+  content: string;
+  userId: string;
+  userEmail: string;
+  emotionAnalysis?: Emotions[] | '';
+}
+
 
 export interface EmotionScores {
   joy: number;

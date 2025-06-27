@@ -50,7 +50,7 @@ const Write: React.FC = () => {
             error={error}
             analyzeText={analyze}
             reset={reset}
-            rawData={rawData}
+            emotions={emotions}
           />
           
           <Grid 
