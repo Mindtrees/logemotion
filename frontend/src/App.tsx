@@ -1,21 +1,21 @@
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { CustomThemeProvider } from './contexts/ThemeContext';
+import Loading from './components/Loading';
+
+const AppLayout = React.lazy(() => import('./layout/AppLayout'));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+      <CustomThemeProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <Suspense fallback={<Loading />}>
+            <AppLayout />
+          </Suspense>
+        </Router>
+      </CustomThemeProvider>
+
   );
 }
 
