@@ -26,19 +26,20 @@ const WritePostHeading: React.FC = () => {
                   width: 56,
                   height: 56,
                   borderRadius: 3,
-                  backgroundColor: 'rgba(80, 70, 228, 0.1)',
+                  backgroundColor: (theme) => `${theme.palette.primary.main}1A`,
                   backdropFilter: 'blur(20px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  border: '1px solid rgba(80, 70, 228, 0.2)',
-                  boxShadow: '0 8px 32px rgba(80, 70, 228, 0.15)',
+                  border: '1px solid',
+                  borderColor: (theme) => `${theme.palette.primary.main}33`,
+                  boxShadow: (theme) => `0 8px 32px ${theme.palette.primary.main}26`,
                 }}
               >
                 <EditIcon 
                   sx={{ 
-                    color: '#5046e4', 
-                    fontSize: '1.75rem'
+                    color: 'primary.main', 
+                    fontSize: (theme) => theme.typography.h3.fontSize
                   }}
                 />
               </Box>
@@ -48,7 +49,6 @@ const WritePostHeading: React.FC = () => {
                 sx={{ 
                   fontWeight: 700,
                   color: 'text.primary',
-                  fontSize:'2rem',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.1
                 }}
@@ -57,11 +57,10 @@ const WritePostHeading: React.FC = () => {
               </Typography>
             </Box>
             <Typography 
-              variant="h4" 
+              variant="h3" 
               sx={{ 
                 color: 'text.primary',
                 fontWeight: 600,
-                fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
                 letterSpacing: '-0.01em',
                 lineHeight: 1.2,
                 mb: 2
@@ -70,12 +69,11 @@ const WritePostHeading: React.FC = () => {
               Beyond the Words
             </Typography>
             <Typography 
-              variant="h6" 
+              variant="h5" 
               sx={{ 
                 color: 'text.secondary',
                 fontWeight: 400,
                 maxWidth: '600px',
-                fontSize: { xs: '1.1rem', md: '1.25rem' },
                 lineHeight: 1.5,
                 opacity: 0.8
               }}

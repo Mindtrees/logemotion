@@ -1,0 +1,179 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# EmotionLog Frontend Development Rules
+
+You are an expert React TypeScript developer working on EmotionLog, an emotion recording and analysis application.
+
+## Project Context
+- **Framework**: React 18+ with TypeScript
+- **UI Library**: Material-UI (MUI) with custom dark mode theme
+- **Routing**: React Router DOM
+- **State Management**: React Hooks (useState, useContext)
+- **Build Tool**: Create React App
+- **Working Directory**: Always assume we're in the `frontend/` folder
+
+
+## Code Conventions
+
+### File Naming
+- **Components**: PascalCase folders with `index.tsx` files
+  - Example: `src/components/NavBar/index.tsx`
+- **Types**: camelCase inside `models/` folder with `.ts` extension
+  - Example: `user.ts`, `post.ts`
+- **Utils**: Descriptive camelCase filenames
+  - Example: `formatDate.ts`, `apiClient.ts`
+
+### Component Structure Template
+Always use this structure for new components:
+
+```tsx
+import React from 'react';
+import { ComponentProps } from '@/models';
+
+const ComponentName: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  const [state, setState] = useState<StateType>(initialValue);
+
+  const handleAction = () => {
+    // handler logic
+  };
+
+  return (
+    <div>
+      {/* JSX Content */}
+    </div>
+  );
+};
+
+export default ComponentName;
+```
+
+### TypeScript Conventions
+- **Interface Naming**: Use descriptive names with `Props` suffix for component props
+- **Event Handlers**: Use `handleAction` pattern (e.g., `handleClickSubmit`, `handleChangeEmail`)
+- **Export Types**: Always export from `models/index.ts`
+- **Import Types**: Use absolute paths where possible: `import { User, Post } from '@/models'`
+
+## Dark Mode Theme System
+
+### Background Colors
+```tsx
+<Box sx={{ backgroundColor: 'background.default' }} />     // Main background
+<Box sx={{ backgroundColor: 'background.section' }} />     // Section background
+<Box sx={{ backgroundColor: 'background.elevated' }} />    // Card background
+<Box sx={{ background: 'background.hero' }} />             // Hero gradient
+<Box sx={{ background: 'background.stats' }} />            // Stats gradient
+```
+
+### Text Colors
+```tsx
+<Typography color="text.primary">Title</Typography>         // Main/emphasized
+<Typography color="text.secondary">Description</Typography> // Body text
+<Typography color="text.muted">Hint</Typography>            // Hints/disabled
+```
+
+### Emotion Colors
+```tsx
+theme.palette.emotion.achievement  // Achievement - bright green (#10b981)
+theme.palette.emotion.fatigue      // Fatigue - orange (#f59e0b)
+theme.palette.emotion.stress       // Stress - red (#ef4444)
+theme.palette.emotion.pride        // Pride - brand purple (#5046e4)
+```
+
+### Dark Mode Toggle Pattern
+```tsx
+import { useTheme } from '../../contexts/ThemeContext';
+
+const { isDarkMode, toggleTheme } = useTheme();
+
+<IconButton onClick={toggleTheme}>
+  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+</IconButton>
+```
+
+## Material-UI Best Practices
+
+### Import Pattern
+```tsx
+import { Button, TextField, Box } from '@mui/material';
+import { Login as LoginIcon } from '@mui/icons-material';
+```
+
+### Styling with sx Prop
+```tsx
+<Button sx={{ mt: 2, backgroundColor: 'primary.main' }}>
+  Submit
+</Button>
+```
+
+### Auto-Styled Components
+These components automatically inherit theme colors:
+- `Card`: background, border, hover effects
+- `LinearProgress`: background color
+- `Button`: auto text transformation, rounded corners
+
+## Routing Structure
+```tsx
+const routes = [
+  { path: '/', component: 'Home' },
+  { path: '/write', component: 'Write' },
+  { path: '/my-posts', component: 'MyPosts' },
+  { path: '/all-posts', component: 'AllPosts' },
+  { path: '/profile', component: 'Profile' },
+  { path: '/login', component: 'Login' }
+];
+```
+
+### Lazy Loading Pattern
+```tsx
+const ComponentName = React.lazy(() => import('../pages/ComponentName'));
+
+<Suspense fallback={<Loading />}>
+  <ComponentName />
+</Suspense>
+```
+
+## Performance Guidelines
+- Use `React.lazy()` for page-level components
+- Use `Suspense` for loading fallback
+- Break down large components into reusable pieces
+- Import only required MUI components
+- Use absolute paths to reduce deep nesting
+- Implement proper tree shaking
+- Use `React.memo` where appropriate
+
+## Error Handling Requirements
+- **Error Boundaries**: For page-level components
+- **Form Validation**: Handle user input validation
+- **API Errors**: Handle errors from API calls properly
+
+## Code Quality Checklist
+Before suggesting code, ensure:
+- [ ] Component naming conventions followed
+- [ ] TypeScript interfaces properly defined
+- [ ] Unused imports or variables removed
+- [ ] Proper error handling implemented
+- [ ] Responsive design considered
+- [ ] Performance optimizations applied
+- [ ] Single Responsibility Principle followed
+- [ ] Components designed for reusability
+
+## Required Dependencies
+```json
+{
+  "@mui/material": "^5.x.x",
+  "@mui/icons-material": "^5.x.x",
+  "@emotion/react": "^11.x.x",
+  "@emotion/styled": "^11.x.x",
+  "react-router-dom": "^6.x.x"
+}
+```
+
+
+## Key Reminders
+- Always use semantic color tokens for light/dark mode compatibility
+- Maintain consistent code conventions
+- Add TypeScript types to all components
+- Prioritize component reusability and performance

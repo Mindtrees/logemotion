@@ -24,16 +24,17 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
       sx={{ 
         p: { xs: 3, sm: 4 }, 
         borderRadius: 4,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backgroundColor: 'background.elevated',
         backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+        border: '1px solid',
+        borderColor: 'divider',
+        boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
         height: '300px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         '&:hover': {
-          boxShadow: '0 24px 80px rgba(0, 0, 0, 0.12)',
+          boxShadow: (theme) => `0 24px 80px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.12)' : 'rgba(0, 0, 0, 0.4)'}`,
           transform: 'translateY(-2px)',
         }
       }}
@@ -49,7 +50,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
         <LightbulbIcon 
           sx={{ 
             color: colors.status.warning,
-            fontSize: '1.5rem'
+            fontSize: (theme) => theme.typography.h4.fontSize
           }} 
         />
         <Typography 
@@ -58,7 +59,6 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
           sx={{ 
             fontWeight: 700,
             color: 'text.primary',
-            fontSize: { xs: '1.25rem', sm: '1.4rem', md: '1.75rem' },
             letterSpacing: '-0.01em'
           }}
         >
@@ -71,11 +71,12 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
                   <Box
           sx={{
             flex: 1,
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: 'background.paper',
             backdropFilter: 'blur(20px)',
             borderRadius: 1,
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 8px 32px rgba(86, 86, 86, 0.06)',
+            border: '1px solid',
+            borderColor: 'divider',
+            boxShadow: (theme) => `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(86, 86, 86, 0.06)' : 'rgba(0, 0, 0, 0.3)'}`,
             padding: 1.5,
             overflow: 'auto',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -84,9 +85,9 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
               display: 'none', // Chrome, Safari, Edge
             },
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
-              borderColor: 'rgba(80, 70, 228, 0.3)',
+              backgroundColor: 'background.default',
+              boxShadow: (theme) => `0 12px 40px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.4)'}`,
+              borderColor: 'primary.light',
             },
           }}
         >
@@ -95,7 +96,6 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
             sx={{ 
               color: 'text.primary',
               lineHeight: 1.7,
-              fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
               fontWeight: 400,
               opacity: 0.9
             }}
@@ -118,7 +118,6 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
               sx={{ 
                 fontStyle: 'italic', 
                 textAlign: 'center',
-                fontSize: { xs: '0.9rem', sm: '0.95rem', md: '1rem' },
                 color: 'text.primary',
                 opacity: 0.6
               }}

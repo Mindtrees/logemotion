@@ -33,35 +33,35 @@ interface WritePostProps {
 
 const InputTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: theme.palette.background.elevated,
     backdropFilter: 'blur(20px)',
     borderRadius: 16,
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.06)' : 'rgba(0, 0, 0, 0.2)'}`,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
-      borderColor: 'rgba(80, 70, 228, 0.3)',
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 12px 40px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
+      borderColor: theme.palette.primary.light,
     },
     '&.Mui-focused': {
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      boxShadow: '0 16px 48px rgba(80, 70, 228, 0.15)',
-      borderColor: '#5046e4',
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 16px 48px ${theme.palette.primary.main}30`,
+      borderColor: theme.palette.primary.main,
     },
     '& fieldset': {
       border: 'none',
     },
   },
-  '& .MuiInputBase-input': {
-    fontSize: '1rem',
-    fontWeight: 500,
-    color: 'rgba(0, 0, 0, 0.87)',
-    '&::placeholder': {
-      color: 'rgba(0, 0, 0, 0.4)',
-      opacity: 1,
+      '& .MuiInputBase-input': {
+      fontSize: theme.typography.body1.fontSize,
+      fontWeight: 500,
+      color: theme.palette.text.primary,
+      '&::placeholder': {
+        color: theme.palette.text.secondary,
+        opacity: 0.7,
+      },
     },
-  },
 }));
 
 const WritePost: React.FC<WritePostProps> = ({ 
@@ -91,7 +91,7 @@ const WritePost: React.FC<WritePostProps> = ({
     try {
   
       const emotionAnalysis = emotions.map(emotion => ({
-        color: emotion.color || '#CCCCCC', 
+        color: emotion.color || 'text.muted', 
         name: emotion.name,
         value: emotion.value,
       })) || [];
@@ -177,10 +177,11 @@ const WritePost: React.FC<WritePostProps> = ({
         sx={{ 
           p: { xs: 3, sm: 4, md: 5 }, 
           borderRadius: 4,
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          backgroundColor: 'background.elevated',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+          border: '1px solid',
+          borderColor: 'divider',
+          boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
           height: '100%',
           minHeight: '70vh',
           display: 'flex',
@@ -194,7 +195,6 @@ const WritePost: React.FC<WritePostProps> = ({
             mb: 4, 
             fontWeight: 700,
             color: 'text.primary',
-            fontSize: { xs: '1.5rem', md: '1.75rem' },
             letterSpacing: '-0.01em'
           }}
         >
@@ -220,8 +220,7 @@ const WritePost: React.FC<WritePostProps> = ({
               sx={{ 
                 mb: 2, 
                 fontWeight: 600,
-                color: 'text.primary',
-                fontSize: '1rem'
+                color: 'text.primary'
               }}
             >
               Title
@@ -245,8 +244,7 @@ const WritePost: React.FC<WritePostProps> = ({
               sx={{ 
                 mb: 2, 
                 fontWeight: 600,
-                color: 'text.primary',
-                fontSize: '1rem'
+                color: 'text.primary'
               }}
             >
               Content
@@ -279,7 +277,7 @@ const WritePost: React.FC<WritePostProps> = ({
                   overflow: 'auto !important',
                   resize: 'none',
                   fontFamily: 'inherit',
-                  fontSize: '1rem',
+                  fontSize: (theme) => theme.typography.body1.fontSize,
                   lineHeight: 1.6,
                   padding: '40px !important',
                   paddingRight: '60px !important',
@@ -320,15 +318,15 @@ const WritePost: React.FC<WritePostProps> = ({
                 py: 1.75,
                 px: 5,
                 borderRadius: 1,
-                fontSize: '1rem',
+                fontSize: (theme) => theme.typography.body1.fontSize,
                 minWidth: '200px',
-                backgroundColor: hasBeenAnalyzed ? '#5046e4' : '#1c1c1e',
+                backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.main : theme.palette.text.primary,
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: hasBeenAnalyzed ? '#3832a0' : '#2c2c2e',
+                  backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.dark : theme.palette.text.secondary,
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.2)',
                   transform: 'translateY(-1px)',
                 },
@@ -337,8 +335,8 @@ const WritePost: React.FC<WritePostProps> = ({
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
                 },
                 '&:disabled': {
-                  backgroundColor: 'rgba(28, 28, 30, 0.3)',
-                  color: 'rgba(255, 255, 255, 0.3)',
+                  backgroundColor: 'action.disabled',
+                  color: 'text.disabled',
                   boxShadow: 'none',
                   transform: 'none',
                 }
@@ -358,27 +356,28 @@ const WritePost: React.FC<WritePostProps> = ({
                 py: 1.75,
                 px: 5,
                 borderRadius: 1,
-                fontSize: '1rem',
+                fontSize: (theme) => theme.typography.body1.fontSize,
                 minWidth: '140px',
-                backgroundColor: 'white',
-                color: '#1c1c1e',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
+                backgroundColor: 'background.paper',
+                color: 'text.primary',
+                border: '1px solid',
+                borderColor: 'divider',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: '#f8f8f8',
+                  backgroundColor: 'background.default',
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.12)',
                   transform: 'translateY(-1px)',
-                  borderColor: 'rgba(0, 0, 0, 0.15)',
+                  borderColor: 'divider',
                 },
                 '&:active': {
                   transform: 'translateY(0px)',
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
                 },
                 '&:disabled': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                  color: 'rgba(28, 28, 30, 0.3)',
-                  borderColor: 'rgba(0, 0, 0, 0.05)',
+                  backgroundColor: 'action.hover',
+                  color: 'text.disabled',
+                  borderColor: 'action.disabled',
                   boxShadow: 'none',
                   transform: 'none',
                 }
