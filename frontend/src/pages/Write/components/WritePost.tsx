@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -13,7 +13,9 @@ import { styled } from '@mui/material/styles';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { EmotionAnalysisResponse } from '../../../models';
+import { Emotions } from '../../../models';
+import { useAuthState } from '../../../hooks/UseLogin'; 
+import { useAddDocument } from '../../../hooks/UseAddDocument';
 
 interface WritePostProps {
   title: string;
@@ -25,12 +27,7 @@ interface WritePostProps {
   error: Error | null;
   analyzeText: (text: string) => void;
   reset: () => void;
-  rawData: EmotionAnalysisResponse | null;
-  emotions: any[];
-  savePost: (data: { title: string; content: string; emotionAnalysis?: any }) => void;
-  isSaving: boolean;
-  saveError: Error | null;
-  saveSuccess: boolean;
+  emotions: Emotions[];
 }
 
 const AppleTextField = styled(TextField)(({ theme }) => ({
@@ -76,35 +73,64 @@ const WritePost: React.FC<WritePostProps> = ({
   error,
   analyzeText,
   reset,
-  rawData,
   emotions,
-  savePost,
-  isSaving,
-  saveError,
-  saveSuccess,
 }) => {
+  const { user } = useAuthState();
+  const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
+  const addPostMutation = useAddDocument();
 
-  const handleSave = () => {
-    savePost({
-      title,
-      content,
-      emotionAnalysis: emotions || undefined
-    });
+  const handleSave = async () => {
+    if (!user || !emotions) {
+      console.error('User not authenticated or no emotion analysis data');
+      return;
+    }
+
+    try {
+  
+      const emotionAnalysis = emotions.map(emotion => ({
+        color: emotion.color || '#CCCCCC', 
+        name: emotion.name,
+        value: emotion.value || 0 
+      })) || [];
+
+      const postData = {
+        content: content.trim(),
+        title: title.trim() || 'Untitled Post', 
+        userEmail: user.email || '',
+        userId: user.uid || '',
+        emotionAnalysis
+      };
+
+      await addPostMutation.addDocument(postData);
+      
+
+      console.log('Post saved successfully!');
+      
+      handleReset();
+      
+    } catch (error) {
+      console.error('Failed to save post:', error);
+
+    }
   };
 
   const handleAnalyze = () => {
     if (!combinedText.trim()) return;
+    setHasBeenAnalyzed(true);
     analyzeText(combinedText);
   };
 
   const handleReset = () => {
+    setHasBeenAnalyzed(false);
     reset();
     setTitle('');
     setContent('');
   };
 
-  const isFormValid = content.trim();
-  const hasAnalysisData = !!rawData;
+  const isFormValid = content.trim() && title.trim();
+  const hasAnalysisData = emotions && emotions.length > 0;
+  const canSave = isFormValid && hasAnalysisData && user;
+  const isSaving = addPostMutation.isLoading;
 
   return (
     <Grid 
@@ -149,18 +175,6 @@ const WritePost: React.FC<WritePostProps> = ({
           {error && (
             <Alert severity="error" sx={{ borderRadius: 2 }}>
               {error.message}
-            </Alert>
-          )}
-          
-          {saveError && (
-            <Alert severity="error" sx={{ borderRadius: 2 }}>
-              {saveError.message}
-            </Alert>
-          )}
-          
-          {saveSuccess && (
-            <Alert severity="success" sx={{ borderRadius: 2 }}>
-              Post saved successfully with emotion analysis!
             </Alert>
           )}
           
@@ -253,9 +267,9 @@ const WritePost: React.FC<WritePostProps> = ({
             <Button
               variant="contained"
               size="large"
-              startIcon={hasAnalysisData ? <RefreshIcon /> : <AnalyticsIcon />}
-              onClick={hasAnalysisData ? handleReset : handleAnalyze}
-              disabled={(!isFormValid && !hasAnalysisData) || loading}
+              startIcon={hasBeenAnalyzed ? <RefreshIcon /> : <AnalyticsIcon />}
+              onClick={hasBeenAnalyzed ? handleReset : handleAnalyze}
+              disabled={(!isFormValid && !hasBeenAnalyzed) || loading}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -264,13 +278,13 @@ const WritePost: React.FC<WritePostProps> = ({
                 borderRadius: 1,
                 fontSize: '1rem',
                 minWidth: '200px',
-                backgroundColor: hasAnalysisData ? '#5046e4' : '#1c1c1e',
+                backgroundColor: hasBeenAnalyzed ? '#5046e4' : '#1c1c1e',
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: hasAnalysisData ? '#3832a0' : '#2c2c2e',
+                  backgroundColor: hasBeenAnalyzed ? '#3832a0' : '#2c2c2e',
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.2)',
                   transform: 'translateY(-1px)',
                 },
@@ -286,14 +300,14 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              {loading ? 'Analyzing...' : hasAnalysisData ? 'Reset' : 'Analyze Emotions'}
+              {loading ? 'Analyzing...' : hasBeenAnalyzed ? 'Reset' : 'Analyze Emotions'}
             </Button>
             
             <Button
               variant="contained"
               startIcon={<SaveIcon />}
               onClick={handleSave}
-              disabled={!isFormValid || isSaving}
+              disabled={!isFormValid}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -326,7 +340,7 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              {isSaving ? 'Saving...' : 'Save'}
+              Save
             </Button>
           </Stack>
         </Stack>
