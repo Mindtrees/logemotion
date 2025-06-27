@@ -3,6 +3,7 @@ import { Email, Lock as Password, Google } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useGoogleLogin, useLogin } from '../../hooks/UseLogin';
+import { useLocationContext } from '../../contexts/LocationContextProvider';
 
 const LoginContainer = styled('div')({
     display: 'flex',
@@ -10,11 +11,11 @@ const LoginContainer = styled('div')({
     alignItems: 'center',
     width: '100%',
     height: 'auto',
-    marginTop: '50px',
 });
 
 const Login = () => {
     const navigate = useNavigate();
+    const { redirectAfterLogin } = useLocationContext();
     const { login, isLoading: loginLoading, error: loginError, isSuccess: loginSuccess, reset: resetLogin } = useLogin();
     const { loginWithGoogle, isLoading: googleLoading, error: googleError, isSuccess: googleSuccess, reset: resetGoogle } = useGoogleLogin();
 
@@ -26,12 +27,12 @@ const Login = () => {
     const isLoading = loginLoading || googleLoading;
     const error = loginError || googleError;
 
-    // 로그인 성공시 홈으로 이동
     useEffect(() => {
         if (loginSuccess || googleSuccess) {
-            navigate('/');
+            const redirectTo = redirectAfterLogin();
+            navigate(redirectTo, { replace: true });
         }
-    }, [loginSuccess, googleSuccess, navigate]);
+    }, [loginSuccess, googleSuccess, navigate, redirectAfterLogin]);
 
     const handleSignIn = async () => {
         setIsEmailError(false);
@@ -63,7 +64,7 @@ const Login = () => {
     };
 
     return (
-        <LoginContainer sx={{ py:14 }}>
+        <LoginContainer sx={{ pt:8, pb:14 }}>
             <Box
                 sx={{
                     width: '30%',

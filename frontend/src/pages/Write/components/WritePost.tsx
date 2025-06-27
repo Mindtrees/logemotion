@@ -10,6 +10,7 @@ import {
   Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -78,6 +79,7 @@ const WritePost: React.FC<WritePostProps> = ({
   isLoggedIn,
 }) => {
   const { user } = useAuthState();
+  const navigate = useNavigate();
   const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
   const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
@@ -110,6 +112,9 @@ const WritePost: React.FC<WritePostProps> = ({
       console.log('Post saved successfully!');
       
       handleReset();
+      
+      // myPost 페이지로 이동
+      navigate('/my-posts');
       
     } catch (error) {
       console.error('Failed to save post:', error);
