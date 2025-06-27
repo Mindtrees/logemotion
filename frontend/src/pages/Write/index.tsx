@@ -84,7 +84,6 @@ const Write: React.FC = () => {
             reset={reset}
             emotions={emotions}
             isLoggedIn={isLoggedIn}
-            // Add edit mode related props
             isEditMode={isEditMode}
             postId={postId}
             existingPost={existingPost || undefined}
