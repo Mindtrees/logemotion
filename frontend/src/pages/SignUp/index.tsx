@@ -10,7 +10,6 @@ const SignUpContainer = styled('div')({
     alignItems: 'center',
     width: '100%',
     height: 'auto',
-    marginTop: '50px',
 });
 
 const SignUp = () => {
@@ -98,7 +97,7 @@ const SignUp = () => {
     const isEmailAlreadyInUse = error?.message?.includes('already registered');
 
     return (
-        <SignUpContainer sx={{ mb: 14 }}>
+        <SignUpContainer sx={{ mb: 14 , py:14 }}>
             <Box
                 sx={{
                     width: '30%',

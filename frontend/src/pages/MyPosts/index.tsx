@@ -49,6 +49,7 @@ const MyPosts = () => {
         minHeight: "100vh",
         width: "100vw",
         paddingBottom: "100px",
+        pt:8
       }}
     >
       <Container

@@ -4,7 +4,12 @@ import { Edit as EditIcon } from '@mui/icons-material';
 
 const WritePostHeading: React.FC = () => {
   return (
-    <Container maxWidth="xl" sx={{ py: { xs: 4, md: 5 }, px: { xs: 2, sm: 3 } }}>
+    <Container 
+      maxWidth="lg" 
+      sx={{
+        px: { xs: 2, sm: 5, md: 6, lg: 8 } 
+      }}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Box sx={{ mb: { xs: 3, md: 4 }, textAlign: { xs: 'left', md: 'left' } }}>
@@ -43,7 +48,7 @@ const WritePostHeading: React.FC = () => {
                 sx={{ 
                   fontWeight: 700,
                   color: 'text.primary',
-                  fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
+                  fontSize:'2rem',
                   letterSpacing: '-0.02em',
                   lineHeight: 1.1
                 }}

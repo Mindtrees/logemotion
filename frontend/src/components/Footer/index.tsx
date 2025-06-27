@@ -160,7 +160,7 @@ const Footer = () => {
               color: "rgba(255, 255, 255, 0.6)",
             }}
           >
-            © 2024 EmotionBlog. All rights reserved.
+             © {new Date().getFullYear()} EmotionBlog. All rights reserved.
           </Typography>
         </Stack>
       </Box>
