@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { Container, Grid, Box, Stack } from '@mui/material';
+import { useParams } from 'react-router-dom'; 
 import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
 import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
 import { useAuthState } from '../../hooks/UseLogin';
+import { useGetPost } from '../../hooks/UsePost'; 
+import Loading from "../../components/Loading"; 
 
 const Write: React.FC = () => {
+  const { postId } = useParams<{ postId: string }>(); // Extract postId parameter from URL
+  const isEditMode = Boolean(postId); // Determine edit mode if postId exists
+  
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const emotionMutation = useEmotionAnalysis();
   const { user } = useAuthState();
+
+  // Fetch existing post data when in edit mode
+  const { data: existingPost, isLoading: isPostLoading } = useGetPost(postId);
 
   const isLoggedIn = !!user;
 
@@ -20,6 +29,18 @@ const Write: React.FC = () => {
   } = emotionMutation;
   
   const combinedText = `${title}. ${content}`;
+
+  // Initialize form with existing data in edit mode
+  useEffect(() => {
+    if (isEditMode && existingPost) {
+      setTitle(existingPost.title || '');
+      setContent(existingPost.content || '');
+    }
+  }, [isEditMode, existingPost]);
+
+  if (isEditMode && isPostLoading) {
+    return <Loading />;
+  }
 
   return (
     <Box 
@@ -63,6 +84,10 @@ const Write: React.FC = () => {
             reset={reset}
             emotions={emotions}
             isLoggedIn={isLoggedIn}
+            // Add edit mode related props
+            isEditMode={isEditMode}
+            postId={postId}
+            existingPost={existingPost || undefined}
           />
           
           <Grid 

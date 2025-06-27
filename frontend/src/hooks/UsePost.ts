@@ -5,6 +5,7 @@ import {
   UpdatePost,
   DeletePost,
   GetAllPosts,
+  getPost,
 } from "../api/postApi";
 
 import { CreatePostData, EmotionAnalysisResponse, Posts } from "../models";
@@ -143,4 +144,16 @@ export const useGetAllPosts = () => {
     error: query.error,
     refetch: query.refetch,
   };
+};
+
+// 단일포스트 가져오기
+export const useGetPost = (postId?: string) => {
+  return useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => {
+      if (!postId) return null;
+      return getPost(postId);
+    },
+    enabled: Boolean(postId),
+  });
 };
