@@ -9,6 +9,7 @@ import {
 
 import { CreatePostData, EmotionAnalysisResponse, Posts } from "../models";
 import { useAuthState } from "./UseLogin";
+import transformEmotionData from "../utils/transformEmotionData";
 
 export const useSavePost = () => {
   const { user } = useAuthState();
@@ -28,7 +29,9 @@ export const useSavePost = () => {
         content: data.content,
         userId: user.uid,
         userEmail: user.email || "",
-        emotionAnalysis: data.emotionAnalysis,
+        emotionAnalysis: data.emotionAnalysis
+          ? transformEmotionData(data.emotionAnalysis)
+          : undefined,
       };
 
       return SavePost(postData);
