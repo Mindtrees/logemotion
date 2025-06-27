@@ -1,8 +1,12 @@
 import { Box, InputAdornment, TextField } from "@mui/material";
-import { Search as SearchIcon } from "@mui/icons-material";
-// import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "@mui/icons-material/Search";
 
-const SearchBar = () => {
+interface SearchBarProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+}
+
+const SearchBar = ({ searchTerm, setSearchTerm }: SearchBarProps) => {
   return (
     <Box sx={{ mb: 3 }}>
       <TextField
@@ -10,6 +14,8 @@ const SearchBar = () => {
         variant="outlined"
         size="small"
         placeholder="Search by title or content..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

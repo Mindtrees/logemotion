@@ -1,9 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import Button from "../common/Button";
-import { EditNote as EditNoteIcon } from "@mui/icons-material";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useNavigate } from "react-router-dom";
 
-const MyPostHeader = () => {
+interface PostHeaderProps {
+  title: string;
+}
+
+const PostHeader = ({ title }: PostHeaderProps) => {
   const navigate = useNavigate();
   const handleClickWritePage = () => {
     navigate("/write");
@@ -18,7 +22,7 @@ const MyPostHeader = () => {
       }}
     >
       <Typography sx={{ fontSize: "2rem", fontWeight: "800" }}>
-        My Posts
+        {title}
       </Typography>
       <Button
         onClick={handleClickWritePage}
@@ -36,4 +40,4 @@ const MyPostHeader = () => {
   );
 };
 
-export default MyPostHeader;
+export default PostHeader;
