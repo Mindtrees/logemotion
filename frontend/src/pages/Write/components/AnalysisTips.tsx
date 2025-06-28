@@ -20,7 +20,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
     <Paper 
       elevation={0}
       sx={{ 
-        p: { xs: 3, sm: 4 }, 
+        p: { xs: 3, sm: 4, md: 2,}, 
         borderRadius: 4,
         backgroundColor: 'background.elevated',
         backdropFilter: 'blur(20px)',
@@ -43,7 +43,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
         sx={{ 
           mb: { xs: 0.5, md: 1 }, 
           color: 'text.primary',
-          mt: 2,
+          mt: 1,
         }}
        
       >
