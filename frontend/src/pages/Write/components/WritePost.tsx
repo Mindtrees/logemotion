@@ -355,23 +355,24 @@ const WritePost: React.FC<WritePostProps> = ({
                 fontSize: (theme) => theme.typography.body1.fontSize,
                 minWidth: { xs: 'auto', sm: '200px' },
                 width: { xs: '100%', sm: 'auto' },
-                backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.main : theme.palette.text.primary,
+                backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.main : theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[900],
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.dark : theme.palette.text.secondary,
+                  backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.dark : theme.palette.mode === 'dark' ? theme.palette.grey[700] : theme.palette.grey[800],
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.2)',
                   transform: 'translateY(-1px)',
                 },
                 '&:active': {
+                  color: 'white',
                   transform: 'translateY(0px)',
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
                 },
                 '&:disabled': {
-                  backgroundColor: 'action.disabled',
-                  color: 'text.disabled',
+                  backgroundColor: (theme) => theme.palette.action.disabledBackground,
+                  color: (theme) => theme.palette.action.disabled,
                   boxShadow: 'none',
                   transform: 'none',
                 }

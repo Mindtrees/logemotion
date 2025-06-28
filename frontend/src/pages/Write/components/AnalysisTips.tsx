@@ -20,7 +20,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
     <Paper 
       elevation={0}
       sx={{ 
-        p: { xs: 3, sm: 4, md: 2,}, 
+        p: { xs: 3, sm: 4, md: 3,}, 
         borderRadius: 4,
         backgroundColor: 'background.elevated',
         backdropFilter: 'blur(20px)',
@@ -43,7 +43,8 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
         sx={{ 
           mb: { xs: 0.5, md: 1 }, 
           color: 'text.primary',
-          mt: 1,
+          mt: 2,
+       
         }}
        
       >
@@ -57,10 +58,9 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
             flex: 1,
             backgroundColor: 'background.paper',
             backdropFilter: 'blur(20px)',
-            borderRadius: 1,
-            
-            borderColor: 'divider',
-            boxShadow: (theme) => `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(86, 86, 86, 0.06)' : 'rgba(0, 0, 0, 0.3)'}`,
+            borderRadius: 2,
+            //borderColor: 'divider',
+            //boxShadow: (theme) => `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(86, 86, 86, 0.06)' : 'rgba(0, 0, 0, 0.3)'}`,
             padding: 1.5,
             overflow: 'auto',
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',

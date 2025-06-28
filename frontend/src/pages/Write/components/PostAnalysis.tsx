@@ -17,7 +17,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
     <Paper 
       elevation={0}
       sx={{ 
-        p: { xs: 3, sm: 4 }, 
+        p: { xs: 3, sm: 4, md: 3,}, 
         borderRadius: 4,
         backgroundColor: 'background.elevated',
         backdropFilter: 'blur(20px)',
@@ -35,7 +35,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
         }
       }}
     >
-              <Typography 
+      <Typography 
           variant="h4" 
           component="h2" 
           sx={{ 
