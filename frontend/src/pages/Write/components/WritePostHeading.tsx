@@ -1,7 +1,11 @@
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
 
-const WritePostHeading: React.FC = () => {
+interface WritePostHeadingProps {
+  isEditMode?: boolean;
+}
+
+const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false }) => {
   return (
     <Container 
       maxWidth="lg" 
@@ -36,7 +40,7 @@ const WritePostHeading: React.FC = () => {
               display: 'block'
             }}
           >
-            Write with
+            {isEditMode ? 'Edit with' : 'Write with'}
           </Box>
           <Box 
             component="span" 
@@ -65,7 +69,7 @@ const WritePostHeading: React.FC = () => {
             fontSize: { xs: '1.375rem', sm: '1.625rem', md: '1.875rem' }
           }}
         >
-          Discover the feelings behind your words
+{isEditMode ? 'Refine and re-analyze your thoughts' : 'Discover the feelings behind your words'}
         </Typography>
 
         <Typography 

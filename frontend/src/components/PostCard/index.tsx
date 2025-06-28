@@ -49,18 +49,17 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
     setIsPostLiked((prev) => !prev);
   };
 
-  const handleClickEdit = (postId?: string) => {
-    if (!postId) return;
-    // Pass the post data through router state for editing
-    navigate('/write', { 
-      state: { 
-        editMode: true, 
+  const handleClickEdit = () => {
+    navigate("/write", {
+      state: {
+        editMode: true,
         postData: {
           id: post.id,
           title: post.title,
-          content: post.content
+          content: post.content,
+          emotionAnalysis: post.emotionAnalysis
         }
-      } 
+      }
     });
   };
 
@@ -133,7 +132,7 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
                   size="small"
                   aria-label="edit"
                   color="primary"
-                  onClick={() => handleClickEdit(post.id)}
+                  onClick={handleClickEdit}
                 >
                   <EditIcon fontSize="small" />
                 </IconButton>

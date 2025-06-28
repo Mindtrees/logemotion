@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -10,7 +10,7 @@ import {
   Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -31,7 +31,6 @@ interface WritePostProps {
   reset: () => void;
   emotions: Emotions[];
   isLoggedIn: boolean;
-  editingPostId?: string | null;
 }
 
 const InputTextField = styled(TextField)(({ theme }) => ({
@@ -79,16 +78,26 @@ const WritePost: React.FC<WritePostProps> = ({
   reset,
   emotions,
   isLoggedIn,
-  editingPostId,
 }) => {
   const { user } = useAuthState();
   const navigate = useNavigate();
+  const location = useLocation();
   const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
   const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
   const updatePostMutation = useUpdatePost();
-  
-  const isEditMode = !!editingPostId;
+
+  // Check if we're in edit mode
+  const isEditMode = location.state?.editMode && location.state?.postData;
+  const editPostData = location.state?.postData;
+
+  // Handle edit mode - pre-fill form if coming from edit
+  useEffect(() => {
+    if (isEditMode) {
+      setTitle(editPostData.title || '');
+      setContent(editPostData.content || '');
+    }
+  }, [location.state, isEditMode, editPostData, setTitle, setContent]);
 
   const handleSave = async () => {
     if (!user || !emotions) {
@@ -103,7 +112,7 @@ const WritePost: React.FC<WritePostProps> = ({
         value: emotion.value,
       })) || [];
 
-      if (isEditMode && editingPostId) {
+      if (isEditMode && editPostData?.id) {
         // Update existing post
         const updatedData = {
           content: content.trim(),
@@ -111,8 +120,8 @@ const WritePost: React.FC<WritePostProps> = ({
           emotionAnalysis
         };
         
-        updatePostMutation.updatePost({
-          postId: editingPostId,
+        await updatePostMutation.updatePost({
+          postId: editPostData.id,
           updatedData
         });
         
@@ -135,7 +144,7 @@ const WritePost: React.FC<WritePostProps> = ({
       navigate('/my-posts');
       
     } catch (error) {
-      console.error(`Failed to ${isEditMode ? 'update' : 'save'} post:`, error);
+      console.error('Failed to save/update post:', error);
     }
   };
 
@@ -155,11 +164,6 @@ const WritePost: React.FC<WritePostProps> = ({
     reset();
     setTitle('');
     setContent('');
-    
-    // Clear router state when resetting to go back to "create new post" mode
-    if (isEditMode) {
-      navigate('/write', { replace: true });
-    }
   };
 
   const handleInputFocus = () => {
@@ -187,7 +191,7 @@ const WritePost: React.FC<WritePostProps> = ({
   const isFormValid = content.trim() && title.trim();
   const hasAnalysisData = emotions && emotions.length > 0;
   const canSave = isFormValid && hasAnalysisData && user;
-  const isSaving = addPostMutation.isLoading || updatePostMutation.isLoading;
+  const isSaving = addPostMutation.isLoading;
 
   return (
     <Grid 
@@ -261,7 +265,7 @@ const WritePost: React.FC<WritePostProps> = ({
               required
               fullWidth
               variant="outlined"
-              disabled={hasBeenAnalyzed && !isEditMode}
+              disabled={hasBeenAnalyzed}
             />
           </Box>
 
@@ -286,7 +290,7 @@ const WritePost: React.FC<WritePostProps> = ({
               multiline
               fullWidth
               variant="outlined"
-              disabled={hasBeenAnalyzed && !isEditMode}
+              disabled={hasBeenAnalyzed}
               sx={{
                 flex: 1,
                 display: 'flex',
@@ -376,7 +380,7 @@ const WritePost: React.FC<WritePostProps> = ({
               variant="contained"
               startIcon={<SaveIcon />}
               onClick={handleSave}
-              disabled={!canSave}
+              disabled={!isFormValid}
               sx={{
                 textTransform: 'none',
                 fontWeight: 500,
@@ -410,7 +414,7 @@ const WritePost: React.FC<WritePostProps> = ({
                 }
               }}
             >
-              {isEditMode ? 'Update' : 'Save'}
+              {isEditMode ? 'Edit' : 'Save'}
             </Button>
           </Stack>
         </Stack>
