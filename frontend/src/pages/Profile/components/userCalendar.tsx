@@ -85,8 +85,8 @@ const UserCalendar = () => {
     const getDateFromSeconds = (seconds: number) => new Date(seconds * 1000);
     const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-    const emotionColorMap = useMemo(() => {
-        const map: Record<string, { color: string; name: string; value: number }> = {};
+    const emotionDataMap = useMemo(() => {
+        const map: Record<string, { color: string; name: string; value: number; count: number }> = {};
 
         posts.forEach((post) => {
             if (!Array.isArray(post.emotionAnalysis) || post.emotionAnalysis.length === 0) return;
@@ -94,14 +94,23 @@ const UserCalendar = () => {
             const date = formatDate(getDateFromSeconds(post.createdAt.seconds));
             const maxEmotion = post.emotionAnalysis.reduce((max, curr) => (curr.value > max.value ? curr : max));
 
-            if (!map[date] || maxEmotion.value > map[date].value) {
+            if (!map[date]) {
                 map[date] = {
                     color: maxEmotion.color,
                     name: maxEmotion.name,
                     value: maxEmotion.value,
+                    count: 1,
                 };
+            } else {
+                if (maxEmotion.value > map[date].value) {
+                    map[date].color = maxEmotion.color;
+                    map[date].name = maxEmotion.name;
+                    map[date].value = maxEmotion.value;
+                }
+                map[date].count += 1;
             }
         });
+
         return map;
     }, [posts]);
 
@@ -112,14 +121,14 @@ const UserCalendar = () => {
                     locale="en-US"
                     tileContent={({ date }) => {
                         const formatted = formatDate(date);
-                        const emotion = emotionColorMap[formatted];
+                        const emotion = emotionDataMap[formatted];
 
                         return emotion ? (
                             <Tooltip
                                 title={
                                     <Box>
                                         <Box>
-                                            Posts: <span>{posts.length}</span>
+                                            Posts: <span>{emotion.count}</span>
                                         </Box>
                                         <Box>
                                             Top Emotion:{' '}
@@ -151,7 +160,7 @@ const UserCalendar = () => {
                                 }}
                             >
                                 <Box sx={{ textAlign: 'center', mt: 1 }}>
-                                    <EmotionIcon sx={{ fontSize: '28', color: emotion.color }} />
+                                    <EmotionIcon sx={{ fontSize: 28, color: emotion.color }} />
                                 </Box>
                             </Tooltip>
                         ) : null;
