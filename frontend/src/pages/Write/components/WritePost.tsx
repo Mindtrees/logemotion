@@ -216,7 +216,8 @@ const WritePost: React.FC<WritePostProps> = ({
           border: '1px solid',
           borderColor: 'divider',
           boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
-  
+          height: '100%',
+          minHeight: '70vh',
           display: 'flex',
           flexDirection: 'column'
         }}
