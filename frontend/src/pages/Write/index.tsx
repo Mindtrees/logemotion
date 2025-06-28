@@ -1,59 +1,42 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react';
 import { Container, Grid, Box, Stack } from '@mui/material';
-import { useParams } from 'react-router-dom'; 
+import { useLocation } from 'react-router-dom';
 import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
 import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
 import { useAuthState } from '../../hooks/UseLogin';
-import { useGetPost } from '../../hooks/UsePost'; 
-import Loading from "../../components/Loading"; 
 
 const Write: React.FC = () => {
-  const { postId } = useParams<{ postId: string }>(); // Extract postId parameter from URL
-  const isEditMode = Boolean(postId); // Determine edit mode if postId exists
-  
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const location = useLocation();
   const emotionMutation = useEmotionAnalysis();
   const { user } = useAuthState();
-
-  // Fetch existing post data when in edit mode
-  const { data: existingPost, isLoading: isPostLoading } = useGetPost(postId);
 
   const isLoggedIn = !!user;
 
   const {
-    analyze, emotions, rawData, isLoading, error, reset
+    analyze, emotions, isLoading, error, reset
   } = emotionMutation;
   
   const combinedText = `${title}. ${content}`;
-
-  // Initialize form with existing data in edit mode
-  useEffect(() => {
-    if (isEditMode && existingPost) {
-      setTitle(existingPost.title || '');
-      setContent(existingPost.content || '');
-    }
-  }, [isEditMode, existingPost]);
-
-  if (isEditMode && isPostLoading) {
-    return <Loading />;
-  }
+  
+  const isEditMode = location.state?.editMode && location.state?.postData;
 
   return (
     <Box 
       sx={{
-        backgroundColor: "background.section",
-        minHeight: "100vh",
+        backgroundColor: "transparent",
+        minHeight: "80vh",
         width: "100vw",
         pt: 8,
-        pb: 14,
-        px: { xs: 2, sm: 5, md: 6, lg: 8 }
+        pb: 30,
+        px: { xs: 0, sm: 2, md: 4, lg: 8 }
       }}
     >
-      <WritePostHeading />
+      <WritePostHeading isEditMode={isEditMode} />
       <Container 
         maxWidth="lg"
         sx={{ 
@@ -65,11 +48,11 @@ const Write: React.FC = () => {
       >
         <Grid 
           container 
-          spacing={{ xs: 3, sm: 4, md: 5 }}
           sx={{ 
             alignItems: 'stretch',
             maxWidth: '100%',
-            mx: 'auto'
+            mx: 'auto',
+            justifyContent: 'center'
           }}
         >
           <WritePost
@@ -84,20 +67,18 @@ const Write: React.FC = () => {
             reset={reset}
             emotions={emotions}
             isLoggedIn={isLoggedIn}
-            isEditMode={isEditMode}
-            postId={postId}
-            existingPost={existingPost || undefined}
           />
           
+  
           <Grid 
             item 
             xs={12} 
-            lg={4} 
+            lg={3} 
             sx={{ 
               display: 'flex', 
               flexDirection: 'column',
               mt: { xs: 2, lg: 0 },
-              px: { xs: 1, sm: 2.5, md: 3 }
+      
             }}
           >
             <Box 
@@ -111,11 +92,11 @@ const Write: React.FC = () => {
               }}
             >
               <Stack 
-                spacing={{ xs: 2, sm: 2.5, md: 3 }}
+                spacing={{xs: 2, sm: 2, md: 3 }}
                 sx={{ height: '100%' }}
               >
                 <PostAnalysis emotions={emotions} />
-                <AnalysisTips emotions={emotions} analysisResult={null} />
+                <AnalysisTips emotions={emotions} />
               </Stack>
             </Box>
           </Grid>

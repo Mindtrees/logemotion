@@ -57,11 +57,8 @@ export const emotionTips: { [key: string]: string[] } = {
 };
 
 export const getRandomTipForEmotion = (emotion: string): string => {
-  const normalizedEmotion = emotion.toLowerCase();
-  const tips = emotionTips[normalizedEmotion] || emotionTips.mixed;
+  const transformedEmotion = emotion.toLowerCase();
+  const tips = emotionTips[transformedEmotion];
   return tips[Math.floor(Math.random() * tips.length)];
 };
-
-
-
  
