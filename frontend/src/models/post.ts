@@ -23,7 +23,7 @@ export interface Emotions {
   color: string;
   name: string;
   value: number;
-}[]
+}
 
 export interface AddPostResponse {
   id: string;

@@ -6,11 +6,8 @@ export const useEmotionAnalysis = () => {
   const mutation = useMutation({
     mutationFn: TextAnalyzeEmotion,
     onSuccess: (data) => {
-      
-      if (data) {
-        const transformedData = transformEmotionData(data);
-        console.log("Transformed emotions:", transformedData);
-      }
+      //console.log("Emotion analysis data:", data);
+    
     },
   }); 
 
