@@ -4,96 +4,89 @@ import {
   Typography, 
   Paper
 } from '@mui/material';
-import { Lightbulb as LightbulbIcon } from "@mui/icons-material";
-import { EmotionAnalysisRes } from '../../../models/api';
 import { EmotionResult } from '../../../models';
 import { getRandomTipForEmotion } from '../../../utils/emotionTips';
-import { colors } from "../../../styles/colors";
 
 interface AnalysisTipsProps {
-  analysisResult: EmotionAnalysisRes | null;
   emotions: EmotionResult[];
 }
 
-const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions }) => {
-  
-  const tip = useMemo(() => {
-    if (!analysisResult || emotions.length === 0) return "Write about your emotions today";
-    
-    // Use the first emotion from the sorted transformed data (highest percentage)
-    const primaryEmotionName = emotions[0].name;
-    
-    return getRandomTipForEmotion(primaryEmotionName);
-  }, [analysisResult, emotions]);
+const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
 
-  const hasAnalysis = !!analysisResult && emotions.length > 0;
-  const isDefaultTip = tip === "Write about your emotions today";
+  const hasAnalysis = emotions && emotions.length > 0;
+  const primaryEmotionName = emotions[0]?.name;
 
   return (
     <Paper 
       elevation={0}
       sx={{ 
-        p: { xs: 3, sm: 4 }, 
+        p: { xs: 3, sm: 4, md: 3,}, 
         borderRadius: 4,
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backgroundColor: 'background.elevated',
         backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
-        height: '100%',
-        minHeight: '250px',
-        maxHeight: '300px',
+        border: '1px solid',
+        borderColor: 'divider',
+        boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
+        height: '500px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         '&:hover': {
-          boxShadow: '0 24px 80px rgba(0, 0, 0, 0.12)',
+          boxShadow: (theme) => `0 24px 80px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.12)' : 'rgba(0, 0, 0, 0.4)'}`,
           transform: 'translateY(-2px)',
         }
       }}
     >
-      <Box 
+      <Typography 
+        variant="h4" 
+        component="h2"
         sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          mb: { xs: 2, sm: 2.5, md: 3 },
-          gap: { xs: 1.5, sm: 2 }
+          mb: { xs: 0.5, md: 1 }, 
+          color: 'text.primary',
+          mt: 2,
+       
         }}
+       
       >
-        <LightbulbIcon 
-          sx={{ 
-            color: colors.status.warning,
-            fontSize: '1.5rem'
-          }} 
-        />
-        <Typography 
-          variant="h4" 
-          component="h2" 
-          sx={{ 
-            fontWeight: 700,
-            color: 'text.primary',
-            fontSize: { xs: '1.25rem', sm: '1.4rem', md: '1.75rem' },
-            letterSpacing: '-0.01em'
+        Today's Tip
+      </Typography>
+
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        {hasAnalysis ? (
+                  <Box
+          sx={{
+            flex: 1,
+            backgroundColor: 'background.paper',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 2,
+            //borderColor: 'divider',
+            //boxShadow: (theme) => `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(86, 86, 86, 0.06)' : 'rgba(0, 0, 0, 0.3)'}`,
+            padding: 1.5,
+            overflow: 'auto',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            scrollbarWidth: 'none', // Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome, Safari, Edge
+            },
+            '&:hover': {
+              backgroundColor: 'background.default',
+              boxShadow: (theme) => `0 12px 40px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.4)'}`,
+              borderColor: 'primary.light',
+            },
           }}
         >
-          {hasAnalysis && !isDefaultTip ? "Personalized Tip" : "Today's Tip"}
-        </Typography>
-      </Box>
-
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {hasAnalysis && !isDefaultTip ? (
           <Typography 
             variant="body1" 
             sx={{ 
-              color: 'text.primary',
-              lineHeight: 1.7,
-              fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
-              flex: 1,
+              color: 'text.secondary',
+              lineHeight: 1.4,
               fontWeight: 400,
-              opacity: 0.8
+       
             }}
           >
-            {tip}
+            {primaryEmotionName ? getRandomTipForEmotion(primaryEmotionName) : 'Loading tip...'}
           </Typography>
+        </Box>
         ) : (
           <Box 
             sx={{ 
@@ -105,19 +98,15 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ analysisResult, emotions })
             }}
           >
             <Typography 
-              variant="body1" 
+              variant="body2" 
               sx={{ 
                 fontStyle: 'italic', 
                 textAlign: 'center',
-                fontSize: { xs: '0.9rem', sm: '0.95rem', md: '1rem' },
                 color: 'text.primary',
-                opacity: 0.6
+                opacity: 0.7
               }}
             >
-              {tip === "Write about your emotions today" 
-                ? "Analyze your emotions to receive personalized wellness tips"
-                : tip
-              }
+              Analyze your post to receive personalized wellness tips
             </Typography>
           </Box>
         )}

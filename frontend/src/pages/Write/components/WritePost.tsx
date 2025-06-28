@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -10,13 +10,18 @@ import {
   Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import SaveIcon from '@mui/icons-material/Save';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { EmotionResult } from '../../../models';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Emotions, Posts } from '../../../models';
 import { useAuthState } from '../../../hooks/UseLogin'; 
 import { useAddDocument } from '../../../hooks/UseAddDocument';
+import { useUpdatePost } from '../../../hooks/UsePost';
 
 interface WritePostProps {
   title: string;
@@ -28,44 +33,44 @@ interface WritePostProps {
   error: Error | null;
   analyzeText: (text: string) => void;
   reset: () => void;
-  emotions: Emotions[];
+  emotions: EmotionResult[];
   isLoggedIn: boolean;
   isEditMode?: boolean;
   postId?: string;
   existingPost?: Posts | null;
 }
 
-const AppleTextField = styled(TextField)(({ theme }) => ({
+const InputTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: theme.palette.background.elevated,
     backdropFilter: 'blur(20px)',
     borderRadius: 16,
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.06)' : 'rgba(0, 0, 0, 0.2)'}`,
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
-      borderColor: 'rgba(80, 70, 228, 0.3)',
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 12px 40px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
+      borderColor: theme.palette.primary.light,
     },
     '&.Mui-focused': {
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-      boxShadow: '0 16px 48px rgba(80, 70, 228, 0.15)',
-      borderColor: '#5046e4',
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 16px 48px ${theme.palette.primary.main}30`,
+      borderColor: theme.palette.primary.main,
     },
     '& fieldset': {
       border: 'none',
     },
   },
-  '& .MuiInputBase-input': {
-    fontSize: '1rem',
-    fontWeight: 500,
-    color: 'rgba(0, 0, 0, 0.87)',
-    '&::placeholder': {
-      color: 'rgba(0, 0, 0, 0.4)',
-      opacity: 1,
+      '& .MuiInputBase-input': {
+      fontSize: theme.typography.body1.fontSize,
+      fontWeight: 500,
+      color: theme.palette.text.primary,
+      '&::placeholder': {
+        color: theme.palette.text.secondary,
+        opacity: 0.7,
+      },
     },
-  },
 }));
 
 const WritePost: React.FC<WritePostProps> = ({ 
@@ -83,9 +88,27 @@ const WritePost: React.FC<WritePostProps> = ({
 }) => {
   const { user } = useAuthState();
   const navigate = useNavigate();
+  const location = useLocation();
   const [hasBeenAnalyzed, setHasBeenAnalyzed] = useState(false);
   const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
+  const updatePostMutation = useUpdatePost();
+  const isEditMode = location.state?.editMode && location.state?.postData;
+  const editPostData = location.state?.postData;
+
+  useEffect(() => {
+    if (isEditMode) {
+      setTitle(editPostData.title || '');
+      setContent(editPostData.content || '');
+    }
+  }, [location.state, isEditMode, editPostData, setTitle, setContent]);
+
+  useEffect(() => {
+    if (showLoginWarning) {
+      const timer = setTimeout(() => navigate('/signup'), 2000);
+      () => clearTimeout(timer);
+    }
+  }, [showLoginWarning, navigate]);
 
   const handleSave = async () => {
     if (!user || !emotions) {
@@ -94,34 +117,46 @@ const WritePost: React.FC<WritePostProps> = ({
     }
 
     try {
-  
       const emotionAnalysis = emotions.map(emotion => ({
-        color: emotion.color || '#CCCCCC', 
+        color: emotion.color || 'text.muted', 
         name: emotion.name,
-        value: emotion.value || 0 
+        value: emotion.value,
       })) || [];
 
-      const postData = {
-        content: content.trim(),
-        title: title.trim() || 'Untitled Post', 
-        userEmail: user.email || '',
-        userId: user.uid || '',
-        emotionAnalysis
-      };
+      if (isEditMode && editPostData?.id) {
+        const updatedData = {
+          content: content.trim(),
+          title: title.trim() || 'Untitled Post',
+          emotionAnalysis
+        };
+        
+        await updatePostMutation.updatePost({
+          postId: editPostData.id,
+          updatedData
+        });
+        
+        console.log('Post updated successfully!');
+      } else {
+        const postData = {
+          content: content.trim(),
+          title: title.trim() || 'Untitled Post', 
+          userEmail: user.email || '',
+          userId: user.uid || '',
+          emotionAnalysis
+        };
 
-      await addPostMutation.addDocument(postData);
-      
-
-      console.log('Post saved successfully!');
+        await addPostMutation.addDocument(postData);
+        console.log('Post saved successfully!');
+      }
       
       handleReset();
+      navigate('/my-posts');
       
       // myPost 페이지로 이동
       navigate('/my-posts');
       
     } catch (error) {
-      console.error('Failed to save post:', error);
-
+      console.error('Failed to save/update post:', error);
     }
   };
 
@@ -177,7 +212,8 @@ const WritePost: React.FC<WritePostProps> = ({
       lg={8}
       sx={{ 
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        mx: 'auto',
       }}
     >
       <Paper 
@@ -185,10 +221,11 @@ const WritePost: React.FC<WritePostProps> = ({
         sx={{ 
           p: { xs: 3, sm: 4, md: 5 }, 
           borderRadius: 4,
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          backgroundColor: 'background.elevated',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+          border: '1px solid',
+          borderColor: 'divider',
+          boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
           height: '100%',
           minHeight: '70vh',
           display: 'flex',
@@ -199,14 +236,11 @@ const WritePost: React.FC<WritePostProps> = ({
           variant="h4" 
           component="h2" 
           sx={{ 
-            mb: 4, 
-            fontWeight: 700,
+            mb: { xs: 0.5, md: 1 }, 
             color: 'text.primary',
-            fontSize: { xs: '1.5rem', md: '1.75rem' },
-            letterSpacing: '-0.01em'
           }}
         >
-          Write New Post
+          {isEditMode ? 'Edit Post' : 'Write New Post'}
         </Typography>
         
         <Stack spacing={4} sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -226,15 +260,15 @@ const WritePost: React.FC<WritePostProps> = ({
             <Typography 
               variant="subtitle1" 
               sx={{ 
-                mb: 2, 
-                fontWeight: 600,
-                color: 'text.primary',
-                fontSize: '1rem'
+                mb: 1,
+                mt:5,
+                fontWeight: {xs: 500, md: 600},
+                color: 'text.secondary'
               }}
             >
               Title
             </Typography>
-            <AppleTextField
+            <InputTextField
               name="title"
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
@@ -243,6 +277,7 @@ const WritePost: React.FC<WritePostProps> = ({
               required
               fullWidth
               variant="outlined"
+              disabled={hasBeenAnalyzed}
             />
           </Box>
 
@@ -250,15 +285,14 @@ const WritePost: React.FC<WritePostProps> = ({
             <Typography 
               variant="subtitle1" 
               sx={{ 
-                mb: 2, 
-                fontWeight: 600,
-                color: 'text.primary',
-                fontSize: '1rem'
+                mb: 1, 
+                fontWeight: {xs: 500, md: 600},
+                color: 'text.secondary'
               }}
             >
               Content
             </Typography>
-            <AppleTextField
+            <InputTextField
               name="content"
               value={content}
               onChange={(e) => handleContentChange(e.target.value)}
@@ -268,9 +302,11 @@ const WritePost: React.FC<WritePostProps> = ({
               multiline
               fullWidth
               variant="outlined"
+              disabled={hasBeenAnalyzed}
               sx={{
                 flex: 1,
                 display: 'flex',
+                minHeight: '500px',
                 flexDirection: 'column',
                 '& .MuiOutlinedInput-root': {
                   height: '100%',
@@ -285,10 +321,14 @@ const WritePost: React.FC<WritePostProps> = ({
                   overflow: 'auto !important',
                   resize: 'none',
                   fontFamily: 'inherit',
-                  fontSize: '1rem',
+                  fontSize: (theme) => theme.typography.body1.fontSize,
                   lineHeight: 1.6,
                   padding: '40px !important',
-                  paddingRight: '60px !important', 
+                  paddingRight: '60px !important',
+                  scrollbarWidth: 'none', 
+                  '&::-webkit-scrollbar': {
+                    display: 'none', 
+                  },
                 }
               }}
               InputProps={{
@@ -302,10 +342,11 @@ const WritePost: React.FC<WritePostProps> = ({
           </Box>
 
           <Stack 
-            direction="row" 
-            spacing={3} 
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 2, sm: 3 }}
             sx={{ 
-              justifyContent: 'flex-end',
+              justifyContent: { xs: 'stretch', sm: 'flex-end' },
+              alignItems: { xs: 'stretch', sm: 'center' },
               pt: 2,
               flexShrink: 0
             }}
@@ -322,25 +363,27 @@ const WritePost: React.FC<WritePostProps> = ({
                 py: 1.75,
                 px: 5,
                 borderRadius: 1,
-                fontSize: '1rem',
-                minWidth: '200px',
-                backgroundColor: hasBeenAnalyzed ? '#5046e4' : '#1c1c1e',
+                fontSize: (theme) => theme.typography.body1.fontSize,
+                minWidth: { xs: 'auto', sm: '200px' },
+                width: { xs: '100%', sm: 'auto' },
+                backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.main : theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[900],
                 color: 'white',
                 border: 'none',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: hasBeenAnalyzed ? '#3832a0' : '#2c2c2e',
+                  backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.dark : theme.palette.mode === 'dark' ? theme.palette.grey[700] : theme.palette.grey[800],
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.2)',
                   transform: 'translateY(-1px)',
                 },
                 '&:active': {
+                  color: 'white',
                   transform: 'translateY(0px)',
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
                 },
                 '&:disabled': {
-                  backgroundColor: 'rgba(28, 28, 30, 0.3)',
-                  color: 'rgba(255, 255, 255, 0.3)',
+                  backgroundColor: (theme) => theme.palette.action.disabledBackground,
+                  color: (theme) => theme.palette.action.disabled,
                   boxShadow: 'none',
                   transform: 'none',
                 }
@@ -360,33 +403,35 @@ const WritePost: React.FC<WritePostProps> = ({
                 py: 1.75,
                 px: 5,
                 borderRadius: 1,
-                fontSize: '1rem',
-                minWidth: '140px',
-                backgroundColor: 'white',
-                color: '#1c1c1e',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
+                fontSize: (theme) => theme.typography.body1.fontSize,
+                minWidth: { xs: 'auto', sm: '140px' },
+                width: { xs: '100%', sm: 'auto' },
+                backgroundColor: 'background.paper',
+                color: 'text.primary',
+                border: '1px solid',
+                borderColor: 'divider',
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
-                  backgroundColor: '#f8f8f8',
+                  backgroundColor: 'background.default',
                   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.12)',
                   transform: 'translateY(-1px)',
-                  borderColor: 'rgba(0, 0, 0, 0.15)',
+                  borderColor: 'divider',
                 },
                 '&:active': {
                   transform: 'translateY(0px)',
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
                 },
                 '&:disabled': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                  color: 'rgba(28, 28, 30, 0.3)',
-                  borderColor: 'rgba(0, 0, 0, 0.05)',
+                  backgroundColor: 'action.hover',
+                  color: 'text.disabled',
+                  borderColor: 'action.disabled',
                   boxShadow: 'none',
                   transform: 'none',
                 }
               }}
             >
-              Save
+              {isEditMode ? 'Edit' : 'Save'}
             </Button>
           </Stack>
         </Stack>
