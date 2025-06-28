@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import {
   CalendarToday,
-  Favorite,
   Psychology
 } from '@mui/icons-material';
 
@@ -101,12 +100,12 @@ const ExamplePosts = () => {
                         {post.title}
                       </Typography>
                       
-                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                      {/* <Stack direction="row" alignItems="center" spacing={0.5}>
                         <Favorite sx={{ fontSize: '1.1rem', color: '#primary' }} />
                         <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
                           {post.likes}
                         </Typography>
-                      </Stack>
+                      </Stack> */}
                     </Stack>
                     
                     <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Loading from "../components/Loading";
 import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { LocationProvider } from "../contexts/LocationContextProvider";
 
 const Home = React.lazy(() => import("../pages/Home"));
 const Write = React.lazy(() => import("../pages/Write/index"));
@@ -17,6 +18,7 @@ const AppLayout: React.FC = () => {
     <div>
       <NavBar />
       <Suspense fallback={<Loading />}>
+      <LocationProvider> 
         <Routes>
           <Route path="/" element={<Home />} />
           {/* 새 글 작성용 */}
@@ -29,6 +31,7 @@ const AppLayout: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
+      </LocationProvider> 
       </Suspense>
       <Footer />
     </div>

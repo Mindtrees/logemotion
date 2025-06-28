@@ -15,6 +15,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { EmotionResult } from '../../../models';
+import SaveIcon from '@mui/icons-material/Save';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Emotions, Posts } from '../../../models';
 import { useAuthState } from '../../../hooks/UseLogin'; 
 import { useAddDocument } from '../../../hooks/UseAddDocument';
 import { useUpdatePost } from '../../../hooks/UsePost';
@@ -31,6 +35,9 @@ interface WritePostProps {
   reset: () => void;
   emotions: EmotionResult[];
   isLoggedIn: boolean;
+  isEditMode?: boolean;
+  postId?: string;
+  existingPost?: Posts | null;
 }
 
 const InputTextField = styled(TextField)(({ theme }) => ({
@@ -99,7 +106,7 @@ const WritePost: React.FC<WritePostProps> = ({
   useEffect(() => {
     if (showLoginWarning) {
       const timer = setTimeout(() => navigate('/signup'), 2000);
-      return () => clearTimeout(timer);
+      () => clearTimeout(timer);
     }
   }, [showLoginWarning, navigate]);
 
@@ -143,6 +150,9 @@ const WritePost: React.FC<WritePostProps> = ({
       }
       
       handleReset();
+      navigate('/my-posts');
+      
+      // myPost 페이지로 이동
       navigate('/my-posts');
       
     } catch (error) {
