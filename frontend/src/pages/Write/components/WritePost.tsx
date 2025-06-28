@@ -103,7 +103,7 @@ const WritePost: React.FC<WritePostProps> = ({
   useEffect(() => {
     if (showLoginWarning) {
       const timer = setTimeout(() => navigate('/signup'), 2000);
-      () => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
   }, [showLoginWarning, navigate]);
 
