@@ -1,9 +1,11 @@
 import { Box, Typography, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../../components/common/Button';
+import { useAuthState } from '../../../../hooks/UseLogin';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { user } = useAuthState();
   return (
     <Box
       sx={{
@@ -46,7 +48,7 @@ const Hero = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Button variant="primary" size="large" onClick={() => navigate('/login')}>
+          <Button variant="primary" size="large" onClick={() => navigate(user ? '/write' : '/login')}>
             Get Started
           </Button>
         </Stack>
