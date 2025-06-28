@@ -25,7 +25,7 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
         borderColor: 'divider',
         boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
         height: '100%',
-        minHeight: '500px',
+        minHeight: '350px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -39,16 +39,15 @@ const PostAnalysis: React.FC<PostAnalysisProps> = ({ emotions }) => {
           variant="h4" 
           component="h2" 
           sx={{ 
-            mb: { xs: 2, sm: 2.5, md: 3 }, 
-            fontWeight: 700,
+            mb: { xs: 0.5, md: 1 }, 
             color: 'text.primary',
-            letterSpacing: '-0.01em'
+            mt: 2,
           }}
         >
         Emotion Analysis Results
       </Typography>
       
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', pt: 4, pb: 2 }}>
         {emotions.length > 0 ? (
           <Stack spacing={{ xs: 1, sm: 1.2, md: 1.5 }}>
             {emotions.map((emotion, index) => (

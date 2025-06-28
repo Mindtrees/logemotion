@@ -18,7 +18,7 @@ const Write: React.FC = () => {
   const isLoggedIn = !!user;
 
   const {
-    analyze, emotions, rawData, isLoading, error, reset
+    analyze, emotions, isLoading, error, reset
   } = emotionMutation;
   
   const combinedText = `${title}. ${content}`;
@@ -28,12 +28,12 @@ const Write: React.FC = () => {
   return (
     <Box 
       sx={{
-        backgroundColor: "background.section",
-        minHeight: "100vh",
+        backgroundColor: "transparent",
+        minHeight: "80vh",
         width: "100vw",
         pt: 8,
-        pb: 14,
-        px: { xs: 2, sm: 5, md: 6, lg: 8 }
+        pb: 30,
+        px: { xs: 0, sm: 2, md: 4, lg: 8 }
       }}
     >
       <WritePostHeading isEditMode={isEditMode} />
@@ -48,11 +48,11 @@ const Write: React.FC = () => {
       >
         <Grid 
           container 
-          spacing={{ xs: 3, sm: 4, md: 5 }}
           sx={{ 
             alignItems: 'stretch',
             maxWidth: '100%',
-            mx: 'auto'
+            mx: 'auto',
+            justifyContent: 'center'
           }}
         >
           <WritePost
@@ -69,15 +69,16 @@ const Write: React.FC = () => {
             isLoggedIn={isLoggedIn}
           />
           
+  
           <Grid 
             item 
             xs={12} 
-            lg={4} 
+            lg={3} 
             sx={{ 
               display: 'flex', 
               flexDirection: 'column',
               mt: { xs: 2, lg: 0 },
-              px: { xs: 1, sm: 2.5, md: 3 }
+      
             }}
           >
             <Box 
@@ -91,7 +92,7 @@ const Write: React.FC = () => {
               }}
             >
               <Stack 
-                spacing={{ xs: 2, sm: 2.5, md: 3 }}
+                spacing={{xs: 2, sm: 2, md: 3 }}
                 sx={{ height: '100%' }}
               >
                 <PostAnalysis emotions={emotions} />

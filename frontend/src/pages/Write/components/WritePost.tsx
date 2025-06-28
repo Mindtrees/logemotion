@@ -14,7 +14,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Emotions } from '../../../models';
+import { EmotionResult } from '../../../models';
 import { useAuthState } from '../../../hooks/UseLogin'; 
 import { useAddDocument } from '../../../hooks/UseAddDocument';
 import { useUpdatePost } from '../../../hooks/UsePost';
@@ -29,7 +29,7 @@ interface WritePostProps {
   error: Error | null;
   analyzeText: (text: string) => void;
   reset: () => void;
-  emotions: Emotions[];
+  emotions: EmotionResult[];
   isLoggedIn: boolean;
 }
 
@@ -86,18 +86,22 @@ const WritePost: React.FC<WritePostProps> = ({
   const [showLoginWarning, setShowLoginWarning] = useState(false);
   const addPostMutation = useAddDocument();
   const updatePostMutation = useUpdatePost();
-
-  // Check if we're in edit mode
   const isEditMode = location.state?.editMode && location.state?.postData;
   const editPostData = location.state?.postData;
 
-  // Handle edit mode - pre-fill form if coming from edit
   useEffect(() => {
     if (isEditMode) {
       setTitle(editPostData.title || '');
       setContent(editPostData.content || '');
     }
   }, [location.state, isEditMode, editPostData, setTitle, setContent]);
+
+  useEffect(() => {
+    if (showLoginWarning) {
+      const timer = setTimeout(() => navigate('/signup'), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showLoginWarning, navigate]);
 
   const handleSave = async () => {
     if (!user || !emotions) {
@@ -113,7 +117,6 @@ const WritePost: React.FC<WritePostProps> = ({
       })) || [];
 
       if (isEditMode && editPostData?.id) {
-        // Update existing post
         const updatedData = {
           content: content.trim(),
           title: title.trim() || 'Untitled Post',
@@ -127,7 +130,6 @@ const WritePost: React.FC<WritePostProps> = ({
         
         console.log('Post updated successfully!');
       } else {
-        // Create new post
         const postData = {
           content: content.trim(),
           title: title.trim() || 'Untitled Post', 
@@ -200,7 +202,8 @@ const WritePost: React.FC<WritePostProps> = ({
       lg={8}
       sx={{ 
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        mx: 'auto',
       }}
     >
       <Paper 
@@ -213,8 +216,7 @@ const WritePost: React.FC<WritePostProps> = ({
           border: '1px solid',
           borderColor: 'divider',
           boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
-          height: '100%',
-          minHeight: '70vh',
+  
           display: 'flex',
           flexDirection: 'column'
         }}
@@ -223,10 +225,8 @@ const WritePost: React.FC<WritePostProps> = ({
           variant="h4" 
           component="h2" 
           sx={{ 
-            mb: { xs: 2, sm: 2.5, md: 3 }, 
-            fontWeight: 700,
+            mb: { xs: 0.5, md: 1 }, 
             color: 'text.primary',
-            letterSpacing: '-0.01em'
           }}
         >
           {isEditMode ? 'Edit Post' : 'Write New Post'}
@@ -249,9 +249,10 @@ const WritePost: React.FC<WritePostProps> = ({
             <Typography 
               variant="subtitle1" 
               sx={{ 
-                mb: 2, 
-                fontWeight: 600,
-                color: 'text.primary'
+                mb: 1,
+                mt:5,
+                fontWeight: {xs: 500, md: 600},
+                color: 'text.secondary'
               }}
             >
               Title
@@ -273,9 +274,9 @@ const WritePost: React.FC<WritePostProps> = ({
             <Typography 
               variant="subtitle1" 
               sx={{ 
-                mb: 2, 
-                fontWeight: 600,
-                color: 'text.primary'
+                mb: 1, 
+                fontWeight: {xs: 500, md: 600},
+                color: 'text.secondary'
               }}
             >
               Content
@@ -294,6 +295,7 @@ const WritePost: React.FC<WritePostProps> = ({
               sx={{
                 flex: 1,
                 display: 'flex',
+                minHeight: '500px',
                 flexDirection: 'column',
                 '& .MuiOutlinedInput-root': {
                   height: '100%',
@@ -312,9 +314,9 @@ const WritePost: React.FC<WritePostProps> = ({
                   lineHeight: 1.6,
                   padding: '40px !important',
                   paddingRight: '60px !important',
-                  scrollbarWidth: 'none', // Firefox
+                  scrollbarWidth: 'none', 
                   '&::-webkit-scrollbar': {
-                    display: 'none', // Chrome, Safari, Edge
+                    display: 'none', 
                   },
                 }
               }}
@@ -329,10 +331,11 @@ const WritePost: React.FC<WritePostProps> = ({
           </Box>
 
           <Stack 
-            direction="row" 
-            spacing={3} 
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={{ xs: 2, sm: 3 }}
             sx={{ 
-              justifyContent: 'flex-end',
+              justifyContent: { xs: 'stretch', sm: 'flex-end' },
+              alignItems: { xs: 'stretch', sm: 'center' },
               pt: 2,
               flexShrink: 0
             }}
@@ -350,7 +353,8 @@ const WritePost: React.FC<WritePostProps> = ({
                 px: 5,
                 borderRadius: 1,
                 fontSize: (theme) => theme.typography.body1.fontSize,
-                minWidth: '200px',
+                minWidth: { xs: 'auto', sm: '200px' },
+                width: { xs: '100%', sm: 'auto' },
                 backgroundColor: (theme) => hasBeenAnalyzed ? theme.palette.primary.main : theme.palette.text.primary,
                 color: 'white',
                 border: 'none',
@@ -388,7 +392,8 @@ const WritePost: React.FC<WritePostProps> = ({
                 px: 5,
                 borderRadius: 1,
                 fontSize: (theme) => theme.typography.body1.fontSize,
-                minWidth: '140px',
+                minWidth: { xs: 'auto', sm: '140px' },
+                width: { xs: '100%', sm: 'auto' },
                 backgroundColor: 'background.paper',
                 color: 'text.primary',
                 border: '1px solid',

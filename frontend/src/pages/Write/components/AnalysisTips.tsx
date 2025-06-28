@@ -27,7 +27,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
         border: '1px solid',
         borderColor: 'divider',
         boxShadow: (theme) => `0 20px 60px ${theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.3)'}`,
-        height: '300px',
+        height: '500px',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -39,13 +39,13 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
     >
       <Typography 
         variant="h4" 
-        component="h2" 
+        component="h2"
         sx={{ 
-          mb: { xs: 2, sm: 2.5, md: 3 }, 
-          fontWeight: 700,
+          mb: { xs: 0.5, md: 1 }, 
           color: 'text.primary',
-          letterSpacing: '-0.01em'
+          mt: 2,
         }}
+       
       >
         Today's Tip
       </Typography>
@@ -58,7 +58,7 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
             backgroundColor: 'background.paper',
             backdropFilter: 'blur(20px)',
             borderRadius: 1,
-            border: '1px solid',
+            
             borderColor: 'divider',
             boxShadow: (theme) => `0 8px 32px ${theme.palette.mode === 'light' ? 'rgba(86, 86, 86, 0.06)' : 'rgba(0, 0, 0, 0.3)'}`,
             padding: 1.5,
@@ -78,10 +78,10 @@ const AnalysisTips: React.FC<AnalysisTipsProps> = ({ emotions }) => {
           <Typography 
             variant="body1" 
             sx={{ 
-              color: 'text.primary',
-              lineHeight: 1.7,
+              color: 'text.secondary',
+              lineHeight: 1.4,
               fontWeight: 400,
-              opacity: 0.9
+       
             }}
           >
             {primaryEmotionName ? getRandomTipForEmotion(primaryEmotionName) : 'Loading tip...'}

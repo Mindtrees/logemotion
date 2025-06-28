@@ -11,14 +11,28 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
       maxWidth="lg" 
       sx={{
         px: { xs: 3, sm: 4, md: 6, lg: 8 },
-        py: { xs: 6, sm: 8, md: 10 }
+        py: { xs: 6, sm: 8, md: 10 },
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
       }}
     >
       <Box 
         sx={{ 
           textAlign: 'center',
           maxWidth: '800px',
-          mx: 'auto'
+          mx: 'auto',
+          '@keyframes gradientShift': {
+            '0%': {
+              backgroundPosition: '0% 50%',
+            },
+            '50%': {
+              backgroundPosition: '100% 50%',
+            },
+            '100%': {
+              backgroundPosition: '0% 50%',
+            },
+          },
         }}
       >
         <Typography 
@@ -28,8 +42,8 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
             fontWeight: 600,
             color: 'text.primary',
             lineHeight: { xs: 1.1, md: 1.05 },
-            mb: { xs: 2, md: 3 },
-            fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' }
+            mb: { xs: 3, md: 4, lg: 6 },
+            fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
           }}
         >
           <Box 
@@ -37,7 +51,7 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
             sx={{ 
               letterSpacing: '-0.02em',
               marginBottom: { xs: '0.1em', md: '0.05em' },
-              display: 'block'
+              display: 'block',
             }}
           >
             {isEditMode ? 'Edit with' : 'Write with'}
@@ -46,11 +60,14 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
             component="span" 
             sx={{ 
               display: 'block',
-              background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
+              backgroundSize: '200% 200%',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              letterSpacing: '-0.03em'
+              letterSpacing: '-0.03em',
+              fontSize: { xs: '2.8rem', sm: '3.8rem', md: '5rem' },
+              animation: 'gradientShift 3s ease-in-out infinite',
             }}
           >
             Emotion
@@ -62,14 +79,14 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
           sx={{ 
             color: 'text.secondary',
             fontWeight: 400,
-            letterSpacing: '-0.015em',
+            letterSpacing: '0.01em',
             lineHeight: 1.4,
-            mt: { xs: 1, md: 2 },
-            mb: { xs: 2, md: 3 },
-            fontSize: { xs: '1.375rem', sm: '1.625rem', md: '1.875rem' }
+            mt: { xs: 3, md: 4, lg: 6 },
+            mb: { xs: 2, md: 3,},
+            fontSize: { xs: '1.375rem', sm: '1.625rem', md: '1.875rem' },
           }}
         >
-{isEditMode ? 'Refine and re-analyze your thoughts' : 'Discover the feelings behind your words'}
+{isEditMode ? 'Refine and re-analyze your thoughts' : 'Discover the Feelings Behind your Words'}
         </Typography>
 
         <Typography 
@@ -82,7 +99,7 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
             maxWidth: '500px',
             mx: 'auto',
             opacity: 0.8,
-            fontSize: { xs: '0.9rem', md: '1rem' }
+            fontSize: { xs: '0.9rem', md: '1rem' },
           }}
         >
           Share your thoughts and let our emotion analysis reveal the deeper meaning in your writing
@@ -91,11 +108,9 @@ const WritePostHeading: React.FC<WritePostHeadingProps> = ({ isEditMode = false 
         <Box 
           sx={{
             width: 60,
-            height: 1,
-            background: (theme) => `linear-gradient(90deg, transparent, ${theme.palette.primary.main}, transparent)`,
-            mx: 'auto',
+            height: 11,
             mt: { xs: 4, md: 5 },
-            opacity: 0.3
+            opacity: 0.3,
           }}
         />
       </Box>
