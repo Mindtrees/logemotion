@@ -12,10 +12,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { EmotionResult } from '../../../models';
-import SaveIcon from '@mui/icons-material/Save';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Emotions, Posts } from '../../../models';

@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react';
 import { Container, Grid, Box, Stack } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { useParams } from 'react-router-dom'; 
 import WritePostHeading from './components/WritePostHeading';
 import WritePost from './components/WritePost';
 import PostAnalysis from './components/PostAnalysis';
 import AnalysisTips from './components/AnalysisTips';
 import { useEmotionAnalysis } from '../../hooks/UseEmotionAnalysis';
 import { useAuthState } from '../../hooks/UseLogin';
-import { useGetPost } from '../../hooks/UsePost'; 
-import Loading from "../../components/Loading"; 
 
 const Write: React.FC = () => {
-  const { postId } = useParams<{ postId: string }>(); // Extract postId parameter from URL
-  const isEditMode = Boolean(postId); // Determine edit mode if postId exists
-  
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const location = useLocation();
   const emotionMutation = useEmotionAnalysis();
   const { user } = useAuthState();
-
-  // Fetch existing post data when in edit mode
-  const { data: existingPost, isLoading: isPostLoading } = useGetPost(postId);
 
   const isLoggedIn = !!user;
 
@@ -33,18 +24,6 @@ const Write: React.FC = () => {
   const combinedText = `${title}. ${content}`;
   
   const isEditMode = location.state?.editMode && location.state?.postData;
-
-  // Initialize form with existing data in edit mode
-  useEffect(() => {
-    if (isEditMode && existingPost) {
-      setTitle(existingPost.title || '');
-      setContent(existingPost.content || '');
-    }
-  }, [isEditMode, existingPost]);
-
-  if (isEditMode && isPostLoading) {
-    return <Loading />;
-  }
 
   return (
     <Box 
@@ -88,9 +67,6 @@ const Write: React.FC = () => {
             reset={reset}
             emotions={emotions}
             isLoggedIn={isLoggedIn}
-            isEditMode={isEditMode}
-            postId={postId}
-            existingPost={existingPost || undefined}
           />
           
   
