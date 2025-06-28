@@ -31,7 +31,6 @@ const Write: React.FC = () => {
         backgroundColor: "transparent",
         minHeight: "80vh",
         width: "100vw",
-        pt: 8,
         pb: 30,
         px: { xs: 0, sm: 2, md: 4, lg: 8 }
       }}

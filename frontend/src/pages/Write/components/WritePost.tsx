@@ -257,8 +257,7 @@ const WritePost: React.FC<WritePostProps> = ({
             <Typography 
               variant="subtitle1" 
               sx={{ 
-                mb: 1,
-                mt:5,
+                my: 1,
                 fontWeight: {xs: 500, md: 600},
                 color: 'text.secondary'
               }}

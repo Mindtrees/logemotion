@@ -27,7 +27,7 @@ const Demo = () => {
   const [emotionValues, setEmotionValues] = React.useState([0, 0, 0, 0]);
 
   const titleText = "Dear my diary,";
-  const fullText = "Today was a really tough day. The project deadline was approaching, so I had to work late into the night, and unexpected problems kept popping up. I felt a lot of stress, but I also felt a sense of accomplishment as I worked with my team to solve each problem. It was hard, but I feel a great sense of achievement for having made it through.";
+  const fullText = "Today was a really tough day. The project deadline was approaching, and unexpected problems kept popping up. I felt a lot of stress, but I worked with my team to solve each problem. It was hard, but I feel achievement for having made it through.";
 
   const emotions = [
     { name: 'Achievement', value: 79, color: '#FFF3B8' },
