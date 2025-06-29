@@ -57,9 +57,9 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
           id: post.id,
           title: post.title,
           content: post.content,
-          emotionAnalysis: post.emotionAnalysis
-        }
-      }
+          emotionAnalysis: post.emotionAnalysis,
+        },
+      },
     });
   };
 
@@ -181,17 +181,31 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
         </Typography>
 
         {/* 분석 결과 */}
-        <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1,
+          }}
+        >
           {emotions.map((emotion, idx) => (
             <Box
               key={idx}
               sx={{ ...EmotionCircleStyle, backgroundColor: emotion.color }}
             >
-              <span>{emotion.name}</span>
-              <span>{emotion.value}%</span>
+              <span>
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  {emotion.name}
+                </Typography>
+              </span>
+              <span>
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  {emotion.value}%
+                </Typography>
+              </span>
             </Box>
           ))}
-        </Stack>
+        </Box>
       </CardContent>
     </Card>
   );

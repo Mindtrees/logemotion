@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import Button from "../common/Button";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
 interface PostHeaderProps {
   title: string;
@@ -12,6 +13,8 @@ const PostHeader = ({ title }: PostHeaderProps) => {
   const handleClickWritePage = () => {
     navigate("/write");
   };
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
   return (
     <Box
       sx={{
@@ -31,6 +34,9 @@ const PostHeader = ({ title }: PostHeaderProps) => {
           px: 2.5,
           py: 1,
           borderRadius: 1,
+          ...(isDarkMode && {
+            border: `1px solid #757575`,
+          }),
         }}
         startIcon={<EditNoteIcon />}
       >
