@@ -11,6 +11,7 @@ import {
   Favorite as FavoriteIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  CalendarToday,
 } from "@mui/icons-material";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -151,10 +152,20 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
         </Box>
 
         {/* 날짜 */}
-        <Typography fontSize="0.9rem" color="text.secondary" mb={2}>
-          {dayjs(post.createdAt.toDate()).format("YYYY. MM. DD. A h:mm") ||
-            "Unknown date"}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            mb: 1,
+          }}
+        >
+          <CalendarToday sx={{ fontSize: "0.9rem", color: "text.secondary" }} />
+          <Typography fontSize="0.9rem" color="text.secondary">
+            {dayjs(post.createdAt.toDate()).format("YYYY. MM. DD. A h:mm") ||
+              "Unknown date"}
+          </Typography>
+        </Box>
 
         {/* 내용 */}
         <Typography color="text.secondary" mb={2}>
