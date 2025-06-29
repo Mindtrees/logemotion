@@ -6,6 +6,23 @@ import 'react-calendar/dist/Calendar.css';
 import { useGetUserPosts } from '../../../hooks/UsePost';
 import { useMemo } from 'react';
 
+interface Timestamp {
+    seconds: number;
+    nanoseconds?: number;
+}
+
+interface Emotion {
+    name: string;
+    color: string;
+    value: number;
+}
+
+interface Post {
+    createdAt: Timestamp;
+    updatedAt?: Timestamp;
+    emotionAnalysis?: Emotion[];
+}
+
 const CalendarContainer = styled('div')(({ theme }) => ({
     '.react-calendar': {
         width: '100%',
@@ -91,13 +108,21 @@ const UserCalendar = () => {
         return `${y}-${m}-${d}`;
     };
 
+    const getPostDate = (post: Post): string => {
+        const createdDate = post.createdAt?.seconds ?? 0;
+        const updatedDate = post.updatedAt?.seconds ?? 0;
+        const latestDate = Math.max(createdDate, updatedDate);
+        return formatDate(getDateFromSeconds(latestDate));
+    };
+
     const emotionDataMap = useMemo(() => {
         const map: Record<string, { color: string; name: string; value: number; count: number }> = {};
 
         posts.forEach((post) => {
             if (!Array.isArray(post.emotionAnalysis) || post.emotionAnalysis.length === 0) return;
 
-            const date = formatDate(getDateFromSeconds(post.createdAt.seconds));
+            // 글 최근 수정일 반영
+            const date = getPostDate(post);
             const maxEmotion = post.emotionAnalysis.reduce((max, curr) => (curr.value > max.value ? curr : max));
 
             if (!map[date]) {
