@@ -4,6 +4,7 @@ import {
   CardContent,
   IconButton,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { EmotionResult, Posts } from "../../models";
@@ -18,6 +19,7 @@ import dayjs from "dayjs";
 import transformEmotionData from "../../utils/transformEmotionData";
 import { useNavigate } from "react-router-dom";
 import { useDeletePost } from "../../hooks/UsePost";
+import { useAuthState } from "../../hooks/UseLogin";
 
 interface PostCardProps {
   post: Posts;
@@ -42,12 +44,30 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
   //   console.log("post", post);
   const navigate = useNavigate();
   const { deletePost } = useDeletePost();
-  const [isPostLiked, setIsPostLiked] = useState(false);
+  // const [isPostLiked, setIsPostLiked] = useState(false);
+  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>(
+    () => {
+      const stored = localStorage.getItem("likedPosts");
+      return stored ? JSON.parse(stored) : {};
+    }
+  );
   const [isExpanded, setIsExpanded] = useState(false);
   const isMyPost = post.userId === currentUserId;
+  const isPostLiked = likedPosts[post.id || ""] || false;
+  const { user } = useAuthState();
 
-  const handleClickLike = () => {
-    setIsPostLiked((prev) => !prev);
+  // const handleClickLike = () => {
+  //   setIsPostLiked((prev) => !prev);
+  // };
+  const handleClickLike = (postId: string) => {
+    setLikedPosts((prev) => {
+      const updated = {
+        ...prev,
+        [postId]: !prev[postId],
+      };
+      localStorage.setItem("likedPosts", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const handleClickEdit = () => {
@@ -117,14 +137,20 @@ const PostCard = ({ post, currentUserId }: PostCardProps) => {
 
           <Box>
             {/* 좋아요 */}
-            <IconButton
-              size="small"
-              aria-label="like"
-              onClick={() => handleClickLike()}
-              color={isPostLiked ? "error" : "default"}
-            >
-              <FavoriteIcon fontSize="small" />
-            </IconButton>
+            <Tooltip title={user ? "" : "Please login"} placement="top" arrow>
+              <span>
+                <IconButton
+                  size="small"
+                  aria-label="like"
+                  //  onClick={() => handleClickLike()}
+                  onClick={() => handleClickLike(post.id || "")}
+                  color={isPostLiked ? "error" : "default"}
+                  disabled={!user}
+                >
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+              </span>
+            </Tooltip>
 
             {isMyPost && (
               <>
