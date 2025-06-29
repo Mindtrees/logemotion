@@ -79,17 +79,3 @@ const PostList = ({
 };
 
 export default PostList;
-
-// {posts?.length === 0 ? (
-//       <Typography>No posts found. Create your first post.</Typography>
-//     ) : (
-//       <Stack spacing={2}>
-//         {posts.map((post) => (
-//           <PostCard
-//             key={post.id}
-//             post={post}
-//             currentUserId={currentUserId || ""}
-//           />
-//         ))}
-//       </Stack>
-//     )}

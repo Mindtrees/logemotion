@@ -13,11 +13,36 @@ const LoginContainer = styled('div')({
     height: 'auto',
 });
 
+const LoginBox = styled(Box)(({ theme }) => ({
+    width: '30%',
+    minWidth: '400px',
+    height: 'auto',
+    borderRadius: '10px',
+    padding: theme.spacing(4),
+    border: '2px solid',
+    borderColor: theme.palette.primary.main,
+    [theme.breakpoints.down('sm')]: {
+        border: 'none',
+    },
+}));
+
 const Login = () => {
     const navigate = useNavigate();
     const { redirectAfterLogin } = useLocationContext();
-    const { login, isLoading: loginLoading, error: loginError, isSuccess: loginSuccess, reset: resetLogin } = useLogin();
-    const { loginWithGoogle, isLoading: googleLoading, error: googleError, isSuccess: googleSuccess, reset: resetGoogle } = useGoogleLogin();
+    const {
+        login,
+        isLoading: loginLoading,
+        error: loginError,
+        isSuccess: loginSuccess,
+        reset: resetLogin,
+    } = useLogin();
+    const {
+        loginWithGoogle,
+        isLoading: googleLoading,
+        error: googleError,
+        isSuccess: googleSuccess,
+        reset: resetGoogle,
+    } = useGoogleLogin();
 
     const [emailValue, setEmailValue] = useState<string>('');
     const [passwordValue, setPasswordValue] = useState<string>('');
@@ -26,6 +51,10 @@ const Login = () => {
 
     const isLoading = loginLoading || googleLoading;
     const error = loginError || googleError;
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
 
     useEffect(() => {
         if (loginSuccess || googleSuccess) {
@@ -64,28 +93,17 @@ const Login = () => {
     };
 
     return (
-        <LoginContainer sx={{ pt:8, pb:14 }}>
-            <Box
-                sx={{
-                    width: '30%',
-                    minWidth: '400px',
-                    height: 'auto',
-                    border: '2px solid',
-                    borderColor: 'primary.main',
-                    borderRadius: '10px',
-                    boxShadow: 3,
-                    p: 4,
-                }}
-            >
+        <LoginContainer sx={{ pt: 8, pb: 14 }}>
+            <LoginBox>
                 <Box sx={{ mt: 2, mb: 4 }}>
                     <Typography
                         variant="h2"
-                        sx={{ 
-                            width: '100%', 
-                            color: 'primary.main', 
+                        sx={{
+                            width: '100%',
+                            color: 'primary.main',
                             textAlign: 'center',
                             fontSize: '2.5rem',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
                         }}
                     >
                         Emotion Blog
@@ -97,7 +115,7 @@ const Login = () => {
                             color: 'text.secondary',
                             mt: 2,
                             textAlign: 'center',
-                            fontSize: '1.1rem'
+                            fontSize: '1.1rem',
                         }}
                     >
                         Sign in to your account to start your emotion journal!
@@ -191,13 +209,13 @@ const Login = () => {
                             fontSize: '1.1rem',
                             fontWeight: '600',
                             textTransform: 'none',
-                            mt: 1
+                            mt: 1,
                         }}
                     >
                         Create New Account
                     </Button>
                 </Box>
-            </Box>
+            </LoginBox>
         </LoginContainer>
     );
 };

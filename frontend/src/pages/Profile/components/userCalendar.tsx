@@ -1,5 +1,5 @@
 import Calendar from 'react-calendar';
-import { Box, Tooltip } from '@mui/material';
+import { Box, Tooltip, useMediaQuery } from '@mui/material';
 import EmotionIcon from '@mui/icons-material/Favorite';
 import { styled } from '@mui/material/styles';
 import 'react-calendar/dist/Calendar.css';
